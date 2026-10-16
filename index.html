@@ -2780,6 +2780,7 @@ html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; ba
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.21.2', d: '2026-10-16', items: ['Einstellungen: Navigation ist jetzt Teil von „Darstellung“'] },
   { v: '1.21.1', d: '2026-10-16', items: ['Lichtreflex auf Glasflächen am Mac erscheint nur noch unter dem Mauszeiger'] },
   { v: '1.21', d: '2026-10-16', items: ['Neue Einstellung „Liquid Glass“ unter Darstellung: ein- und ausschaltbar, Deckkraft der Leisten von transparent bis eingefärbt regelbar', 'Ausgeschaltet sind Leisten und Knöpfe deckend – auch am Mac'] },
   { v: '1.20', d: '2026-10-16', items: ['Einstellungen neu gegliedert: Übersicht mit Unterseiten, Suchfeld und aktuellen Werten', 'Bereiche lassen sich oben anheften (bis zu drei) – über „Bearbeiten“ oder langes Drücken', '„Zurücksetzen“ für jeden Bereich einzeln', 'Symbole in Einstellungen und „Mehr“-Menü einheitlich in der Farbe des Designs', 'Hintergrund der Lernpfade und Farben der Prüfungsdomänen passen sich dem Design an', 'Tagesziel-Ringe in festen Farben: Rot, Grün, Türkis', 'Standard-Design ist jetzt „IT sure“'] },
@@ -12435,7 +12436,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     contrast: function () { return sRow('Mehr Kontrast', '', sTgl('contrast', !!lookVal('contrast'))); },
     motion: function () { return sRow('Animationen', '', sSeg('motion', [['on', 'An'], ['reduced', 'Reduziert'], ['off', 'Aus']], lookVal('motion'))); },
     tilt: function () { return sRow('Lichteffekt beim Neigen', 'Nur auf dem iPhone. Am Mac folgt er der Maus.', sTgl('tilt', !!LOOK.tilt)); },
-    nav: function () { return sRow('Am Mac', '', sSeg('nav', [['sidebar', 'Seitenleiste'], ['tabbar', 'Leiste unten']], LOOK.nav || 'sidebar')); },
+    nav: function () { return sRow('Navigation am Mac', '', sSeg('nav', [['sidebar', 'Seitenleiste'], ['tabbar', 'Leiste unten']], LOOK.nav || 'sidebar')); },
     tabs: function () {
       return '<div class="set-row tabs-row"><div class="set-l"><b>Tabs in der unteren Leiste</b><span>„Mehr“ steht immer rechts.</span></div><div class="set-c tab-pick">' + tabKeys().map(function (k, i) {
         return '<label class="tp-slot"><small>' + (i + 1) + '</small><select data-tabslot="' + i + '" aria-label="Tab ' + (i + 1) + '">' + Object.keys(TAB_OPTS).map(function (o) { return '<option value="' + o + '"' + (o === k ? ' selected' : '') + '>' + TAB_OPTS[o][1] + '</option>'; }).join('') + '</select></label>';
@@ -12486,14 +12487,12 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
   };
   var SETS = {
-    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'play'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
-      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null }); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Stil Ruhig Lebendig eigene Farbe' },
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'play', 'nav', 'tabs'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
     lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
       reset: function () { lookSet({ size: null, serif: null, width: null, density: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
     bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
       reset: function () { lookSet({ motion: null, tilt: false }); }, find: 'Animationen Bewegung Neigen Lichteffekt' },
-    navigation: { t: 'Navigation', rows: ['nav', 'tabs'], quick: ['tabs'], tier: 1, val: function () { return LOOK.nav === 'tabbar' ? 'Leiste unten' : 'Seitenleiste'; },
-      reset: function () { lookSet({ nav: null, tabs: null }); renderTabbar(); }, find: 'Navigation Seitenleiste Leiste unten Tabs Reiter' },
     quiz: { t: 'Quiz', rows: ['shuffle', 'why', 'skip', 'quickn'], quick: ['shuffle', 'why'], tier: 2, val: function () { return quickCount() + ' Fragen im Schnell-Quiz'; },
       reset: function () { S.settings.shuffle = true; S.settings.whyOpen = false; S.settings.ignoreSkipped = true; lsDel('dp600.quickN'); save(); }, find: 'Antworten mischen Erklärungen Begründungen nicht relevant Schnell-Quiz' },
     ziele: { t: 'Tagesziele', rows: ['goals', 'mix', 'greet'], quick: ['goals'], tier: 2, val: function () { return S.goals.q + ' Fragen · ' + S.goals.min + ' Min. · ' + S.goals.fix + ' Fehler'; },
