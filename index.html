@@ -2703,6 +2703,23 @@ html {
   --dom-4: color-mix(in srgb, var(--accent) 35%, var(--text-3));
 }
 
+/* Liquid Glass: zentral steuerbar (Einstellungen → Darstellung). --glass-a = Deckkraft der Glasflächen */
+html { --glass-bg: color-mix(in srgb, var(--surface) var(--glass-a, 77%), transparent); }
+html[data-glass="on"] :is(.topbar, .subnav, .exam-bar, .toast, .fs-bar, .cs-sheet, .ctx-menu, .upd-bar),
+html[data-glass="on"].tbnav :is(.tb-bar, .tb-resume, .theme-fab, .msheet),
+html[data-glass="on"].tbnav .topbar::before {
+  background-color: color-mix(in srgb, var(--surface) var(--glass-a, 77%), transparent) !important; }
+html[data-glass="off"] :is(.lg, .seg, .tabs, .btn.sec, .glass-chip, .topbar, .subnav, .exam-bar, .toast, .fs-bar, .cs-sheet, .ctx-menu, .upd-bar, .tb-bar, .tb-resume, .theme-fab, .msheet, .dz-row),
+html[data-glass="off"] .topbar::before {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: var(--surface) !important; background-image: none !important; }
+html[data-glass="off"] :is(.seg, .tabs) { background-color: var(--surface-3) !important; }
+html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.glass-row { display: block; }
+.gl-range { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 999px; background: var(--surface-2); }
+.gl-range svg { width: 22px; height: 22px; flex: none; fill: none; stroke: var(--text-2); stroke-width: 1.6; }
+.gl-range input[type="range"] { flex: 1; accent-color: var(--accent); }
+.gl-hint { margin: 8px 4px 0; font-size: 13px; color: var(--text-3); line-height: 1.4; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2717,6 +2734,7 @@ html {
     if (mode === 'time') { var hr = new Date().getHours(); mode = hr >= 7 && hr < 19 ? 'light' : 'dark'; }
     if (pr === 'custom') { try { var css = localStorage.getItem('dp600.customcss'); if (css) { var st = document.createElement('style'); st.id = 'customPalette'; st.textContent = css; document.head.appendChild(st); } } catch (e) {} }
     r.setAttribute('data-width', L.width || 'wide');
+    r.setAttribute('data-glass', L.glass === false ? 'off' : 'on'); r.style.setProperty('--glass-a', (45 + (L.glassT == null ? 60 : L.glassT) * .53) + '%');
     if (window.matchMedia('(max-width: 900px)').matches || L.nav === 'tabbar') r.classList.add('tbnav');
     if (mode === 'light' || mode === 'dark') r.setAttribute('data-theme', mode);
     r.setAttribute('data-palette', P[pr][0]);
@@ -2762,6 +2780,7 @@ html {
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.21', d: '2026-10-16', items: ['Neue Einstellung „Liquid Glass“ unter Darstellung: ein- und ausschaltbar, Deckkraft der Leisten von transparent bis eingefärbt regelbar', 'Ausgeschaltet sind Leisten und Knöpfe deckend – auch am Mac'] },
   { v: '1.20', d: '2026-10-16', items: ['Einstellungen neu gegliedert: Übersicht mit Unterseiten, Suchfeld und aktuellen Werten', 'Bereiche lassen sich oben anheften (bis zu drei) – über „Bearbeiten“ oder langes Drücken', '„Zurücksetzen“ für jeden Bereich einzeln', 'Symbole in Einstellungen und „Mehr“-Menü einheitlich in der Farbe des Designs', 'Hintergrund der Lernpfade und Farben der Prüfungsdomänen passen sich dem Design an', 'Tagesziel-Ringe in festen Farben: Rot, Grün, Türkis', 'Standard-Design ist jetzt „IT sure“'] },
   { v: '1.19', d: '2026-10-16', items: ['Mehrere Kurse: neue Seite „Meine Kurse“ und Kursauswahl oben rechts', 'Neuer Kurs PL-300 Power BI Data Analyst mit Lesetexten, Karteikarten, 69 Quizfragen und Prüfungssimulation', 'Kurse lassen sich per Link aus Microsoft Learn übernehmen', 'Tagesziele wahlweise für alle Kurse gemeinsam oder je Kurs', 'Details zu einer Kachel erscheinen direkt unter ihr', 'Fehlerhafte Links in den Power-BI-Modulen korrigiert', 'Neuer App-Name: Lernwerk'] },
   { v: '1.18', d: '2026-10-16', items: ['Menü neu sortiert in Heute, Lernen, Prüfen, Meine Inhalte und App', '„Wiederholen“ und „Fokus-Session“ im Menü, mit Zähler für fällige Fragen', 'Technische Bereinigung, schnelleres Laden'] },
@@ -9536,6 +9555,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     r.setAttribute('data-motion', lookVal('motion'));
     r.setAttribute('data-size', lookVal('size'));
     r.setAttribute('data-density', lookVal('density'));
+    // Liquid Glass: aus = deckende Flächen; an = Deckkraft der Glasflächen von 45 % (transparent) bis 98 % (eingefärbt)
+    r.setAttribute('data-glass', LOOK.glass === false ? 'off' : 'on');
+    r.style.setProperty('--glass-a', (45 + (LOOK.glassT == null ? 60 : LOOK.glassT) * .53).toFixed(1) + '%');
     if (lookVal('serif')) r.setAttribute('data-serif', '1'); else r.removeAttribute('data-serif');
     if (lookVal('contrast')) r.setAttribute('data-contrast', '1'); else r.removeAttribute('data-contrast');
     updateIcon();
@@ -9548,7 +9570,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     applyLook();
   }
   // Darstellung geräteübergreifend: S.look = {v: Werte, at: Zeitpunkt}; Gruppen in LOOK.local bleiben auf diesem Gerät
-  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
+  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play', 'glass', 'glassT'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
   var LOOK_GROUP_NAMES = { design: 'Design & Stil', mode: 'Hell/Dunkel', motion: 'Animationen', text: 'Schrift & Lesebreite', nav: 'Navigation & Reiter', extras: 'Begrüßung, Neigung, App-Symbol' };
   function lookLocal() { return LOOK.local || ['nav', 'extras']; }
   function syncedKeys() { var l = lookLocal(), ks = []; Object.keys(LOOK_GROUPS).forEach(function (g) { if (l.indexOf(g) < 0) ks = ks.concat(LOOK_GROUPS[g]); }); return ks; }
@@ -12389,6 +12411,12 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       }).join('') + '</div>';
     },
     mode: function () { return sRow('Erscheinungsbild', '', sSeg('mode', [['system', 'Automatisch'], ['light', 'Hell'], ['dark', 'Dunkel'], ['time', 'Tageszeit']], lookVal('mode'))); },
+    glass: function () {
+      var on = LOOK.glass !== false, t = LOOK.glassT == null ? 60 : LOOK.glassT;
+      return sRow('Liquid Glass', on ? '' : 'Leisten und Knöpfe sind deckend.', sTgl('glass', on)) + (on ? '<div class="set-row glass-row"><div class="gl-range"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3"/></svg>' +
+        '<input type="range" min="0" max="100" step="1" value="' + t + '" data-glassrange="1" aria-label="Transparent bis eingefärbt"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3" fill="currentColor"/></svg></div>' +
+        '<p class="gl-hint">„Transparent“ lässt mehr vom Hintergrund durch, „Eingefärbt“ erhöht die Deckkraft und den Kontrast.</p></div>' : '');
+    },
     play: function () { return sRow('Stil', 'Wirkt auf Formen, Schatten und Bewegung.', sSeg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))); },
     size: function () { return sRow('Textgröße', '', sSeg('size', [['s', 'S'], ['m', 'M'], ['l', 'L']], lookVal('size'))); },
     serif: function () { return sRow('Schriftart', 'Gilt für Lesetexte.', sSeg('serif', [['false', 'Standard'], ['true', 'Serif']], lookVal('serif'))); },
@@ -12448,8 +12476,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
   };
   var SETS = {
-    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'play'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
-      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system' }); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Stil Ruhig Lebendig eigene Farbe' },
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'play'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null }); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Stil Ruhig Lebendig eigene Farbe' },
     lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
       reset: function () { lookSet({ size: null, serif: null, width: null, density: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
     bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
@@ -12517,6 +12545,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   app.addEventListener('input', function (e) {
     if (curView !== 'settings') return;
     if (e.target.id === 'setSearch') { SET_Q = e.target.value; setSearchRun(); return; }
+    if (e.target.dataset.glassrange) { document.documentElement.style.setProperty('--glass-a', (45 + e.target.value * .53).toFixed(1) + '%'); return; }
     var k = e.target.dataset.hlc || e.target.dataset.hln; if (!k) return;
     var hl = S.settings.hl || (S.settings.hl = {}); hl[k] = Object.assign({}, hlCfg()[k], hl[k]);
     if (e.target.dataset.hlc) { hl[k].c = e.target.value; e.target.parentElement.style.background = e.target.value; applyHlVars(); }
@@ -12532,12 +12561,14 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       if (j >= 0) tk[j] = tk[i];   // doppelte Auswahl tauscht die beiden Tabs
       tk[i] = v; lookSet({ tabs: tk }); renderTabbar(); route(true); toast('Tabs gespeichert'); return;
     }
+    if (t.dataset.glassrange) { lookSet({ glassT: +t.value }); return; }
     if (!k) return;
     if (k === 'shuffle') { S.settings.shuffle = t.checked; save(); }
     else if (k === 'why') { S.settings.whyOpen = t.checked; save(); }
     else if (k === 'skip') { S.settings.ignoreSkipped = t.checked; cfg.excludeSkipped = null; save(); renderSidebar(); }
     else if (k === 'greet') lookSet({ greet: t.checked });
     else if (k === 'contrast') lookSet({ contrast: t.checked });
+    else if (k === 'glass') { lookSet({ glass: t.checked }); route(true); }
     else if (k === 'tilt') {
       var on = t.checked; lookSet({ tilt: on });
       setTilt(on, true).then(function (ok) { if (on && !ok && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') toast('Bewegungssensor nicht freigegeben'); });
