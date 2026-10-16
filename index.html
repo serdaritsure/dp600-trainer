@@ -8563,7 +8563,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       '<div class="ms-body">' + groups + '<section class="ms-sec" id="msCourse"><h3 class="ms-cap">Kurs ' + esc((CFG.exam && CFG.exam.code) || '') + '<span>' + all.done + ' / ' + all.relevant + '</span></h3><div class="ms-list">' + course + '</div></section></div>';
   }
   function sheetOpen() { return document.body.classList.contains('ms-open'); }
+  var sheetVia = '';
   function setSheet(open, toCourse) {
+    if (!open) sheetVia = '';
     if (open) {
       renderSheet();
       var b = msheet.querySelector('.ms-body'); b.scrollTop = 0;
@@ -8620,11 +8622,11 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if (!tabbar) return;
     var w = wrongIds().length, open = sheetOpen();
     var it = function (key) {
-      var o = TAB_OPTS[key], on = !open && (key === 'learn' ? curView === 'module' || curView === 'path' : key === 'search' ? false : curView === key);
+      var o = TAB_OPTS[key], on = (!open || (sheetVia === 'learn' && key === 'learn')) && (key === 'learn' ? curView === 'module' || curView === 'path' : key === 'search' ? false : curView === key);
       return '<a class="tb-item' + (on ? ' on' : '') + '" href="' + (o[0] || 'javascript:void 0') + '"' + (o[0] ? ' data-vt="tab"' : '') + (o[0] ? '' : ' data-tb="' + key + '"') + (on ? ' aria-current="page"' : '') + '>' +
         '<span class="tb-ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS[key] + '</svg>' + (key === 'errors' && w ? '<i class="tb-badge">' + w + '</i>' : '') + '</span><span class="tb-lbl">' + o[1] + '</span></a>';
     };
-    var moreOn = open || (barKeys().indexOf(curView) < 0 && !((curView === 'module' || curView === 'path') && barKeys().indexOf('learn') >= 0) && curView !== 'resume');
+    var moreOn = (open && sheetVia !== 'learn') || (barKeys().indexOf(curView) < 0 && !((curView === 'module' || curView === 'path') && barKeys().indexOf('learn') >= 0) && curView !== 'resume');
     var html = barKeys().map(it).join('') +
       '<a class="tb-item tb-more' + (moreOn ? ' on' : '') + '" href="javascript:void 0" data-tb="more" aria-expanded="' + open + '"><span class="tb-ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + MORE_IC + '</svg></span><span class="tb-lbl">Mehr</span></a>';
     // Kapsel und Leiste bleiben dauerhaft im DOM und werden nur bei Änderungen neu befüllt –
@@ -8670,11 +8672,15 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       if (location.hash === href) { route(); return; }
       vtDir = 'tab'; location.hash = href; return;
     }
-    if (k === 'more') setSheet(!sheetOpen());
+    if (k === 'more') { var wasLearn = sheetVia === 'learn'; sheetVia = ''; setSheet(!sheetOpen() || wasLearn); }
     else if (k === 'learn') {
-      // Lernen: zurück zur letzten Lernstelle; ohne eine öffnet sich das Blatt beim Kursbaum
-      if (!sheetOpen() && RES.loc && curView !== 'module' && CMOD[RES.loc.hash.split('/')[2]]) { markTab(a); vtDir = 'tab'; go(RES.loc.hash); return; }
-      setSheet(!sheetOpen() || curView === 'module', true);
+      // Lernen: immer sichtbar ausgewählt. Außerhalb des Lernbereichs geht es zur letzten Lernstelle
+      // (neues Gerät: zum ersten offenen Modul); im Lernbereich öffnet sich der Kursbaum als Blatt
+      if (sheetOpen()) { setSheet(false); return; }
+      if (curView === 'module' || curView === 'path') { sheetVia = 'learn'; setSheet(true, true); return; }
+      var target = RES.loc && CMOD[RES.loc.hash.split('/')[2]] ? RES.loc.hash : null;
+      if (!target) { var firstOpen = ALL_MIDS.filter(function (m) { return statusOf(m) === 'open'; })[0] || ALL_MIDS[0]; target = '#/module/' + firstOpen; }
+      markTab(a); vtDir = 'tab'; go(target);
     }
     else if (k === 'search') { setSheet(false); openCmdk(); }
   }
