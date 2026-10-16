@@ -2720,6 +2720,139 @@ html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; ba
 .gl-range input[type="range"] { flex: 1; accent-color: var(--accent); }
 .gl-hint { margin: 8px 4px 0; font-size: 13px; color: var(--text-3); line-height: 1.4; }
 
+/* ================= Design-Paket 2 (1.22) ================= */
+/* (1) Modulkopf in der Lernpfad-Farbe + Kapitel-Kacheln */
+.mod-hero { position: relative; padding: 30px 30px 24px; margin: 6px 0 18px; border-radius: var(--r-card, 22px);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--lpc, var(--accent)) 20%, var(--surface)) 0%, var(--surface) 70%); border: 1px solid var(--hairline); }
+.ch-wrap { margin: 4px 0 22px; }
+.ch-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 2px 10px; }
+.ch-head b { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.ch-head span { font-size: 13px; color: var(--text-3); }
+.ch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.ch-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px; border-radius: 16px; border: 1px solid var(--hairline);
+  background: var(--surface); color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: transform .2s, border-color .2s; }
+.ch-tile:hover { border-color: var(--accent); transform: translateY(-1px); }
+.ch-tile b { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; }
+.ch-tile small { font-size: 12.5px; color: var(--text-3); }
+.ch-n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700;
+  background: color-mix(in srgb, var(--btn-bg) 18%, var(--surface)); color: var(--accent); }
+.ch-tile.done .ch-n { background: var(--btn-bg); color: var(--on-btn); }
+@media (max-width: 900px) {
+  .mod-hero { padding: 22px 18px 18px; }
+  .ch-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin: 0 -16px; padding: 2px 16px 8px; scrollbar-width: none; }
+  .ch-grid::-webkit-scrollbar { display: none; }
+  .ch-tile { flex: 0 0 62%; scroll-snap-align: start; min-height: 110px; }
+}
+
+/* (2) Startseite „Heute“: großer nächster Schritt + wischbare Karten */
+.today.v2 { display: block; }
+.today.v2 .td-sub { margin-bottom: 18px; }
+.td-hero { display: flex; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 22px; color: var(--on-btn); text-decoration: none;
+  background: linear-gradient(135deg, var(--btn-bg), color-mix(in srgb, var(--btn-bg) 70%, var(--text))); box-shadow: 0 12px 30px -12px color-mix(in srgb, var(--btn-bg) 60%, transparent); }
+.td-hero:hover { text-decoration: none; filter: brightness(1.04); }
+.th-ic { flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--on-btn) 16%, transparent); }
+.th-ic svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.th-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.th-t small { font-size: 12.5px; font-weight: 600; opacity: .8; letter-spacing: .02em; text-transform: uppercase; }
+.th-t b { font-size: 20px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
+.th-t span { font-size: 14px; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.th-go { font-size: 28px; opacity: .8; }
+.td-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+.td-card { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-height: 168px; padding: 16px; border-radius: 20px; border: 1px solid var(--hairline);
+  background: var(--surface); color: var(--text); text-decoration: none; box-shadow: var(--depth, none); }
+.td-card:hover { text-decoration: none; border-color: var(--hairline-strong); }
+.td-card > small { font-size: 12.5px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .03em; }
+.tc-goal .td-rings svg { width: 86px; height: 86px; }
+.tc-goal .gr-legend, .tc-goal ul { font-size: 12px; margin: 0; }
+.tc-ready .ring { --size: 92px; width: 92px; height: 92px; }
+.tc-ready .ring span { font-size: 22px; }
+.tc-sub { font-size: 13px; color: var(--text-2); }
+.tc-big { font-size: 44px; font-weight: 700; letter-spacing: -.03em; line-height: 1; margin-top: 10px; }
+.tc-ic .ico { width: 40px; height: 40px; color: var(--accent); margin-top: 10px; }
+.tc-streak .flame svg { width: 44px; height: 44px; }
+.tc-streak .flame b { font-size: 28px; }
+.next-list.compact { margin: 0 0 14px; }
+.td-domcard { margin-top: 2px; }
+@media (max-width: 900px) {
+  .td-cards { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 14px -16px; padding: 2px 16px 8px; scrollbar-width: none; }
+  .td-cards::-webkit-scrollbar { display: none; }
+  .td-card { flex: 0 0 44%; scroll-snap-align: start; min-height: 172px; }
+  .td-hero { padding: 18px; }
+  .th-t b { font-size: 18px; }
+}
+
+/* (3) Dunkelmodus „Schwarz“ für OLED-Bildschirme */
+html[data-oled="1"] { --bg: #000 !important; --surface: #0c0c0c !important; --surface-2: #141414 !important; --surface-3: #1f1f1f !important; --sidebar-bg: #000 !important; --tile-light: #0c0c0c !important; }
+html[data-oled="1"] body { background: #000; }
+
+/* (4) Lernpfad-Kopf: großer Ring, Kennzahlen, Weiter-Knopf */
+.lp-hero { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px; margin: 6px 0 18px; border-radius: var(--r-card, 22px); border: 1px solid var(--hairline);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--lpc, var(--accent)) 22%, var(--surface)) 0%, var(--surface) 75%); }
+.lph-t { flex: 1; min-width: 0; }
+.lph-t h1 { margin: 6px 0 12px; font-size: var(--fs-display); font-weight: 700; letter-spacing: -.022em; line-height: 1.1; }
+.lph-facts { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 16px; color: var(--text-2); font-size: 14px; }
+.lph-facts b { color: var(--text); font-size: 17px; }
+.lph-ring { flex: none; }
+@media (max-width: 700px) { .lp-hero { flex-direction: column-reverse; align-items: flex-start; padding: 22px 18px; } .lph-ring { --size: 120px; width: 120px; height: 120px; } }
+
+/* (5) Leerzustände mit ruhiger Illustration in der Designfarbe */
+.card.empty { text-align: center; padding: 34px 24px; }
+.empty-ic { position: relative; display: grid; place-items: center; width: 96px; height: 96px; margin: 0 auto 16px; border-radius: 50%;
+  background: color-mix(in srgb, var(--btn-bg) 14%, var(--surface)); color: var(--accent); }
+.empty-ic::before { content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--accent) 35%, transparent); }
+.empty-ic::after { content: ''; position: absolute; width: 12px; height: 12px; border-radius: 50%; right: -6px; top: 8px; background: color-mix(in srgb, var(--prog) 70%, var(--surface)); box-shadow: -96px 62px 0 -3px color-mix(in srgb, var(--accent) 45%, var(--surface)); }
+.empty-ic .ico { width: 42px !important; height: 42px !important; stroke-width: 1.5 !important; }
+.empty-t { display: block; font-size: 19px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
+
+/* (6) Quiz fokussiert (Handy): Leisten weg, dünner Fortschritt oben, große Antwortkarten */
+.qf-close { display: none; }
+@media (max-width: 900px) {
+  body.quiz-focus .topbar, body.quiz-focus #tabbar, body.quiz-focus .theme-fab, body.quiz-focus .lt-bar, body.quiz-focus .subnav, body.quiz-focus .mod-hero, body.quiz-focus .tabs,
+  body.quiz-focus .page-head, body.quiz-focus .skip-banner, body.quiz-focus .container > .actions { display: none !important; }
+  body.quiz-focus::before { content: ''; position: fixed; z-index: 70; left: 0; top: 0; height: 3px; width: calc(var(--qf-p, 0) * 100%); background: var(--prog); transition: width .35s cubic-bezier(.32, .72, 0, 1); }
+  body.quiz-focus .qf-close { display: grid; place-items: center; position: fixed; z-index: 71; top: calc(env(safe-area-inset-top, 0px) + 10px); right: 14px; width: 34px; height: 34px; border-radius: 50%;
+    border: 0; background: var(--surface-3); color: var(--text-2); font-size: 15px; cursor: pointer; }
+  body.quiz-focus #app { padding-top: calc(env(safe-area-inset-top, 0px) + 44px); }
+  body.quiz-focus .quiz-card { border: 0; box-shadow: none; background: transparent; padding: 0 2px; }
+  body.quiz-focus .quiz-card .qtext { font-size: 20px; line-height: 1.4; letter-spacing: -.015em; }
+  body.quiz-focus .quiz-card .ans { padding: 16px 16px; border-radius: 16px; font-size: 16.5px; margin-bottom: 10px; }
+  body.quiz-focus .quiz-card .kbd-hint { display: none; }
+  body.quiz-focus .quiz-card > .actions { position: sticky; bottom: 0; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(transparent, var(--bg) 30%); }
+}
+.td-card .ring.ring-ready { width: 84px !important; height: 84px !important; min-height: 0 !important; flex: none; aspect-ratio: 1; margin: 2px 0; }
+.td-card .ring.ring-ready span { font-size: 20px !important; }
+.td-card { min-height: 0; }
+.tc-goal .td-rings svg { width: 80px; height: 80px; }
+.tc-goal .gr-legend li { font-size: 12px; }
+@media (max-width: 900px) { .td-card { flex-basis: 46%; min-height: 0; } }
+.lph-ring { width: 150px !important; height: 150px !important; flex: 0 0 150px !important; }
+.lph-ring span { font-size: 36px !important; }
+.lph-ring span small { font-size: 12px !important; }
+@media (max-width: 700px) { .lph-ring { width: 108px !important; height: 108px !important; flex-basis: 108px !important; } .lph-ring span { font-size: 26px !important; } }
+@media (max-width: 900px) { body.quiz-focus .quiz-card { border: 0 !important; box-shadow: none !important; background: transparent !important; } }
+
+/* Wischbare Reihen: Punkte + leichter Hinweis-Schatten rechts */
+.sw-dots { display: none; }
+@media (max-width: 900px) {
+  .sw-dots { display: flex; justify-content: center; gap: 6px; margin: -4px 0 14px; }
+  .sw-dots[hidden] { display: none; }
+  .sw-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--hairline-strong); transition: width .3s cubic-bezier(.32, .72, 0, 1), background .3s; }
+  .sw-dots i.on { width: 18px; background: var(--accent); }
+  .can-swipe:not(.at-end) { -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent); mask-image: linear-gradient(90deg, #000 82%, transparent); }
+  .can-swipe:not(.at-end)::after { content: ''; flex: 0 0 4px; }
+}
+
+/* Such-Kreis links neben der kleinen Leiste (wie Hell/Dunkel rechts) */
+.search-fab svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+@media (max-width: 900px) {
+  html.tbnav body.tb-min .tb-bar { width: min(64%, calc(100% - 116px)) !important; translate: 0 0 !important; }
+}
+
+/* Suche schließen: am Mac „esc“ (anklickbar), am Handy „Abbrechen“ wie in iOS */
+.cmdk-esc { cursor: pointer; }
+.cmdk-cancel { display: none; flex: none; border: 0; background: none; color: var(--link); font: inherit; font-size: 17px; padding: 6px 2px 6px 8px; cursor: pointer; }
+@media (max-width: 900px), (pointer: coarse) { .cmdk-esc { display: none; } .cmdk-cancel { display: block; } }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2736,6 +2869,7 @@ html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; ba
     r.setAttribute('data-width', L.width || 'wide');
     r.setAttribute('data-glass', L.glass === false ? 'off' : 'on'); r.style.setProperty('--glass-a', (45 + (L.glassT == null ? 60 : L.glassT) * .53) + '%');
     if (window.matchMedia('(max-width: 900px)').matches || L.nav === 'tabbar') r.classList.add('tbnav');
+    if (mode === 'black') { mode = 'dark'; r.setAttribute('data-oled', '1'); }
     if (mode === 'light' || mode === 'dark') r.setAttribute('data-theme', mode);
     r.setAttribute('data-palette', P[pr][0]);
     r.setAttribute('data-play', L.play || P[pr][1]);
@@ -2780,6 +2914,7 @@ html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; ba
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.22', d: '2026-10-16', items: ['Neue Startseite: nächster Schritt als große Karte, Tagesziel, Prüfungsreife, Serie und Prüfungstermin als wischbare Karten', 'Modulseiten mit farbigem Kopf und Kapitel-Übersicht', 'Lernpfad-Seiten mit Fortschrittsring, Lernzeit und „Weiter“-Knopf', 'Quiz auf dem iPhone im Vollbild mit großen Antwortkarten', 'Erscheinungsbild: Automatisch, Hell, Dunkel und neu „Schwarz“ für OLED-Bildschirme', 'Suchknopf neben der verkleinerten unteren Leiste, Suche am iPhone mit „Abbrechen“', 'Punkte unter wischbaren Kartenreihen', 'Leere Seiten mit Illustration', 'Vor/Zurück zwischen Lernpfaden funktioniert in allen Kursen'] },
   { v: '1.21.2', d: '2026-10-16', items: ['Einstellungen: Navigation ist jetzt Teil von „Darstellung“'] },
   { v: '1.21.1', d: '2026-10-16', items: ['Lichtreflex auf Glasflächen am Mac erscheint nur noch unter dem Mauszeiger'] },
   { v: '1.21', d: '2026-10-16', items: ['Neue Einstellung „Liquid Glass“ unter Darstellung: ein- und ausschaltbar, Deckkraft der Leisten von transparent bis eingefärbt regelbar', 'Ausgeschaltet sind Leisten und Knöpfe deckend – auch am Mac'] },
@@ -9546,7 +9681,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function applyLook() {
     var r = document.documentElement;
     if (LOOK.custom) { var cp = customPalette(LOOK.custom); injectCustom(cp.css); lsSet('dp600.customcss', cp.css); }
-    var mode = LOOK.mode === 'time' ? timeTheme() : LOOK.mode;
+    if (LOOK.mode === 'time') LOOK.mode = 'system';   // „Tageszeit“ gibt es nicht mehr
+    var mode = LOOK.mode === 'black' ? 'dark' : LOOK.mode;
+    if (LOOK.mode === 'black') r.setAttribute('data-oled', '1'); else r.removeAttribute('data-oled');
     if (mode === 'light' || mode === 'dark') r.setAttribute('data-theme', mode); else r.removeAttribute('data-theme');
     // Stilwelt folgt dem Stil: Ruhig = Editorial, Ausgewogen = Standard, Lebendig = Verspielt
     r.setAttribute('data-world', { calm: 'editorial', balanced: 'standard', lively: 'playful' }[lookVal('play')] || 'standard');
@@ -9790,7 +9927,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function route(keepScroll) {
     if (cleanup) { cleanup(); cleanup = null; }
     var r = parseHash(), p = r.parts, y = window.scrollY;
-    document.body.classList.remove('nav-open', 'ms-open', 'tb-min');
+    document.body.classList.remove('nav-open', 'ms-open', 'tb-min', 'quiz-focus');
     var view = p[0] || 'home';
     curView = view; curSub = p[1] || '';
     if (view === 'module' && CMOD[p[1]]) viewModule(p[1], p[2] || 'learn');
@@ -10461,6 +10598,23 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var b = e.target.closest('[data-course-go]'); if (b) { switchCourse(b.dataset.courseGo); return; }
     if (e.target.closest('[data-cs-close]')) setCourseSheet(false);
   });
+  // Wischbare Kachel-Reihen (Handy): Punkte darunter zeigen Anzahl und Position
+  function swipeDots(row) {
+    if (!row || row.nextElementSibling && row.nextElementSibling.classList.contains('sw-dots')) return;
+    var n = row.children.length; if (n < 2) return;
+    var d = document.createElement('div'); d.className = 'sw-dots'; d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = Array.apply(null, Array(n)).map(function (_, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('');
+    row.after(d);
+    var upd = function () {
+      var max = row.scrollWidth - row.clientWidth; if (max <= 4) { d.hidden = true; row.classList.remove('can-swipe'); return; }
+      d.hidden = false; row.classList.add('can-swipe');
+      var i = Math.round(row.scrollLeft / max * (n - 1));
+      Array.prototype.forEach.call(d.children, function (x, k) { x.classList.toggle('on', k === i); });
+      row.classList.toggle('at-end', row.scrollLeft >= max - 4);
+    };
+    row.addEventListener('scroll', upd, { passive: true }); setTimeout(upd, 60); window.addEventListener('resize', upd);
+  }
+  new MutationObserver(function () { document.querySelectorAll('#app .td-cards, #app .ch-grid').forEach(swipeDots); }).observe(app, { childList: true, subtree: true });
   // (7) Große Titel wie in iOS: verlässt die Seitenüberschrift den Bildschirm, steht der Titel klein oben in der Mitte
   var ltBar = document.createElement('div'); ltBar.className = 'lt-bar'; ltBar.setAttribute('aria-hidden', 'true'); ltBar.innerHTML = '<span></span>';
   document.body.appendChild(ltBar);
@@ -10482,13 +10636,17 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     fab.setAttribute('aria-label', 'Hell/Dunkel umschalten'); fab.innerHTML = '<span aria-hidden="true">◐</span>';
     fab.addEventListener('click', function () { document.getElementById('themeBtn').click(); });
     document.body.appendChild(fab);
+    // Such-Kreis links neben der kleinen Leiste – öffnet dieselbe Suche wie das Suchfeld oben bzw. ⌘K
+    var sfab = document.createElement('button'); sfab.type = 'button'; sfab.className = 'theme-fab search-fab'; sfab.id = 'searchFab';
+    sfab.setAttribute('aria-label', 'Suchen'); sfab.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.search + '</svg>';
+    sfab.addEventListener('click', function () { openCmdk(); });
+    document.body.appendChild(sfab);
     // Kreis genauso hoch wie die Leiste und auf derselben Grundlinie
     var fit = function () {
       var bar = document.querySelector('.tb-bar'); if (!bar) return;
       var r = bar.getBoundingClientRect(); if (!r.height) return;
-      fab.style.width = fab.style.height = r.height + 'px';
-      fab.style.bottom = (window.innerHeight - r.bottom) + 'px';
-      if (document.body.classList.contains('tb-min')) fab.style.left = (r.right + 10) + 'px';
+      [fab, sfab].forEach(function (f) { f.style.width = f.style.height = r.height + 'px'; f.style.bottom = (window.innerHeight - r.bottom) + 'px'; });
+      if (document.body.classList.contains('tb-min')) { fab.style.left = (r.right + 10) + 'px'; sfab.style.left = (r.left - 10 - r.height) + 'px'; }
     };
     var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(fit).observe(bar); else setTimeout(hook, 300); fit(); };
     hook(); window.addEventListener('resize', fit); document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('tb-bar')) fit(); });
@@ -10599,25 +10757,27 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if (weak && Object.keys(S.answered).length) steps.push(['exam', 'Schwächste Domäne: ' + DOMAINS[weak].label + ' (' + rd.dom[weak].p + ' %)', 'Mit einem Schnell-Quiz aufholen', '#/quick/' + quickCount()]);
     else if (hasQ) steps.push(['exam', 'Erstes Schnell-Quiz', quickCount() + ' gemischte Fragen aus allen Modulen', '#/quick/' + quickCount()]);
     var STEP_ICON = { review: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4v4.5H9"/><path d="M12 8.5V12l2.5 1.5"/>', focus: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6"/>', play: '<path d="M8 5.5v13l10-6.5z"/>', errors: NAV_ICONS.errors, learn: NAV_ICONS.learn, exam: NAV_ICONS.exam };
-    var today = '<section class="today"><div class="td-main"><div class="t-eyebrow">Heute</div><h1 class="td-h">' + hello + '</h1>' +
-      '<p class="td-sub">' + ps.done + ' von ' + ps.relevant + ' Modulen erledigt · ' + okNow + ' von ' + relQ.length + ' Fragen sicher beantwortet</p>' +
-      (pdH && pdH.daysLeft >= 0 ? '<a class="countdown" href="#/plan">' + ico('plan') + '<b>' + (pdH.daysLeft ? 'Noch ' + pdH.daysLeft + (pdH.daysLeft === 1 ? ' Tag' : ' Tage') + ' bis zur Prüfung' : 'Heute ist Prüfung – viel Erfolg!') + '</b><span>' + (pdH.diff < 0 ? (-pdH.diff) + ' Module hinter dem Plan' : pdH.diff > 0 ? pdH.diff + ' Module voraus' : 'im Plan') + '</span></a>' :
-        '<a class="countdown empty" href="#/plan">' + ico('plan') + '<b>Prüfungsdatum festlegen</b><span>Die App erstellt dir einen Lernplan</span></a>') +
-      '<ol class="next-list">' + steps.slice(0, 3).map(function (x, i) {
-        return '<li><a class="next-item' + (i === 0 ? ' first' : '') + '" href="' + x[3] + '"><span class="ni-ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + STEP_ICON[x[0]] + '</svg></span>' +
-          '<span class="ni-t"><b>' + esc(x[1]) + '</b><small>' + esc(x[2]) + '</small></span><span class="ni-go" aria-hidden="true">›</span></a></li>';
-      }).join('') + '</ol>' + (function () {
-        var gr = goalRings(112), st = streakInfo();
-        var aD = dayAct(), allDone = ['q', 'min', 'fix'].every(function (k) { return (aD[k] || 0) >= S.goals[k]; });
-        return '<div class="td-daily"><a class="td-rings' + (allDone ? ' done' : '') + '" href="#/progress" title="Tagesziel – Details unter Fortschritt">' + gr.svg + '</a><div class="td-goal-txt"><b>Tagesziel</b>' + gr.legend + '</div>' +
-          '<div class="td-streak"><span class="flame' + (st.cur ? ' on' : '') + (st.cur >= 30 ? ' lv3' : st.cur >= 7 ? ' lv2' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + FLAME + '</svg><b>' + st.cur + '</b></span><small>' + (st.cur === 1 ? 'Tag' : 'Tage') + ' am Stück</small>' + weekStrip() + '</div></div>';
-      })() + '</div>' +
-      '<aside class="td-ready" aria-label="Prüfungsreife"><div class="ring ring-ready" data-pfrom="' + from + '" style="--ring-c:var(--prog);--to:' + rd.p + '"><span data-from="' + from + '">' + rd.p + '%<small>Prüfungsreife</small></span></div>' +
-      (delta > 0 ? '<span class="delta-chip">+' + delta + ' % seit dem letzten Besuch</span>' : '') +
-      '<p class="td-goal">' + (rd.p >= 70 ? 'Auf Kurs: Bestehen ab 700 von 1000 Punkten.' : 'Ziel: 70 % – entspricht etwa 700 Punkten.') + '</p>' +
-      '<div class="td-doms">' + DOMAIN_KEYS.map(function (k) {
+    // (2) „Heute“ als Kartenstapel: großer nächster Schritt, darunter wischbare Karten, dann Domänen
+    var gr = goalRings(96), stS = streakInfo(), aD = dayAct(), allDone = ['q', 'min', 'fix'].every(function (k) { return (aD[k] || 0) >= S.goals[k]; });
+    var stepIc = function (x) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + STEP_ICON[x[0]] + '</svg>'; };
+    var first = steps[0], more = steps.slice(1, 3);
+    var tcard = function (cls, href, inner) { return '<a class="td-card ' + cls + '" href="' + href + '" role="listitem">' + inner + '</a>'; };
+    var today = '<section class="today v2"><div class="t-eyebrow">Heute</div><h1 class="td-h">' + hello + '</h1>' +
+      '<p class="td-sub">' + ps.done + ' von ' + ps.relevant + ' Modulen erledigt · ' + okNow + ' von ' + relQ.length + ' Fragen sicher</p>' +
+      (first ? '<a class="td-hero" href="' + first[3] + '"><span class="th-ic">' + stepIc(first) + '</span><span class="th-t"><small>Als Nächstes</small><b>' + esc(first[1]) + '</b><span>' + esc(first[2]) + '</span></span><span class="th-go" aria-hidden="true">›</span></a>' : '') +
+      '<div class="td-cards" role="list">' +
+        tcard('tc-goal' + (allDone ? ' done' : ''), '#/progress', '<small>Tagesziel</small><span class="td-rings">' + gr.svg + '</span>' + gr.legend) +
+        tcard('tc-ready', '#/exam', '<small>Prüfungsreife</small><div class="ring ring-ready" data-pfrom="' + from + '" style="--ring-c:var(--prog);--to:' + rd.p + '"><span data-from="' + from + '">' + rd.p + '%</span></div>' +
+          (delta > 0 ? '<span class="delta-chip">+' + delta + ' %</span>' : '<span class="tc-sub">Ziel 70 %</span>')) +
+        tcard('tc-streak', '#/progress', '<small>Serie</small><span class="flame' + (stS.cur ? ' on' : '') + (stS.cur >= 30 ? ' lv3' : stS.cur >= 7 ? ' lv2' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + FLAME + '</svg><b>' + stS.cur + '</b></span><span class="tc-sub">' + (stS.cur === 1 ? 'Tag' : 'Tage') + ' am Stück</span>' + weekStrip()) +
+        tcard('tc-plan', '#/plan', '<small>Prüfung</small>' + (pdH && pdH.daysLeft >= 0 ? '<b class="tc-big">' + pdH.daysLeft + '</b><span class="tc-sub">' + (pdH.daysLeft === 1 ? 'Tag' : 'Tage') + ' bis zur Prüfung</span>' : '<span class="tc-ic">' + ico('plan') + '</span><span class="tc-sub">Datum festlegen</span>')) +
+      '</div>' +
+      (more.length ? '<ol class="next-list compact">' + more.map(function (x) {
+        return '<li><a class="next-item" href="' + x[3] + '"><span class="ni-ic">' + stepIc(x) + '</span><span class="ni-t"><b>' + esc(x[1]) + '</b><small>' + esc(x[2]) + '</small></span><span class="ni-go" aria-hidden="true">›</span></a></li>';
+      }).join('') + '</ol>' : '') +
+      '<div class="card td-domcard"><h2>Prüfungsdomänen</h2><div class="td-doms">' + DOMAIN_KEYS.map(function (k) {
         return '<div class="td-dom"><span><b>' + esc(DOMAINS[k].label) + '</b><em>' + rd.dom[k].p + ' %</em></span><div class="bar"><i style="width:' + rd.dom[k].p + '%;background:' + DOMAINS[k].color + '"></i></div><small>' + esc(DOMAINS[k].range) + ' der Prüfung</small></div>';
-      }).join('') + '</div><p class="td-note">Anteil zuletzt richtig beantworteter Fragen, gewichtet wie die echte Prüfung.</p></aside></section>';
+      }).join('') + '</div></div></section>';
     var examRow = '<section class="quick-bar exam-row"><div class="qb-copy"><b>Prüfungssimulation</b><span>' +
       (lastExam ? 'Letzte Simulation: ' + lastExam.score + ' Punkte · ' + (lastExam.passed ? 'bestanden' : 'nicht bestanden') : 'Gewichtet nach Study Guide, mit Fallstudien, Timer und Score 0–1000.') + '</span></div>' +
       (lastExam ? '<a class="btn sec" href="#/exam/result/' + (S.exams.length - 1) + '">Report</a>' : '') + '<a class="btn" href="#/exam">Simulation starten</a></section>';
@@ -10694,6 +10854,11 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
      Lernpfad-Übersicht
      --------------------------------------------------------------------- */
   // (8) Lernpfad als Reisekarte: geschwungener Weg, Stationen je Modul (erledigt / aktuell / offen)
+  function modMin(mid) {
+    var m = MODS[mid], lm = LEARN.modules[CMOD[mid].learn[0]];
+    var n = m && m.deep && m.deep.length ? m.deep.reduce(function (a, d) { return a + minutesOf(d); }, 0) : lm && lm.minutes;
+    return n ? ' · ≈ ' + n + ' Min.' : '';
+  }
   function roadMap(lp) {
     var mids = lp.modules.map(function (x) { return MID(x); }), STEP = 92, H = mids.length * STEP;
     var resMid = RES.loc ? RES.loc.hash.split('/')[2] : null;
@@ -10704,7 +10869,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var st = mids.map(function (mid, i) {
       var s2 = statusOf(mid), cls = s2 === 'done' ? 'done' : s2 === 'skip' ? 'skip' : mid === cur ? 'cur' : 'open', c = CMOD[mid];
       return '<a class="rm-st rm-' + cls + (i % 2 ? ' rm-r' : '') + '" href="#/module/' + mid + '" style="top:' + (Y(i) - 20) + 'px">' +
-        '<i class="rm-dot">' + (cls === 'done' ? '✓' : cls === 'skip' ? '–' : c.nr) + '</i><span class="rm-l"><small>Modul ' + c.nr + (cls === 'cur' ? ' · hier geht’s weiter' : cls === 'done' ? ' · erledigt' : '') + '</small><b>' + esc(c.title) + '</b></span></a>';
+        '<i class="rm-dot">' + (cls === 'done' ? '✓' : cls === 'skip' ? '–' : c.nr) + '</i><span class="rm-l"><small>Modul ' + c.nr + (cls === 'cur' ? ' · hier geht’s weiter' : cls === 'done' ? ' · erledigt' : cls === 'skip' ? ' · nicht relevant' : '') + modMin(mid) + '</small><b>' + esc(c.title) + '</b></span></a>';
     }).join('');
     var doneN = mids.filter(function (m) { return statusOf(m) === 'done'; }).length;
     // Farbiger Weg bis zur aktuellen Station (bzw. bis zur letzten erledigten)
@@ -10715,12 +10880,18 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   function viewPath(lpid) {
     var lp = COURSE.filter(function (l) { return l.id === lpid; })[0], ps = pathStats(lp);
-    app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow lp-eyebrow"><span class="mh-ic">' + lpIcon(lp) + '</span>Lernpfad ' + lp.nr + '</div><h1 class="vt-lp">' + esc(lp.title) + '</h1>' +
-      '<div class="sub">' + ps.done + ' von ' + ps.relevant + ' relevanten Modulen erledigt. Jedes Modul ist frei wählbar.</div></div>' +
-      learnPathCard(lp) + roadMap(lp) + '<div class="card"><h2>Module</h2><p class="card-sub">Status setzen: Offen, Erledigt (✓) oder Nicht relevant (–).</p><ul class="mod-list">' +
+    var mids = lp.modules.map(function (x) { return MID(x); }), nextMid = mids.filter(function (m) { return statusOf(m) === 'open'; })[0];
+    var mins = mids.reduce(function (n, m) { var lm = LEARN.modules[CMOD[m].learn[0]]; return n + (MODS[m] && MODS[m].deep ? MODS[m].deep.reduce(function (a, d) { return a + minutesOf(d); }, 0) : lm && lm.minutes || 0); }, 0);
+    var p = ps.relevant ? Math.round(ps.done / ps.relevant * 100) : 0;
+    app.innerHTML = '<div class="container"><header class="lp-hero" style="--lpc:var(--lp-' + ((lp.nr - 1) % 5 + 1) + ')">' +
+      '<div class="lph-t"><div class="eyebrow lp-eyebrow"><span class="mh-ic">' + lpIcon(lp) + '</span>Lernpfad ' + lp.nr + '</div><h1 class="vt-lp">' + esc(lp.title) + '</h1>' +
+      '<div class="lph-facts"><span><b>' + mids.length + '</b> Module</span><span><b>≈ ' + Math.max(1, Math.round(mins / 6) / 10).toString().replace('.', ',') + ' h</b> Lernzeit</span><span><b>' + ps.done + '</b> erledigt</span></div>' +
+      (nextMid ? '<a class="btn lph-go" href="#/module/' + nextMid + '">' + (ps.done ? 'Weiter mit M' + CMOD[nextMid].nr : 'Mit M' + CMOD[nextMid].nr + ' beginnen') + ' ›</a>' : '<span class="tag ok">Alle Module erledigt</span>') + '</div>' +
+      '<div class="ring ring-xl lph-ring" style="--ring-c:var(--prog);--to:' + p + '"><span>' + p + '%<small>geschafft</small></span></div></header>' +
+      roadMap(lp) + learnPathCard(lp) + '<div class="card"><h2>Module</h2><p class="card-sub">Status setzen: Offen, Erledigt (✓) oder Nicht relevant (–).</p><ul class="mod-list">' +
       lp.modules.map(function (x) { return modRow(MID(x)); }).join('') + '</ul></div><div class="actions">' +
-      (lp.nr > 1 ? '<a class="btn sec" data-vt="back" href="#/path/lp' + (lp.nr - 1) + '">‹ Lernpfad ' + (lp.nr - 1) + '</a>' : '') + '<span class="spacer"></span>' +
-      (lp.nr < COURSE.length ? '<a class="btn sec" data-vt="forward" href="#/path/lp' + (lp.nr + 1) + '">Lernpfad ' + (lp.nr + 1) + ' ›</a>' : '') + '</div></div>';
+      (lp.nr > 1 ? '<a class="btn sec" data-vt="back" href="#/path/' + CUR.prefix + 'lp' + (lp.nr - 1) + '">‹ Lernpfad ' + (lp.nr - 1) + '</a>' : '') + '<span class="spacer"></span>' +
+      (lp.nr < COURSE.length ? '<a class="btn sec" data-vt="forward" href="#/path/' + CUR.prefix + 'lp' + (lp.nr + 1) + '">Lernpfad ' + (lp.nr + 1) + ' ›</a>' : '') + '</div></div>';
     setTimeout(function () { var w = app.querySelector('.rm-wrap.draw'); if (w) w.classList.remove('draw'); }, 2200);
   }
 
@@ -10737,7 +10908,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var readMin = m && m.deep && m.deep.length ? m.deep.reduce(function (n, d) { return n + minutesOf(d); }, 0) : (lm0 ? lm0.minutes : null);
     var lead = m && m.summary && m.summary.lead ? (m.summary.lead.match(/^[\s\S]*?[.!?](?=\s|$)/) || [m.summary.lead])[0] : '';
     var fact = function (v, l, cls) { return '<div class="mh-fact' + (cls ? ' ' + cls : '') + '"><b>' + v + '</b><span>' + l + '</span></div>'; };
-    var h = '<div class="container"><header class="mod-head mod-hero' + (st === 'skip' ? ' is-skip' : '') + '">' +
+    var h = '<div class="container"><header class="mod-head mod-hero' + (st === 'skip' ? ' is-skip' : '') + '" style="--lpc:var(--lp-' + ((c.lp.nr - 1) % 5 + 1) + ')">' +
       '<a class="mh-path" href="#/path/' + c.lp.id + '"><span class="mh-ic">' + lpIcon(c.lp) + '</span>Lernpfad ' + c.lp.nr + ' · ' + esc(c.lp.title) + '<span class="mh-sep">/</span>Modul ' + c.nr + '</a>' +
       '<h1>' + esc(m ? m.title : c.title) + '</h1>' + (m ? '<div class="en">' + esc(m.titleEn) + '</div>' : '') +
       (lead ? '<p class="mh-lead">' + md(lead) + '</p>' : '') +
@@ -10770,7 +10941,14 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var nav = '<div class="subnav"><b class="ln-title">' + esc(c.title) + '</b>' + sec.map(function (x) { return '<a href="javascript:void 0" data-jump="' + x[0] + '">' + x[1] + '</a>'; }).join('') +
       '<button class="read-toggle" data-reading="1" title="Lesemodus (L)">' + ico('book') + '<span>Lesemodus</span></button></div>';
     var h = '';
-
+    // Kapitel-Übersicht: jeder Vertiefungsabschnitt als Kachel mit Lesezeit und Häkchen (wie ein Inhaltsverzeichnis)
+    if (deep.length) {
+      var rd0 = S.read[m.id] || [];
+      h += '<section class="ch-wrap"><div class="ch-head"><b>Kapitel</b><span>' + rd0.length + ' von ' + deep.length + ' gelesen</span></div><div class="ch-grid">' + deep.map(function (d, i) {
+        var done = rd0.indexOf(i) >= 0;
+        return '<button type="button" class="ch-tile' + (done ? ' done' : '') + '" data-deep="' + i + '"><span class="ch-n">' + (done ? '✓' : i + 1) + '</span><b>' + esc(d.t) + '</b><small>≈ ' + minutesOf(d) + ' Min.</small></button>';
+      }).join('') + '</div></section>';
+    }
     h += learnModuleCard(c.learn, c.lp);
     // „Auf einen Blick“: Kernaussage, drei Kernpunkte sichtbar, Rest und Architektur zum Aufklappen
     var pts = s.points || [], arch = s.architecture || [];
@@ -11027,6 +11205,16 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       '<div class="kbd-hint">Tastatur: <kbd>1</kbd>–<kbd>' + order.length + '</kbd> wählen · <kbd>Enter</kbd> prüfen/weiter · <kbd>←</kbd> <kbd>→</kbd> blättern</div></div>';
     var card = Q.container.firstChild;
     card.addEventListener('click', onQuizClick);
+    // Fokus-Ansicht (Handy): Leisten ausblenden, dünner Fortschrittsbalken oben, Schließen-Knopf
+    if (Q.ctx.kind !== 'exam') {
+      document.body.classList.add('quiz-focus');
+      document.documentElement.style.setProperty('--qf-p', ((Q.i + (checked ? 1 : 0)) / Q.ids.length).toFixed(3));
+      if (!document.getElementById('qfClose')) {
+        var qb = document.createElement('button'); qb.type = 'button'; qb.id = 'qfClose'; qb.className = 'qf-close'; qb.setAttribute('aria-label', 'Quiz schließen'); qb.textContent = '✕';
+        qb.addEventListener('click', function () { var back = Q.ctx.moduleId ? '#/module/' + Q.ctx.moduleId + '/learn' : '#/home'; go(back); });
+        document.body.appendChild(qb);
+      }
+    }
     addSwipe(card, function (dir) {
       if (dir < 0) {
         var nb = card.querySelector('[data-q="next"], [data-q="finish"]');
@@ -12382,7 +12570,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
      Bis zu drei Bereiche lassen sich oben anheften und zeigen dort ihre wichtigsten Regler.
      --------------------------------------------------------------------- */
   var SET_EDIT = false, SET_Q = '';
-  var MODE_L = { system: 'Automatisch', light: 'Hell', dark: 'Dunkel', time: 'Nach Tageszeit' };
+  var MODE_L = { system: 'Automatisch', light: 'Hell', dark: 'Dunkel', black: 'Schwarz', time: 'Nach Tageszeit' };
   var MOTION_L = { on: 'An', reduced: 'Reduziert', off: 'Aus' };
   function setPins() { var p = (LOOK.pins || ['darstellung']).filter(function (k, i, a) { return SETS[k] && a.indexOf(k) === i; }); return p.slice(0, 3); }
   function sSeg(key, opts, cur) {
@@ -12421,7 +12609,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         return '<button type="button" class="dz' + (on ? ' on' : '') + '" data-preset="' + k + '" aria-pressed="' + on + '"><span class="dz-dot" data-palette="' + PRESETS[k].palette + '"></span><span class="dz-n">' + esc(PRESETS[k].name) + '</span></button>';
       }).join('') + '</div>';
     },
-    mode: function () { return sRow('Erscheinungsbild', '', sSeg('mode', [['system', 'Automatisch'], ['light', 'Hell'], ['dark', 'Dunkel'], ['time', 'Tageszeit']], lookVal('mode'))); },
+    mode: function () { return sRow('Erscheinungsbild', '', sSeg('mode', [['system', 'Automatisch'], ['light', 'Hell'], ['dark', 'Dunkel'], ['black', 'Schwarz']], LOOK.mode === 'time' ? 'system' : lookVal('mode'))); },
     glass: function () {
       var on = LOOK.glass !== false, t = LOOK.glassT == null ? 60 : LOOK.glassT;
       return sRow('Liquid Glass', on ? '' : 'Leisten und Knöpfe sind deckend.', sTgl('glass', on)) + (on ? '<div class="set-row glass-row"><div class="gl-range"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3"/></svg>' +
@@ -12775,7 +12963,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var ov = document.createElement('div');
     ov.className = 'cmdk-backdrop';
     ov.innerHTML = '<div class="cmdk" role="dialog" aria-modal="true" aria-label="Befehlspalette"><div class="cmdk-in">' + ico('search') +
-      '<input id="cmdkInput" type="text" autocomplete="off" spellcheck="false" placeholder="Modul, Begriff, Aktion … z. B. „m12“, „calculate“, „dunkel“" aria-label="Suchen"><kbd>esc</kbd></div><div class="cmdk-list" role="listbox"></div>' +
+      '<input id="cmdkInput" type="text" autocomplete="off" spellcheck="false" placeholder="Modul, Begriff, Aktion … z. B. „m12“, „calculate“, „dunkel“" aria-label="Suchen"><kbd class="cmdk-esc" data-cmdk-close="1" role="button" title="Schließen">esc</kbd><button type="button" class="cmdk-cancel" data-cmdk-close="1">Abbrechen</button></div><div class="cmdk-list" role="listbox"></div>' +
       '<div class="cmdk-foot"><span><kbd>↑</kbd><kbd>↓</kbd> auswählen</span><span><kbd>↵</kbd> öffnen</span><span><kbd>⌘K</kbd> schließen</span></div></div>';
     document.body.appendChild(ov);
     var input = ov.querySelector('input'), list = ov.querySelector('.cmdk-list');
@@ -12805,6 +12993,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     });
     list.addEventListener('click', function (e) { var b = e.target.closest('[data-i]'); if (b) run(+b.dataset.i); });
     ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCmdk(); });
+    ov.addEventListener('click', function (e) { if (e.target === ov || e.target.closest('[data-cmdk-close]')) closeCmdk(); });
     input.value = initial || ''; draw(); input.focus();
   }
   function closeCmdk() { if (!CMDK) return; CMDK.el.remove(); CMDK = null; }
