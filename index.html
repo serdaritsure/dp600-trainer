@@ -2627,6 +2627,82 @@ body.cs-open .cs-sheet { opacity: 1; translate: -50% 0; pointer-events: auto; }
 }
 html.course-switch #app { opacity: 0; transition: opacity .2s ease; }
 
+/* „Mehr“-Blatt: Symbolkacheln einheitlich aus der Designfarbe (hell und dunkel lesbar, da Knopf-Farbpaar) */
+html.tbnav .ms-sec.t1 .ms-tile { background: var(--btn-bg); color: var(--on-btn); }
+html.tbnav .ms-sec.t2 .ms-tile, html.tbnav .ms-tile.t2 { background: color-mix(in srgb, var(--btn-bg) 20%, var(--surface)); color: var(--accent); }
+html.tbnav .ms-sec.t3 .ms-tile { background: var(--surface-3); color: var(--text-2); }
+
+/* Einstellungen: Übersicht mit Unterseiten, angeheftete Bereiche, Bearbeiten-Modus */
+.set-page { max-width: 760px; }
+.set-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 8px 0 18px; }
+.set-top h1 { margin: 0; font-family: var(--font-title, var(--font)); font-size: var(--fs-display); font-weight: 700; letter-spacing: -.022em; line-height: 1.1; }
+.st-edit { flex: none; border: 0; background: none; color: var(--link); font: inherit; font-size: 17px; font-weight: 500; padding: 6px 2px; cursor: pointer; }
+.st-back { display: inline-block; margin-top: 6px; color: var(--link); font-size: 17px; }
+.set-search { display: flex; align-items: center; gap: 8px; padding: 9px 12px; margin-bottom: 18px; border-radius: 12px; background: var(--surface-3); color: var(--text-3); }
+.set-search svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.set-search input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: inherit; font-size: 17px; outline: none; }
+.set-cap { margin: 22px 4px 8px; font-size: 13px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .03em; }
+.st-list { border-radius: var(--r-card, 16px); background: var(--surface); border: 1px solid var(--hairline); overflow: hidden; margin-bottom: 18px; }
+.st-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 16px; color: var(--text); text-decoration: none; position: relative; background: var(--surface); }
+.st-row:hover { text-decoration: none; background: color-mix(in srgb, var(--text) 4%, var(--surface)); }
+.st-row + .st-row::before { content: ''; position: absolute; top: 0; right: 0; left: 60px; border-top: 1px solid var(--hairline); }
+.st-row.edit + .st-row.edit::before { left: 96px; }
+.st-tile { flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; }
+.st-tile svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.st-tile.t1 { background: var(--btn-bg); color: var(--on-btn); }
+.st-tile.t2 { background: color-mix(in srgb, var(--btn-bg) 20%, var(--surface)); color: var(--accent); }
+.st-tile.t3 { background: var(--surface-3); color: var(--text-2); }
+.st-lbl { flex: 1; font-size: 17px; letter-spacing: -.02em; min-width: 0; }
+.st-val { color: var(--text-3); font-size: 15px; text-align: right; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-row .ms-chev { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--text-3); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.st-act { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 0; color: #fff; font: inherit; font-size: 18px; line-height: 1; font-weight: 700; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.st-act.add { background: #34C759; }
+.st-act.rem { background: #FF3B30; }
+.st-grip { flex: none; font-size: 22px; color: var(--text-3); cursor: grab; touch-action: none; padding: 4px 2px 4px 10px; user-select: none; }
+.st-row.dragging { z-index: 2; box-shadow: 0 10px 28px rgba(0, 0, 0, .18); border-radius: 12px; }
+.st-empty { padding: 16px; color: var(--text-3); font-size: 15px; }
+.set-pin { padding: 18px 22px 10px; }
+.sp-h { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.sp-h b { flex: 1; font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
+.sp-all { font-size: 15px; color: var(--link); white-space: nowrap; }
+.set-card { padding: 6px 22px; }
+.set-pin .set-row:last-child, .set-card .set-row:last-child { border-bottom: 0; }
+.set-block { padding: 10px 0 14px; }
+.set-block .crs-list { margin-bottom: 6px; }
+.st-reset { display: block; width: 100%; margin: 4px 0 30px; padding: 14px; border-radius: var(--r-card, 16px); border: 1px solid var(--hairline); background: var(--surface); color: var(--bad); font: inherit; font-size: 17px; cursor: pointer; }
+@media (max-width: 900px) {
+  .set-pin { padding: 14px 16px 6px; }
+  .set-card { padding: 4px 16px; }
+  .set-sub { animation: setIn .42s cubic-bezier(.32, .72, 0, 1); }
+  .st-val { max-width: 45%; font-size: 14px; }
+}
+@keyframes setIn { from { transform: translateX(28%); opacity: 0; } }
+:root[data-motion="off"] .set-sub, :root[data-motion="reduced"] .set-sub { animation: none; }
+.dz-row { display: flex; gap: 6px; overflow-x: auto; padding: 6px 2px 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.dz-row::-webkit-scrollbar { display: none; }
+.dz { flex: none; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 66px; padding: 4px 0; border: 0; background: none; color: var(--text-2); font: inherit; font-size: 11.5px; cursor: pointer; }
+.dz-dot { width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(var(--btn-bg) 0 50%, var(--bg) 50% 75%, var(--accent) 75%); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08); }
+.dz.on .dz-dot { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.dz.on { color: var(--text); font-weight: 600; }
+.dz-n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 66px; }
+
+/* Einheitliche Symbolkacheln: überall hell getönt in der Designfarbe (Einstellungen und „Mehr“) */
+.st-tile.t1, .st-tile.t2, .st-tile.t3,
+html.tbnav .ms-sec.t1 .ms-tile, html.tbnav .ms-sec.t2 .ms-tile, html.tbnav .ms-sec.t3 .ms-tile, html.tbnav .ms-tile.t2, html.tbnav .ms-tile {
+  background: color-mix(in srgb, var(--btn-bg) 18%, var(--surface)); color: var(--accent); }
+
+/* Hintergrund je Lernpfad und Prüfungsdomänen: Abstufungen der Designfarbe statt fester Farben */
+:root {
+  --lp-1: var(--accent); --lp-2: var(--prog); --lp-3: color-mix(in srgb, var(--accent) 50%, var(--text-3));
+  --lp-4: color-mix(in srgb, var(--prog) 60%, var(--bg)); --lp-5: var(--btn-bg);
+}
+html {
+  --dom-prep: var(--accent) !important;
+  --dom-maintain: var(--prog) !important;
+  --dom-model: color-mix(in srgb, var(--accent) 55%, var(--text)) !important;
+  --dom-4: color-mix(in srgb, var(--accent) 35%, var(--text-3));
+}
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2635,7 +2711,7 @@ html.course-switch #app { opacity: 0; transition: opacity .2s ease; }
     var r = document.documentElement, L = {};
     try { L = JSON.parse(localStorage.getItem('dp600.look.v1')) || {}; } catch (e) {}
     var P = { fabric: ['fabric', 'balanced'], studio: ['studio', 'calm'], itsure: ['itsure', 'balanced'], learn: ['learn', 'calm'], anthropic: ['anthropic', 'balanced'], google: ['google', 'calm'], ocean: ['ocean', 'balanced'], aubergine: ['aubergine', 'lively'], sunset: ['sunset', 'balanced'], forest: ['forest', 'calm'], excel: ['excel', 'balanced'], powerbi: ['powerbi', 'balanced'], powerpoint: ['powerpoint', 'balanced'], custom: ['custom', 'balanced'] };
-    var pr = P[L.preset] ? L.preset : 'fabric';
+    var pr = P[L.preset] ? L.preset : 'itsure';
     var legacy = null; try { legacy = localStorage.getItem('dp600.theme'); } catch (e) {}
     var mode = L.mode || legacy || 'system';
     if (mode === 'time') { var hr = new Date().getHours(); mode = hr >= 7 && hr < 19 ? 'light' : 'dark'; }
@@ -2683,32 +2759,34 @@ html.course-switch #app { opacity: 0; transition: opacity .2s ease; }
 <!-- Daten: werden ohne Webserver per <script> geladen und registrieren sich in window.DP600 -->
 <script>
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
-   Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
+   Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
+   Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
-  { v: '1.19', d: '2026-10-16', items: ['Mehrere Kurse: „Meine Kurse“ und Kurs-Schalter oben – Übersicht, Lernen, Prüfung und Fehler gelten für den gewählten Kurs', 'Neuer Kurs PL-300 · Power BI Data Analyst: Lesetexte, Karteikarten, 69 offizielle Wissenscheck-Fragen und eigene Prüfungssimulation', 'Kurse lassen sich ohne KI komplett aus Microsoft Learn übernehmen', 'Tagesziele und Strähne wahlweise über alle Kurse oder je Kurs', 'Interaktive Kacheln: Details erscheinen direkt unter der angeklickten Kachel', 'Defekte Microsoft-Learn-Links der Power-BI-Module repariert', 'App heißt jetzt „Lernwerk“'] },
-  { v: '1.18', d: '2026-10-16', items: ['Neue Sortierung: Heute · Lernen · Prüfen · Meine Inhalte · App – in Seitenleiste und „Mehr“-Blatt', '„Wiederholen“ und „Fokus-Session“ direkt in der Navigation, mit Zähler für fällige Fragen', 'Unter der Haube aufgeräumt: ungenutzte Gestaltungsregeln entfernt'] },
-  { v: '1.17.1', d: '2026-10-16', items: ['Einstellungen: Abstände in den aufklappbaren Gruppen repariert', 'Neu: „Wiederholen“ – beantwortete Fragen kommen nach 1, 3, 7, 14 und 30 Tagen wieder, „Heute fällig“ auf der Startseite'] },
-  { v: '1.17', d: '2026-10-16', items: ['Ruhigere Startseite „Heute“; Lernpfade, Schnell-Quiz und Prüfung unter „Entdecken“', 'Neue Fokus-Session: 15 Minuten mit Fehlern, neuen Fragen und einem Lese-Tipp', 'Einstellungen aufgeräumt, Schrift und Symbole im Apple-Stil, großer Titel beim Scrollen am iPhone', 'Hinweis bei neuer Version – ein Tippen aktualisiert die App'] },
-  { v: '1.16.1', d: '2026-10-16', items: ['Handy: Lesefortschritt als Linie in Designfarbe am unteren Rand der Abschnittsleiste, der Lesering oben entfällt', 'Lesefortschritt am Seitenende jetzt ganz gefüllt', 'Kleine Leiste und Hell/Dunkel-Kreis rücken als Gruppe mittig zusammen'] },
-  { v: '1.16', d: '2026-10-16', items: ['Handy: obere Leiste sitzt etwas tiefer und ist nur ganz oben auf der Seite sichtbar', 'Hell/Dunkel als schwebender Kreis neben der verkleinerten unteren Leiste'] },
-  { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint – kräftiges Grün, Gelb und Rot, Seitenleiste in der Farbe der Anwendung', '13 App-Symbole, neu u. a. „IT sure Buch“ – die Farbe folgt jetzt immer dem gewählten Design', 'Obere Leiste der Home-Bildschirm-App deckend und scharf'] },
-  { v: '1.14.1', d: '2026-10-16', items: ['Obere Leiste am iPhone gestochen scharf, nur noch eine Trennlinie'] },
-  { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden mit dem Fortschritt auf andere Geräte übertragen', 'Selbst festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Speicher wird vor automatischem Löschen geschützt, Erinnerung nach 7 Tagen ohne Sicherung'] },
-  { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis „Neu in …“ nach Updates', 'Sechs App-Symbole zur Auswahl für den Home-Bildschirm'] },
-  { v: '1.12.2', d: '2026-10-16', items: ['Obere Leiste im App-Modus klar statt dunstig'] },
-  { v: '1.12.1', d: '2026-10-16', items: ['Reiter „Lernen“ wird am Handy immer ausgewählt und führt zur letzten Lernstelle'] },
-  { v: '1.12', d: '2026-10-16', items: ['Als App auf dem iPhone-Home-Bildschirm nutzbar – Vollbild und offline', 'Online unter serdaritsure.github.io/dp600-trainer'] },
-  { v: '1.11', d: '2026-10-16', items: ['Hintergrundton je Lernpfad, Kapitelnummern im Lernbereich, Karten mit Tiefe', 'Kontextmenü per langem Druck oder Rechtsklick', 'Lernpfad als Reisekarte, Begrüßung am Morgen, Lichtreflex auf Glas'] },
-  { v: '1.10', d: '2026-10-16', items: ['Stil und Stilwelt zusammengelegt: Ruhig, Ausgewogen, Lebendig', 'Am Mac wahlweise Leiste unten statt Seitenleiste – mit mehr Reitern bei breitem Fenster'] },
-  { v: '1.9', d: '2026-10-16', items: ['Ziehbare Auswahl-Pille in der Leiste, rastet beim nächsten Reiter ein', 'Neue Seiten fließen langsam herein wie auf Apple-Produktseiten'] },
-  { v: '1.8', d: '2026-10-16', items: ['Neue Handy-Navigation wie Apple Music: schwebende Leiste, Weitermachen-Kapsel, „Mehr“ als Blatt', 'Reiter in den Einstellungen frei wählbar'] },
-  { v: '1.7', d: '2026-10-16', items: ['iPhone: kein seitliches Verrutschen mehr, Lesemodus-Knopf neu gestaltet'] },
-  { v: '1.6', d: '2026-10-16', items: ['Interaktive Labore: DAX-Filterkontext, Speichermodi, Sicherheit, Medallion', 'Prüfungsplan mit Countdown und Kalender-Export, Spickzettel und Notizen'] },
-  { v: '1.5', d: '2026-10-16', items: ['Tagesziele als Ringe, Lernserie, Aktivitätskalender und Abzeichen', 'Befehlspalette mit ⌘K', 'Neue Designs Sonnenuntergang und Wald, eigene Farbe wählbar'] },
-  { v: '1.4', d: '2026-10-15', items: ['Einstellungen mit 8 Designs, Stilen, Schriftgröße und Dichte', 'Startseite „Heute“ mit Prüfungsreife-Ring'] },
-  { v: '1.3', d: '2026-10-15', items: ['Bedienung: Tab-Leiste am Handy, Weitermachen, Schnell-Quiz, Karteikarten im Vollbild, Tastenkürzel', 'Fortschritt per Code auf andere Geräte übertragen'] },
-  { v: '1.2', d: '2026-10-15', items: ['Apple-Stil mit Liquid Glass, Modulseiten wie Produktseiten, ruhiges Quiz-Feedback'] },
-  { v: '1.0', d: '2026-10-15', items: ['Erste Version: 5 Lernpfade, 16 Module, 192 Fragen mit Begründungen', 'Prüfungssimulation mit Fallstudien, Timer und Score 0–1000'] }
+  { v: '1.20', d: '2026-10-16', items: ['Einstellungen neu gegliedert: Übersicht mit Unterseiten, Suchfeld und aktuellen Werten', 'Bereiche lassen sich oben anheften (bis zu drei) – über „Bearbeiten“ oder langes Drücken', '„Zurücksetzen“ für jeden Bereich einzeln', 'Symbole in Einstellungen und „Mehr“-Menü einheitlich in der Farbe des Designs', 'Hintergrund der Lernpfade und Farben der Prüfungsdomänen passen sich dem Design an', 'Tagesziel-Ringe in festen Farben: Rot, Grün, Türkis', 'Standard-Design ist jetzt „IT sure“'] },
+  { v: '1.19', d: '2026-10-16', items: ['Mehrere Kurse: neue Seite „Meine Kurse“ und Kursauswahl oben rechts', 'Neuer Kurs PL-300 Power BI Data Analyst mit Lesetexten, Karteikarten, 69 Quizfragen und Prüfungssimulation', 'Kurse lassen sich per Link aus Microsoft Learn übernehmen', 'Tagesziele wahlweise für alle Kurse gemeinsam oder je Kurs', 'Details zu einer Kachel erscheinen direkt unter ihr', 'Fehlerhafte Links in den Power-BI-Modulen korrigiert', 'Neuer App-Name: Lernwerk'] },
+  { v: '1.18', d: '2026-10-16', items: ['Menü neu sortiert in Heute, Lernen, Prüfen, Meine Inhalte und App', '„Wiederholen“ und „Fokus-Session“ im Menü, mit Zähler für fällige Fragen', 'Technische Bereinigung, schnelleres Laden'] },
+  { v: '1.17.1', d: '2026-10-16', items: ['Abstände in den Einstellungen korrigiert', 'Neu: Wiederholen – Fragen kommen nach 1, 3, 7, 14 und 30 Tagen erneut, Anzahl „Heute fällig“ auf der Startseite'] },
+  { v: '1.17', d: '2026-10-16', items: ['Startseite gekürzt; Lernpfade, Schnell-Quiz und Prüfung auf eigener Seite', 'Neu: Fokus-Session mit Fehlern, neuen Fragen und einem passenden Leseabschnitt', 'Neue Schriftgrößen und einheitliche Strichstärke aller Symbole', 'Seitentitel erscheint beim Scrollen klein oben (iPhone)', 'Hinweis, wenn eine neue Version bereitsteht'] },
+  { v: '1.16.1', d: '2026-10-16', items: ['Lesefortschritt als Linie unter der Abschnittsleiste (iPhone)', 'Lesefortschritt erreicht am Seitenende 100 %', 'Untere Leiste und Hell/Dunkel-Knopf stehen enger beieinander'] },
+  { v: '1.16', d: '2026-10-16', items: ['Obere Leiste erscheint nur noch ganz oben auf der Seite (iPhone)', 'Hell/Dunkel-Knopf neben der unteren Leiste'] },
+  { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint', '13 App-Symbole, darunter „IT sure Buch“; die Farbe folgt dem Design', 'Obere Leiste in der Home-Bildschirm-App ohne Unschärfe'] },
+  { v: '1.14.1', d: '2026-10-16', items: ['Darstellung der oberen Leiste auf dem iPhone korrigiert'] },
+  { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden auf andere Geräte übertragen', 'Festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Erinnerung an eine Sicherung nach 7 Tagen'] },
+  { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis nach Updates', 'Sechs App-Symbole zur Auswahl'] },
+  { v: '1.12.2', d: '2026-10-16', items: ['Darstellung der oberen Leiste in der Home-Bildschirm-App korrigiert'] },
+  { v: '1.12.1', d: '2026-10-16', items: ['Tab „Lernen“ führt immer zur letzten Lernstelle'] },
+  { v: '1.12', d: '2026-10-16', items: ['App lässt sich auf den Home-Bildschirm legen und offline nutzen', 'Online unter serdaritsure.github.io/dp600-trainer'] },
+  { v: '1.11', d: '2026-10-16', items: ['Hintergrundfarbe je Lernpfad und nummerierte Kapitel', 'Kontextmenü per langem Drücken oder Rechtsklick', 'Lernpfad als Wegkarte, Begrüßung am Morgen'] },
+  { v: '1.10', d: '2026-10-16', items: ['Drei Stile zur Auswahl: Ruhig, Ausgewogen, Lebendig', 'Untere Navigationsleiste jetzt auch am Mac wählbar'] },
+  { v: '1.9', d: '2026-10-16', items: ['Auswahl in der unteren Leiste lässt sich mit dem Finger verschieben', 'Neue Übergänge beim Seitenwechsel'] },
+  { v: '1.8', d: '2026-10-16', items: ['Neue untere Navigationsleiste auf dem iPhone mit „Weitermachen“ und Menü „Mehr“', 'Tabs der Leiste frei wählbar'] },
+  { v: '1.7', d: '2026-10-16', items: ['Seiten verrutschen auf dem iPhone nicht mehr seitlich', 'Neuer Knopf für den Lesemodus'] },
+  { v: '1.6', d: '2026-10-16', items: ['Labore: DAX-Filterkontext, Speichermodi, Sicherheit, Medallion', 'Prüfungsplan mit Countdown und Kalender-Export', 'Spickzettel, Notizen und Markierungen'] },
+  { v: '1.5', d: '2026-10-16', items: ['Tagesziele, Lernserie, Aktivitätskalender und Abzeichen', 'Schnellsuche mit ⌘K', 'Designs Sonnenuntergang und Wald, eigene Farbe wählbar'] },
+  { v: '1.4', d: '2026-10-15', items: ['Einstellungen mit 8 Designs, Stilen, Textgröße und Abständen', 'Startseite „Heute“ mit Prüfungsreife'] },
+  { v: '1.3', d: '2026-10-15', items: ['Tab-Leiste auf dem iPhone, Weitermachen, Schnell-Quiz, Karteikarten im Vollbild, Tastenkürzel', 'Fortschritt per Code auf andere Geräte übertragen'] },
+  { v: '1.2', d: '2026-10-15', items: ['Neues Erscheinungsbild mit halbtransparenten Leisten', 'Neu gestaltete Modulseiten und Quiz-Rückmeldung'] },
+  { v: '1.0', d: '2026-10-15', items: ['Erste Version: 5 Lernpfade, 16 Module, 192 Fragen mit Begründungen', 'Prüfungssimulation mit Fallstudien, Timer und Punkten von 0 bis 1000'] }
 ];
 
 </script>
@@ -5055,7 +5133,7 @@ window.DP600.courses = [
     "label": "Verwalten und Sichern von Power BI",
     "range": "15–20 %",
     "share": 0.175,
-    "color": "var(--info)"
+    "color": "var(--dom-4)"
    }
   }
  },
@@ -9330,9 +9408,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
      --------------------------------------------------------------------- */
   var LOOK_KEY = 'dp600.look.v1';
   var PRESETS = {
+    itsure: { name: 'IT sure', palette: 'itsure', play: 'balanced', desc: 'Gedämpftes Grün und Graphit (Standard)' },
     fabric: { name: 'Fabric', palette: 'fabric', play: 'balanced', desc: 'Teal und Navy, ausgewogen' },
     studio: { name: 'Studio', palette: 'studio', play: 'calm', desc: 'Schwarz-Weiß, Grün nur als Akzent' },
-    itsure: { name: 'IT sure', palette: 'itsure', play: 'balanced', desc: 'Gedämpftes Grün und Graphit' },
     learn: { name: 'Learn', palette: 'learn', play: 'calm', desc: 'Microsoft-Blau, ruhig' },
     anthropic: { name: 'Anthropic', palette: 'anthropic', play: 'balanced', desc: 'Elfenbein und Graphit, Orange als Akzent' },
     google: { name: 'Google', palette: 'google', play: 'calm', desc: 'Weiß mit Blau, Rot, Gelb und Grün aus dem Logo' },
@@ -9346,7 +9424,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     custom: { name: 'Eigene Farbe', palette: 'custom', play: 'balanced', desc: 'Aus einer Akzentfarbe Ihrer Wahl erzeugt' }
   };
   var LOOK = (function () { try { return JSON.parse(lsGet(LOOK_KEY)) || {}; } catch (e) { return {}; } })();
-  if (!PRESETS[LOOK.preset]) LOOK.preset = 'fabric';
+  if (!PRESETS[LOOK.preset]) LOOK.preset = 'itsure';
   if (!LOOK.custom) LOOK.custom = '#0B6F64';
   if (!LOOK.mode) { LOOK.mode = lsGet('dp600.theme') || 'system'; }
   function lookVal(k) {
@@ -9470,7 +9548,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     applyLook();
   }
   // Darstellung geräteübergreifend: S.look = {v: Werte, at: Zeitpunkt}; Gruppen in LOOK.local bleiben auf diesem Gerät
-  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
+  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
   var LOOK_GROUP_NAMES = { design: 'Design & Stil', mode: 'Hell/Dunkel', motion: 'Animationen', text: 'Schrift & Lesebreite', nav: 'Navigation & Reiter', extras: 'Begrüßung, Neigung, App-Symbol' };
   function lookLocal() { return LOOK.local || ['nav', 'extras']; }
   function syncedKeys() { var l = lookLocal(), ks = []; Object.keys(LOOK_GROUPS).forEach(function (g) { if (l.indexOf(g) < 0) ks = ks.concat(LOOK_GROUPS[g]); }); return ks; }
@@ -9484,7 +9562,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if (!S.look || !S.look.v || (S.look.at || 0) <= (LOOK._at || 0)) return false;
     var v = S.look.v;
     syncedKeys().forEach(function (k) { if (k in v) LOOK[k] = v[k]; else delete LOOK[k]; });
-    if (!PRESETS[LOOK.preset]) LOOK.preset = 'fabric';
+    if (!PRESETS[LOOK.preset]) LOOK.preset = 'itsure';
     LOOK._at = S.look.at; lsSet(LOOK_KEY, JSON.stringify(LOOK)); applyLook();
     if (typeof renderTabbar === 'function') try { renderTabbar(); } catch (e) {}
     return true;
@@ -9700,7 +9778,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     else if (view === 'glossary') viewGlossary(r.params.q || '');
     else if (view === 'progress') viewProgress();
     else if (view === 'import') viewImport();
-    else if (view === 'settings') viewSettings();
+    else if (view === 'settings') viewSettings(p[1]);
     else if (view === 'plan') viewPlan();
     else if (view === 'notes') viewNotes();
     else if (view === 'marks') viewMarks();
@@ -9763,7 +9841,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // Tagesziel als drei Ringe (wie die Aktivitätsringe der Apple Watch) und Wochenstreifen
   var FLAME = '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.6 2.7-5.7 3.9-8.8.3 2 1.5 3.2 2.6 3.7-.2-2.7.9-5.3 3-7.2.2 3.4 4.5 5.6 4.5 11.3 0 4.1-3.1 7.2-7.5 7.2z"/>';
   function goalRings(size) {
-    var a = dayAct(), g = S.goals, rs = [['q', 'Fragen', 'var(--prog)'], ['min', 'Minuten gelesen', 'var(--dom-maintain)'], ['fix', 'Fehler abgebaut', 'var(--dom-model)']];
+    var a = dayAct(), g = S.goals, rs = [['q', 'Fragen', '#FA114F'], ['min', 'Minuten gelesen', '#92E82A'], ['fix', 'Fehler abgebaut', '#1EEAEF']];   // feste Ringfarben wie bei der Apple Watch
     var svg = '<svg class="grings" viewBox="0 0 120 120" width="' + size + '" height="' + size + '" aria-hidden="true">' + rs.map(function (r, i) {
       var rad = 52 - i * 15, c = 2 * Math.PI * rad, p = Math.min(1, (a[r[0]] || 0) / (g[r[0]] || 1));
       return '<circle cx="60" cy="60" r="' + rad + '" fill="none" stroke="' + r[2] + '" stroke-opacity=".18" stroke-width="11"/>' +
@@ -10073,20 +10151,22 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function msTile(key, color) { return '<span class="ms-tile" style="--c:' + color + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS[key] + '</svg></span>'; }
   function renderSheet() {
     var tabs = barKeys(), w = wrongIds().length;
+    // Symbolkacheln in drei Stufen der Designfarbe: kräftig (Heute, Lernen) · hell (Prüfen, Inhalte) · grau (App)
+    var TIER = { 'Heute': 1, 'Lernen': 1, 'Prüfen': 2, 'Meine Inhalte': 2, 'App': 3 };
     var groups = MS_GROUPS.map(function (g) {
       var rows = g[1].filter(function (k) { return tabs.indexOf(k) < 0; }).map(function (k) {
         var r = MS_ROWS[k], on = curView === k;
         return '<a class="ms-row' + (on ? ' on' : '') + '" data-vt="tab" href="' + (k === 'search' ? 'javascript:void 0" data-ms="search' : '#/' + k) + '">' + msTile(k, r[1]) +
           '<span class="ms-lbl">' + r[0] + '</span>' + (k === 'errors' && w ? '<span class="ms-badge">' + w + '</span>' : '') + CHEV + '</a>';
       }).join('');
-      return rows ? '<section class="ms-sec"><h3 class="ms-cap">' + g[0] + '</h3><div class="ms-list">' + rows + '</div></section>' : '';
+      return rows ? '<section class="ms-sec t' + (TIER[g[0]] || 2) + '"><h3 class="ms-cap">' + g[0] + '</h3><div class="ms-list">' + rows + '</div></section>' : '';
     }).join('');
     var curLp = curView === 'module' && CMOD[curSub] ? CMOD[curSub].lp.id : curView === 'path' ? curSub : null;
     var all = statsFor([].concat.apply([], COURSE.map(function (lp) { return lp.modules.map(function (x) { return MID(x); }); })));
     var course = COURSE.map(function (lp) {
       var st = pathStats(lp);
       return '<details class="ms-path"' + (curLp === lp.id ? ' open' : '') + '><summary class="ms-row">' +
-        '<span class="ms-tile" style="--c:var(--accent)">' + lpIcon(lp) + '</span><span class="ms-lbl">' + esc(lp.title) + '<small>' + st.done + ' von ' + st.relevant + ' Modulen</small></span>' + CHEV + '</summary>' +
+        '<span class="ms-tile t2">' + lpIcon(lp) + '</span><span class="ms-lbl">' + esc(lp.title) + '<small>' + st.done + ' von ' + st.relevant + ' Modulen</small></span>' + CHEV + '</summary>' +
         '<div class="ms-mods"><a class="ms-mod ms-lp" href="#/path/' + lp.id + '">Lernpfad ' + lp.nr + ' im Überblick</a>' + lp.modules.map(function (x) {
           var mid = MID(x), s2 = statusOf(mid);
           return '<a class="ms-mod st-' + s2 + (curView === 'module' && curSub === mid ? ' on' : '') + '" href="#/module/' + mid + '"><span class="ms-num">' + x[0] + '</span><span class="ms-lbl">' + esc(x[1]) + '</span>' +
@@ -11391,11 +11471,17 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
 
   // (6) Kontextmenü wie in iOS: langer Druck (Touch) bzw. Rechtsklick (Mac) auf Fragen, Module und Glossar-Einträge
-  var CTX_SEL = '.quiz-card, .g-item, .flash, a[href^="#/module/"], a[href^="#/path/"]';
+  var CTX_SEL = '.quiz-card, .g-item, .flash, a[href^="#/module/"], a[href^="#/path/"], .st-row[data-sec], .set-pin[data-sec]';
   var ctxSuppress = 0;
   function ctxItems(el) {
     var out = [], mm;
     var copy = function (t) { return ['copy', 'Text kopieren', function () { try { navigator.clipboard.writeText(t).then(function () { toast('Kopiert'); }, function () { toast('Kopieren nicht möglich'); }); } catch (e) { toast('Kopieren nicht möglich'); } }]; };
+    if (el.dataset && el.dataset.sec && SETS[el.dataset.sec]) {
+      var sk = el.dataset.sec, pinned = setPins().indexOf(sk) >= 0;
+      out.push(['pin', pinned ? 'Lösen' : 'Oben anheften', function () { if (pinSet(sk, !pinned)) route(true); }]);
+      out.push(['learn', 'Öffnen', function () { go('#/settings/' + sk); }]);
+      return out;
+    }
     if (el.classList.contains('quiz-card')) {
       var bm = el.querySelector('[data-q="bm"]'), nt = el.querySelector('.q-note');
       if (bm) out.push([bm.classList.contains('on') ? 'bookmark-off' : 'bookmark', bm.classList.contains('on') ? 'Lesezeichen entfernen' : 'Lesezeichen setzen', function () { bm.click(); }]);
@@ -11418,7 +11504,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   var CTX_IC = {
     bookmark: '<path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4-6.5 4v-16a1 1 0 0 1 1-1z"/>', 'bookmark-off': '<path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4-6.5 4v-16a1 1 0 0 1 1-1z"/><path d="M4 4l16 16"/>',
     notes: NAV_ICONS.notes, copy: '<rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>',
-    learn: NAV_ICONS.learn, exam: NAV_ICONS.exam, check: '<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'
+    pin: '<path d="M9 3.5h6l-1 5 3 3H7l3-3zM12 11.5v9"/>', learn: NAV_ICONS.learn, exam: NAV_ICONS.exam, check: '<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'
   };
   function closeCtx() {
     var sc = document.querySelector('.ctx-scrim'); if (!sc) return;
@@ -12225,7 +12311,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       '<div class="cb-r"><span>Kontrast Akzent hell ' + ok(r.light, 4.5) + '</span><span>Kontrast Akzent dunkel ' + ok(r.dark, 4.5) + '</span><span>Kontrast Nebentext ' + ok(r.text, 4.5) + '</span></div></div>';
   }
   var showHiddenPresets = false;
-  var FEATURED = ['fabric', 'itsure', 'studio', 'excel', 'powerbi'];
+  var FEATURED = ['itsure', 'fabric', 'studio', 'excel', 'powerbi'];
   var SET_OPEN = {};
   app.addEventListener('toggle', function (e) { var d = e.target; if (d.dataset && d.dataset.grp) SET_OPEN[d.dataset.grp] = d.open; }, true);
   // Versionsverlauf, App-Symbole (nur Web-App) – unterster Abschnitt der Einstellungen
@@ -12255,18 +12341,27 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     b.innerHTML = '<b>Neu in ' + esc(APP_VER) + '</b><span>' + esc(CHANGES[0].items[0]) + '</span>';
     document.body.appendChild(b);
     var close = function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 400); };
-    b.addEventListener('click', function () { close(); openChangelog = true; go('#/settings'); setTimeout(function () { var c = document.getElementById('about'); if (c) c.scrollIntoView({ behavior: 'smooth' }); openChangelog = false; }, 450); });
+    b.addEventListener('click', function () { close(); openChangelog = true; go('#/settings/info'); });
     setTimeout(close, 9000);
   }
-  function viewSettings() {
-    var seg = function (key, opts, cur) {
-      return '<span class="seg" role="group">' + opts.map(function (o) {
-        return '<button type="button" data-look="' + key + '" data-v="' + o[0] + '" class="' + (String(cur) === String(o[0]) ? 'on' : '') + '" aria-pressed="' + (String(cur) === String(o[0])) + '">' + o[1] + '</button>';
-      }).join('') + '</span>';
-    };
-    var row = function (label, hint, ctrl) { return '<div class="set-row"><div class="set-l"><b>' + label + '</b>' + (hint ? '<span>' + hint + '</span>' : '') + '</div><div class="set-c">' + ctrl + '</div></div>'; };
-    var sw = function (id, on) { return '<label class="tgl"><input type="checkbox" id="' + id + '"' + (on ? ' checked' : '') + '><i></i></label>'; };
-    // Designs ausblenden: ausgeblendete stehen eingeklappt unter „Ausgeblendet“; das aktive Design bleibt immer sichtbar
+  /* ---------------------------------------------------------------------
+     Einstellungen: Übersicht (#/settings) mit Unterseiten (#/settings/<bereich>).
+     Bis zu drei Bereiche lassen sich oben anheften und zeigen dort ihre wichtigsten Regler.
+     --------------------------------------------------------------------- */
+  var SET_EDIT = false, SET_Q = '';
+  var MODE_L = { system: 'Automatisch', light: 'Hell', dark: 'Dunkel', time: 'Nach Tageszeit' };
+  var MOTION_L = { on: 'An', reduced: 'Reduziert', off: 'Aus' };
+  function setPins() { var p = (LOOK.pins || ['darstellung']).filter(function (k, i, a) { return SETS[k] && a.indexOf(k) === i; }); return p.slice(0, 3); }
+  function sSeg(key, opts, cur) {
+    return '<span class="seg" role="group">' + opts.map(function (o) {
+      var on = String(cur) === String(o[0]);
+      return '<button type="button" data-look="' + key + '" data-v="' + o[0] + '" class="' + (on ? 'on' : '') + '" aria-pressed="' + on + '">' + o[1] + '</button>';
+    }).join('') + '</span>';
+  }
+  function sRow(label, hint, ctrl, cls) { return '<div class="set-row' + (cls ? ' ' + cls : '') + '"><div class="set-l"><b>' + label + '</b>' + (hint ? '<span>' + hint + '</span>' : '') + '</div><div class="set-c">' + ctrl + '</div></div>'; }
+  function sTgl(key, on) { return '<label class="tgl"><input type="checkbox" data-set="' + key + '"' + (on ? ' checked' : '') + '><i></i></label>'; }
+  function sStep(attr, val, label) { return '<div class="stepper"><button class="st-btn" ' + attr + ' data-d="-1" aria-label="' + label + ' verringern">−</button><output>' + val + '</output><button class="st-btn" ' + attr + ' data-d="1" aria-label="' + label + ' erhöhen">+</button></div>'; }
+  function designBlock() {
     var hiddenL = (LOOK.hidden || []).filter(function (k) { return PRESETS[k] && k !== LOOK.preset; });
     var card = function (k, isHidden) {
       var p = PRESETS[k], on = LOOK.preset === k;
@@ -12276,60 +12371,152 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<span class="pv-dom"><i class="d1"></i><i class="d2"></i><i class="d3"></i></span><span class="pv-btn">Weiter</span></span></span>' +
         '<span class="pr-name">' + esc(p.name) + (on ? ' ' + ico('check') : '') + '</span><span class="pr-desc">' + esc(p.desc) + '</span></button></div>';
     };
-    // Fünf kuratierte Designs sichtbar (plus das aktive), der Rest eingeklappt unter „Mehr Designs“
     var shown = Object.keys(PRESETS).filter(function (k) { return hiddenL.indexOf(k) < 0; });
     var feat = shown.filter(function (k) { return FEATURED.indexOf(k) >= 0 || k === LOOK.preset; }), more = shown.filter(function (k) { return feat.indexOf(k) < 0; });
-    var presets = feat.map(function (k) { return card(k, false); }).join('');
-    var moreBox = '<details class="more-presets" data-grp="more"' + (SET_OPEN.more ? ' open' : '') + '><summary>Mehr Designs (' + more.length + ') und eigene Farbe</summary><div class="preset-grid">' + more.map(function (k) { return card(k, false); }).join('') + '</div>' + customBox() + '</details>';
-    var grp = function (id, title, hint, body) { return '<details class="card set-grp" data-grp="' + id + '"' + (SET_OPEN[id] ? ' open' : '') + '><summary><span class="sg-t"><b>' + title + '</b><small>' + hint + '</small></span><span class="sg-chev" aria-hidden="true">›</span></summary><div class="sg-body">' + body + '</div></details>'; };
-    var hiddenBox = hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ') · ' + hiddenL.map(function (k) { return esc(PRESETS[k].name); }).join(', ') + '</summary>' +
-      '<div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '';
-    app.innerHTML = '<div class="container"><div class="page-head"><h1>Einstellungen</h1>' +
-      '</div>' +
-      '<section class="card"><h2>Design</h2><div class="preset-grid">' + presets + '</div>' + moreBox + hiddenBox + '</section>' +
-      '<section class="card" id="lookBox">' +
-        row('Hell oder dunkel', '„System“ folgt Mac oder iPhone, „Tageszeit“ ist von 7 bis 19 Uhr hell', seg('mode', [['system', 'System'], ['time', 'Tageszeit'], ['light', 'Hell'], ['dark', 'Dunkel']], lookVal('mode'))) +
-        row('Stil', 'Schrift, Formen, Glas und Bewegung der ganzen App', seg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))) +
-      '</section>' + grp('adv', 'Weitere Darstellung', 'Animationen, Schrift, Lesebreite, Navigation, Begrüßung', '' +
-        row('Begrüßung beim ersten Öffnen am Tag', 'Ziele, Countdown und ein Fakt des Tages', sw('setGreet', LOOK.greet !== false) + ' <button type="button" class="btn sm ghost" id="greetNow">Ansehen</button>') +
-        row('Glas reagiert auf Neigung', 'iPhone: Lichtreflex wandert beim Kippen über Leiste und Glas (fragt einmal nach Erlaubnis). Am Mac folgt er der Maus', sw('setTilt', !!LOOK.tilt)) +
-        row('Animationen', 'Übergänge und Einblendungen', seg('motion', [['on', 'An'], ['reduced', 'Reduziert'], ['off', 'Aus']], lookVal('motion'))) +
-        row('Lesebreite', 'Breite des Lernbereichs in Modulen', seg('width', [['normal', 'Normal'], ['wide', 'Breit'], ['full', 'Volle Breite']], LOOK.width || 'wide')) +
-        row('Schriftgröße', '', seg('size', [['s', 'S'], ['m', 'M'], ['l', 'L']], lookVal('size'))) +
-        row('Dichte', 'Abstände in Karten und Listen', seg('density', [['compact', 'Kompakt'], ['comfy', 'Komfortabel']], lookVal('density'))) +
-        row('Lesetext', 'Serifenschrift liest sich bei langen Texten ruhiger', seg('serif', [['false', 'Ohne Serifen'], ['true', 'Mit Serifen']], lookVal('serif'))) +
-        row('Hoher Kontrast', 'Kräftigere Texte und Linien', seg('contrast', [['false', 'Aus'], ['true', 'An']], lookVal('contrast'))) +
-        row('Navigation am Mac', 'Gewohnte Seitenleiste oder schwebende Leiste unten wie am iPhone', seg('nav', [['sidebar', 'Seitenleiste'], ['tabbar', 'Leiste unten']], LOOK.nav || 'sidebar')).replace('set-row', 'set-row nav-row') +
-        '<div class="set-row tabs-row"><div class="set-l"><b>Reiter unten</b><span>Vier Reiter nach Wahl; „Mehr“ bleibt immer rechts. Am Mac kommen je nach Fensterbreite weitere dazu</span></div><div class="set-c tab-pick">' + tabKeys().map(function (k, i) {
-          return '<label class="tp-slot"><small>' + (i + 1) + '</small><select data-tabslot="' + i + '" aria-label="Reiter ' + (i + 1) + '">' + Object.keys(TAB_OPTS).map(function (o) { return '<option value="' + o + '"' + (o === k ? ' selected' : '') + '>' + TAB_OPTS[o][1] + '</option>'; }).join('') + '</select></label>';
-        }).join('') + '</div></div>' +
-        '<div class="actions"><button class="btn ghost" data-look-reset="1">Auf Design-Standard zurücksetzen</button></div>') + syncCard() +
-      grp('learn', 'Lernen und Tagesziele', 'Mischen, Begründungen, Markierungsfarben, Ziele, Schnell-Quiz', '' +
-        row('„Nicht relevante“ Module ignorieren', 'Bei Fortschritt, Fragenpool und Prüfungssimulation', sw('setSkip', S.settings.ignoreSkipped)) +
-        row('Antwortoptionen mischen', 'Reihenfolge 1–4 bei jedem Durchgang neu', sw('setShuffle', S.settings.shuffle !== false)) +
-        row('Begründungen immer aufgeklappt', 'Auch bei richtigen Antworten', sw('setWhy', !!S.settings.whyOpen)) +
-        '<div class="set-row"><div class="set-l"><b>Markierungsfarben</b><span>Farbe und Bedeutung der drei Textmarker</span></div><div class="set-c hl-set">' + ['y', 'g', 'p'].map(function (k) {
-          var c = hlCfg()[k];
-          return '<label class="hl-slot"><span class="swatch pick" style="background:' + c.c + '"><input type="color" data-hlc="' + k + '" value="' + c.c + '" aria-label="Farbe für ' + esc(c.n) + '"></span><input type="text" data-hln="' + k + '" value="' + esc(c.n) + '" maxlength="18" aria-label="Name der Markierung"></label>';
-        }).join('') + '</div></div>' +
-        (COURSES.length > 1 ? row('Tagesziele und Strähne', 'Gemeinsam: Lernen in allen Kursen zählt zusammen. Getrennt: nur der aktive Kurs', seg('mix', [['true', 'Alle Kurse'], ['false', 'Je Kurs']], String(LOOK.mix !== false))) : '') +
-        row('Tagesziel: Fragen', 'Beantwortete Fragen pro Tag', goalStep('q', 5)) +
-        row('Tagesziel: Lesen', 'Minuten in der Vertiefung pro Tag', goalStep('min', 5)) +
-        row('Tagesziel: Fehler', 'Abgebaute Fehler pro Tag', goalStep('fix', 1)) +
-        row('Schnell-Quiz', 'Standard-Anzahl Fragen', '<div class="stepper"><button class="st-btn" data-qn="-5" aria-label="5 weniger">−</button><output id="qnVal">' + quickCount() + '</output><button class="st-btn" data-qn="5" aria-label="5 mehr">+</button></div>') +
-      '') + aboutCard() + '</div>';
-    document.getElementById('setSkip').addEventListener('change', function () { S.settings.ignoreSkipped = this.checked; cfg.excludeSkipped = null; save(); renderSidebar(); });
-    document.getElementById('setShuffle').addEventListener('change', function () { S.settings.shuffle = this.checked; save(); });
-    document.getElementById('setWhy').addEventListener('change', function () { S.settings.whyOpen = this.checked; save(); });
-    document.getElementById('setGreet').addEventListener('change', function () { lookSet({ greet: this.checked }); });
-    document.getElementById('greetNow').addEventListener('click', function () { showGreeting(true); });
-    document.getElementById('setTilt').addEventListener('change', function () {
-      var on = this.checked, box = this; lookSet({ tilt: on });
-      setTilt(on, true).then(function (ok) { if (on && !ok && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') toast('Bewegungssensor nicht freigegeben – am Mac folgt der Reflex weiter der Maus'); });
-    });
+    return '<div class="preset-grid">' + feat.map(function (k) { return card(k, false); }).join('') + '</div>' +
+      '<details class="more-presets" data-grp="more"' + (SET_OPEN.more ? ' open' : '') + '><summary>Weitere Designs (' + more.length + ') und eigene Farbe</summary><div class="preset-grid">' + more.map(function (k) { return card(k, false); }).join('') + '</div>' + customBox() + '</details>' +
+      (hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ')</summary><div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '');
+  }
+  // Regler (jeweils ein Baustein, der auf Unterseite und in angehefteten Karten gleich aussieht)
+  var CTRL = {
+    design: function () { return '<div class="set-block">' + designBlock() + '</div>'; },
+    // Kurzwahl für angeheftete Karte: runde Farbtupfer statt großer Vorschauen
+    designMini: function () {
+      var keys = Object.keys(PRESETS).filter(function (k) { return k !== 'custom' && (LOOK.hidden || []).indexOf(k) < 0; });
+      return '<div class="dz-row" role="group" aria-label="Design">' + keys.map(function (k) {
+        var on = LOOK.preset === k;
+        return '<button type="button" class="dz' + (on ? ' on' : '') + '" data-preset="' + k + '" aria-pressed="' + on + '"><span class="dz-dot" data-palette="' + PRESETS[k].palette + '"></span><span class="dz-n">' + esc(PRESETS[k].name) + '</span></button>';
+      }).join('') + '</div>';
+    },
+    mode: function () { return sRow('Erscheinungsbild', '', sSeg('mode', [['system', 'Automatisch'], ['light', 'Hell'], ['dark', 'Dunkel'], ['time', 'Tageszeit']], lookVal('mode'))); },
+    play: function () { return sRow('Stil', 'Wirkt auf Formen, Schatten und Bewegung.', sSeg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))); },
+    size: function () { return sRow('Textgröße', '', sSeg('size', [['s', 'S'], ['m', 'M'], ['l', 'L']], lookVal('size'))); },
+    serif: function () { return sRow('Schriftart', 'Gilt für Lesetexte.', sSeg('serif', [['false', 'Standard'], ['true', 'Serif']], lookVal('serif'))); },
+    width: function () { return sRow('Breite des Lernbereichs', '', sSeg('width', [['normal', 'Normal'], ['wide', 'Breit'], ['full', 'Voll']], LOOK.width || 'wide')); },
+    density: function () { return sRow('Abstände', '', sSeg('density', [['compact', 'Kompakt'], ['comfy', 'Normal']], lookVal('density'))); },
+    contrast: function () { return sRow('Mehr Kontrast', '', sTgl('contrast', !!lookVal('contrast'))); },
+    motion: function () { return sRow('Animationen', '', sSeg('motion', [['on', 'An'], ['reduced', 'Reduziert'], ['off', 'Aus']], lookVal('motion'))); },
+    tilt: function () { return sRow('Lichteffekt beim Neigen', 'Nur auf dem iPhone. Am Mac folgt er der Maus.', sTgl('tilt', !!LOOK.tilt)); },
+    nav: function () { return sRow('Am Mac', '', sSeg('nav', [['sidebar', 'Seitenleiste'], ['tabbar', 'Leiste unten']], LOOK.nav || 'sidebar')); },
+    tabs: function () {
+      return '<div class="set-row tabs-row"><div class="set-l"><b>Tabs in der unteren Leiste</b><span>„Mehr“ steht immer rechts.</span></div><div class="set-c tab-pick">' + tabKeys().map(function (k, i) {
+        return '<label class="tp-slot"><small>' + (i + 1) + '</small><select data-tabslot="' + i + '" aria-label="Tab ' + (i + 1) + '">' + Object.keys(TAB_OPTS).map(function (o) { return '<option value="' + o + '"' + (o === k ? ' selected' : '') + '>' + TAB_OPTS[o][1] + '</option>'; }).join('') + '</select></label>';
+      }).join('') + '</div></div>';
+    },
+    shuffle: function () { return sRow('Antworten mischen', '', sTgl('shuffle', S.settings.shuffle !== false)); },
+    why: function () { return sRow('Erklärungen immer anzeigen', 'Auch bei richtigen Antworten.', sTgl('why', !!S.settings.whyOpen)); },
+    skip: function () { return sRow('Nicht relevante Module ausblenden', 'Gilt für Fortschritt, Quiz und Prüfung.', sTgl('skip', S.settings.ignoreSkipped)); },
+    quickn: function () { return sRow('Fragen im Schnell-Quiz', '', sStep('data-qn="5"', quickCount(), 'Anzahl')); },
+    goals: function () {
+      return sRow('Fragen pro Tag', '', sStep('data-goal="q" data-s="5"', S.goals.q, 'Fragen')) + sRow('Leseminuten pro Tag', '', sStep('data-goal="min" data-s="5"', S.goals.min, 'Minuten')) +
+        sRow('Abgebaute Fehler pro Tag', '', sStep('data-goal="fix" data-s="1"', S.goals.fix, 'Fehler'));
+    },
+    mix: function () { return COURSES.length > 1 ? sRow('Ziele und Serie zählen für', '', sSeg('mix', [['true', 'Alle Kurse'], ['false', 'Diesen Kurs']], String(LOOK.mix !== false))) : ''; },
+    greet: function () { return sRow('Begrüßung am Morgen', '', sTgl('greet', LOOK.greet !== false) + ' <button type="button" class="btn sm ghost" data-greetnow="1">Ansehen</button>'); },
+    courses: function () { return '<div class="set-block"><div class="crs-list">' + COURSES.map(function (c) { return courseCard(c, false); }).join('') + '</div><a class="cs-add" href="#/import">＋ Kurs hinzufügen</a></div>'; },
+    hl: function () {
+      return '<div class="set-row"><div class="set-l"><b>Textmarker</b><span>Farbe und Name der drei Marker.</span></div><div class="set-c hl-set">' + ['y', 'g', 'p'].map(function (k) {
+        var c = hlCfg()[k];
+        return '<label class="hl-slot"><span class="swatch pick" style="background:' + c.c + '"><input type="color" data-hlc="' + k + '" value="' + c.c + '" aria-label="Farbe für ' + esc(c.n) + '"></span><input type="text" data-hln="' + k + '" value="' + esc(c.n) + '" maxlength="18" aria-label="Name"></label>';
+      }).join('') + '</div></div>';
+    },
+    sync: function () {
+      var l = lookLocal(), how = CLOUD.state === 'on' ? 'Änderungen erscheinen nach wenigen Sekunden auf Ihren anderen Geräten.' : 'Übertragen werden sie mit dem <a href="#/progress">Übertragungscode</a> oder dem Export.';
+      return '<div class="set-block"><p class="card-sub">Markierte Bereiche sind auf allen Geräten gleich. ' + how + '</p><div class="lsync">' +
+        Object.keys(LOOK_GROUPS).map(function (g) { var on = l.indexOf(g) < 0; return '<button type="button" class="chip' + (on ? ' on' : '') + '" data-lsync="' + g + '" aria-pressed="' + on + '">' + (on ? ico('check') + ' ' : '') + esc(LOOK_GROUP_NAMES[g]) + '</button>'; }).join('') + '</div></div>';
+    },
+    version: function () { return sRow('Version ' + esc(APP_VER), CHANGES[0] ? fmtDay(CHANGES[0].d) : '', ''); },
+    changelog: function () {
+      return '<details class="changelog" id="changelog"' + (openChangelog ? ' open' : '') + '><summary>Versionsverlauf</summary><ol>' + CHANGES.map(function (c) {
+        return '<li><div class="cl-h"><b>' + esc(c.v) + '</b><span>' + fmtDay(c.d) + '</span></div><ul>' + c.items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></li>';
+      }).join('') + '</ol></details>';
+    },
+    appicon: function () {
+      var cur = LOOK.appIcon || 'ring';
+      return isWebApp() ? '<div class="set-row icon-row"><div class="set-l"><b>App-Symbol</b><span>Die Farbe folgt dem Design. Nach dem Wechsel die App neu zum Home-Bildschirm hinzufügen.</span></div><div class="set-c icon-pick">' + APP_ICONS.map(function (x) {
+        return '<button type="button" class="ip' + (x[0] === cur ? ' on' : '') + '" data-appicon="' + x[0] + '" aria-pressed="' + (x[0] === cur) + '"><span class="ip-img">' + iconSvg(x[0]) + '</span><span>' + x[1] + '</span></button>';
+      }).join('') + '</div></div>' : sRow('App-Symbol', 'Wählbar in der Web-App unter serdaritsure.github.io/dp600-trainer.', '');
+    }
+  };
+  var SET_IC = {
+    darstellung: '<circle cx="12" cy="12" r="8.5"/><circle cx="8.6" cy="10" r="1.1"/><circle cx="12" cy="7.6" r="1.1"/><circle cx="15.4" cy="10" r="1.1"/><path d="M12 20.5c-1.6 0-2.1-1.3-1.4-2.4.7-1.2-.1-2.6-1.6-2.6H7.2"/>',
+    lesen: '<path d="M3.5 18 8 6l4.5 12M5.2 14h5.6"/><path d="M14.5 12.8a2.8 2.8 0 1 1 0 4.9M17.6 11v7"/>',
+    bewegung: '<path d="M3.5 12h3.5l2-5 4 10 2-5h5.5"/>',
+    navigation: '<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M3.5 15.5h17"/>',
+    quiz: NAV_ICONS.exam, ziele: NAV_ICONS.focus, kurse: NAV_ICONS.courses, markierungen: NAV_ICONS.marks,
+    geraete: '<rect x="3" y="5" width="12" height="9" rx="1.5"/><path d="M6.5 17.5h5"/><rect x="16.5" y="8" width="4.5" height="11" rx="1.2"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
+  };
+  var SETS = {
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'play'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system' }); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Stil Ruhig Lebendig eigene Farbe' },
+    lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
+      reset: function () { lookSet({ size: null, serif: null, width: null, density: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
+    bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
+      reset: function () { lookSet({ motion: null, tilt: false }); }, find: 'Animationen Bewegung Neigen Lichteffekt' },
+    navigation: { t: 'Navigation', rows: ['nav', 'tabs'], quick: ['tabs'], tier: 1, val: function () { return LOOK.nav === 'tabbar' ? 'Leiste unten' : 'Seitenleiste'; },
+      reset: function () { lookSet({ nav: null, tabs: null }); renderTabbar(); }, find: 'Navigation Seitenleiste Leiste unten Tabs Reiter' },
+    quiz: { t: 'Quiz', rows: ['shuffle', 'why', 'skip', 'quickn'], quick: ['shuffle', 'why'], tier: 2, val: function () { return quickCount() + ' Fragen im Schnell-Quiz'; },
+      reset: function () { S.settings.shuffle = true; S.settings.whyOpen = false; S.settings.ignoreSkipped = true; lsDel('dp600.quickN'); save(); }, find: 'Antworten mischen Erklärungen Begründungen nicht relevant Schnell-Quiz' },
+    ziele: { t: 'Tagesziele', rows: ['goals', 'mix', 'greet'], quick: ['goals'], tier: 2, val: function () { return S.goals.q + ' Fragen · ' + S.goals.min + ' Min. · ' + S.goals.fix + ' Fehler'; },
+      reset: function () { S.goals = { q: 20, min: 15, fix: 3 }; save(); lookSet({ mix: null, greet: null }); }, find: 'Tagesziel Ziele Fragen Minuten Fehler Serie Strähne Begrüßung' },
+    kurse: { t: 'Kurse', rows: ['courses', 'mix'], quick: ['courses'], tier: 2, val: function () { return CFG.exam.code + (COURSES.length > 1 ? ' · ' + COURSES.length + ' Kurse' : ''); }, find: 'Kurs wechseln hinzufügen' },
+    markierungen: { t: 'Markierungen', rows: ['hl'], quick: ['hl'], tier: 2, val: function () { var c = hlCfg(); return c.y.n + ' · ' + c.g.n + ' · ' + c.p.n; },
+      reset: function () { delete S.settings.hl; save(); applyHlVars(); }, find: 'Markierungen Textmarker Farben' },
+    geraete: { t: 'Geräte', rows: ['sync'], quick: ['sync'], tier: 3, val: function () { var n = Object.keys(LOOK_GROUPS).length; return (n - lookLocal().length) + ' von ' + n + ' gleich'; },
+      reset: function () { lookSet({ local: null }); }, find: 'Geräte Abgleich synchron iPhone Mac' },
+    info: { t: 'Über Lernwerk', rows: ['version', 'changelog', 'appicon'], quick: ['version'], tier: 3, val: function () { return 'Version ' + APP_VER; }, find: 'Version Versionsverlauf Neuigkeiten App-Symbol' }
+  };
+  function sTile(k) { return '<span class="st-tile t' + SETS[k].tier + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + SET_IC[k] + '</svg></span>'; }
+  function sListRow(k, mode) {
+    var s = SETS[k];
+    var lead = mode === 'pinned' ? '<button type="button" class="st-act rem" data-unpin="' + k + '" aria-label="' + s.t + ' lösen">−</button>' : mode === 'add' ? '<button type="button" class="st-act add" data-pin="' + k + '" aria-label="' + s.t + ' anheften">＋</button>' : '';
+    var tail = mode === 'pinned' ? '<span class="st-grip" data-grip="' + k + '" aria-label="Verschieben">≡</span>' : mode ? '' : '<span class="st-val">' + esc(s.val()) + '</span>' + CHEV;
+    return (mode ? '<div' : '<a href="#/settings/' + k + '"') + ' class="st-row' + (mode ? ' edit' : '') + '" data-sec="' + k + '">' + lead + sTile(k) + '<span class="st-lbl">' + s.t + '</span>' + tail + (mode ? '</div>' : '</a>');
+  }
+  function viewSettings(sub) {
+    if (sub && SETS[sub]) return viewSettingsSub(sub);
+    var pins = setPins(), rest = Object.keys(SETS).filter(function (k) { return pins.indexOf(k) < 0; });
+    var head = '<div class="set-top"><h1>Einstellungen</h1><button type="button" class="st-edit" data-setedit="1">' + (SET_EDIT ? 'Fertig' : 'Bearbeiten') + '</button></div>';
+    var body;
+    if (SET_EDIT) {
+      body = '<p class="set-cap">Angeheftet · höchstens drei</p><div class="st-list" id="pinList">' + (pins.length ? pins.map(function (k) { return sListRow(k, 'pinned'); }).join('') : '<div class="st-empty">Nichts angeheftet</div>') + '</div>' +
+        '<p class="set-cap">Weitere Bereiche</p><div class="st-list">' + rest.map(function (k) { return sListRow(k, 'add'); }).join('') + '</div>';
+    } else {
+      body = '<div class="set-search"><svg viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.search + '</svg><input type="search" id="setSearch" placeholder="Suchen" value="' + esc(SET_Q) + '" autocomplete="off"></div><div id="setResults"></div>' +
+        '<div id="setMain">' + pins.map(function (k) {
+          var s = SETS[k];
+          return '<section class="card set-pin" data-sec="' + k + '"><div class="sp-h">' + sTile(k) + '<b>' + s.t + '</b><a class="sp-all" href="#/settings/' + k + '">Alle Optionen ›</a></div>' + s.quick.map(function (c) { return CTRL[c](); }).join('') + '</section>';
+        }).join('') + '<div class="st-list">' + rest.map(function (k) { return sListRow(k); }).join('') + '</div></div>';
+    }
+    app.innerHTML = '<div class="container set-page">' + head + body + '</div>';
+    if (!SET_EDIT) { setSearchRun(); var inp = document.getElementById('setSearch'); if (SET_Q && inp) { inp.focus(); inp.setSelectionRange(SET_Q.length, SET_Q.length); } }
+  }
+  function viewSettingsSub(k) {
+    var s = SETS[k];
+    app.innerHTML = '<div class="container set-page set-sub"><a class="st-back" href="#/settings">‹ Einstellungen</a><div class="set-top"><h1>' + s.t + '</h1>' +
+      '<button type="button" class="st-edit" data-' + (setPins().indexOf(k) >= 0 ? 'unpin' : 'pin') + '="' + k + '">' + (setPins().indexOf(k) >= 0 ? 'Lösen' : 'Anheften') + '</button></div>' +
+      '<section class="card set-card">' + s.rows.map(function (c) { return CTRL[c](); }).join('') + '</section>' +
+      (s.reset ? '<button type="button" class="st-reset" data-reset="' + k + '">' + s.t + ' zurücksetzen</button>' : '') + '</div>';
+    if (k === 'info' && openChangelog) { var c = document.getElementById('changelog'); if (c) c.scrollIntoView(); openChangelog = false; }
+  }
+  // Suche: findet Bereiche über ihre Regler-Namen
+  function setSearchRun() {
+    var out = document.getElementById('setResults'), main = document.getElementById('setMain'); if (!out) return;
+    var q = SET_Q.trim().toLowerCase();
+    if (!q) { out.innerHTML = ''; if (main) main.hidden = false; return; }
+    var hits = Object.keys(SETS).filter(function (k) { return (SETS[k].t + ' ' + SETS[k].find).toLowerCase().indexOf(q) >= 0; });
+    if (main) main.hidden = true;
+    out.innerHTML = hits.length ? '<div class="st-list">' + hits.map(function (k) { return sListRow(k); }).join('') + '</div>' : '<div class="st-empty">Keine Treffer für „' + esc(SET_Q) + '“</div>';
+  }
+  function pinSet(k, on) {
+    var p = setPins().filter(function (x) { return x !== k; });
+    if (on) { if (p.length >= 3) { toast('Höchstens drei Bereiche – zuerst einen lösen'); return false; } p.push(k); }
+    lookSet({ pins: p }); toast(SETS[k].t + (on ? ' angeheftet' : ' gelöst')); return true;
   }
   app.addEventListener('input', function (e) {
     if (curView !== 'settings') return;
+    if (e.target.id === 'setSearch') { SET_Q = e.target.value; setSearchRun(); return; }
     var k = e.target.dataset.hlc || e.target.dataset.hln; if (!k) return;
     var hl = S.settings.hl || (S.settings.hl = {}); hl[k] = Object.assign({}, hlCfg()[k], hl[k]);
     if (e.target.dataset.hlc) { hl[k].c = e.target.value; e.target.parentElement.style.background = e.target.value; applyHlVars(); }
@@ -12337,45 +12524,74 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     clearTimeout(noteTimer); noteTimer = setTimeout(save, 400);
   });
   app.addEventListener('change', function (e) {
-    if (curView === 'settings' && e.target.id === 'customColor') { lookSet({ preset: 'custom', custom: e.target.value, play: null }); route(true); }
-    if (curView === 'settings' && e.target.dataset.tabslot) {
-      // Doppelte Auswahl tauscht die beiden Reiter, statt zwei gleiche zu erzeugen
-      var t = tabKeys().slice(), i = +e.target.dataset.tabslot, v = e.target.value, j = t.indexOf(v);
-      if (j >= 0) t[j] = t[i];
-      t[i] = v; lookSet({ tabs: t }); renderTabbar(); route(true); toast('Reiter gespeichert');
+    if (curView !== 'settings') return;
+    var t = e.target, k = t.dataset.set;
+    if (t.id === 'customColor') { lookSet({ preset: 'custom', custom: t.value, play: null }); route(true); return; }
+    if (t.dataset.tabslot) {
+      var tk = tabKeys().slice(), i = +t.dataset.tabslot, v = t.value, j = tk.indexOf(v);
+      if (j >= 0) tk[j] = tk[i];   // doppelte Auswahl tauscht die beiden Tabs
+      tk[i] = v; lookSet({ tabs: tk }); renderTabbar(); route(true); toast('Tabs gespeichert'); return;
+    }
+    if (!k) return;
+    if (k === 'shuffle') { S.settings.shuffle = t.checked; save(); }
+    else if (k === 'why') { S.settings.whyOpen = t.checked; save(); }
+    else if (k === 'skip') { S.settings.ignoreSkipped = t.checked; cfg.excludeSkipped = null; save(); renderSidebar(); }
+    else if (k === 'greet') lookSet({ greet: t.checked });
+    else if (k === 'contrast') lookSet({ contrast: t.checked });
+    else if (k === 'tilt') {
+      var on = t.checked; lookSet({ tilt: on });
+      setTilt(on, true).then(function (ok) { if (on && !ok && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') toast('Bewegungssensor nicht freigegeben'); });
     }
   });
-  // Ein einziger Klick-Handler für die Einstellungsseite (die Seite wird bei jeder Änderung neu gezeichnet)
   app.addEventListener('click', function (e) {
-      if (curView !== 'settings') return;
-      var b;
-      if ((b = e.target.closest('[data-lsync]'))) {
-        var g = b.dataset.lsync, l = lookLocal().slice(), i = l.indexOf(g);
-        if (i >= 0) l.splice(i, 1); else l.push(g);
-        lookSet({ local: l }); route(true); toast(LOOK_GROUP_NAMES[g] + (i >= 0 ? ': auf allen Geräten gleich' : ': nur auf diesem Gerät')); return;
-      }
-      if ((b = e.target.closest('[data-appicon]'))) { lookSet({ appIcon: b.dataset.appicon }); applyAppIcon(); route(true); toast('Symbol gewählt – jetzt über Teilen → „Zum Home-Bildschirm“ ablegen'); return; }
-      if ((b = e.target.closest('[data-preset]'))) { lookSet({ preset: b.dataset.preset, play: null }); route(true); toast('Design „' + PRESETS[b.dataset.preset].name + '“ aktiv'); return; }
-      if ((b = e.target.closest('[data-look]'))) {
-        var v = b.dataset.v, patch = {}; patch[b.dataset.look] = v === 'true' ? true : v === 'false' ? false : v;
-        lookSet(patch); route(true); return;
-      }
-      if (e.target.closest('[data-look-reset]')) { lookSet({ play: null, motion: null, size: null, density: null, serif: null, contrast: null, world: null, width: null }); route(true); toast('Auf Design-Standard zurückgesetzt'); return; }
-      if ((b = e.target.closest('[data-hide]'))) { lookSet({ hidden: (LOOK.hidden || []).concat(b.dataset.hide) }); route(true); toast('„' + PRESETS[b.dataset.hide].name + '“ ausgeblendet'); return; }
-      if ((b = e.target.closest('[data-unhide]'))) { lookSet({ hidden: (LOOK.hidden || []).filter(function (k) { return k !== b.dataset.unhide; }) }); showHiddenPresets = true; route(true); return; }
-      if ((b = e.target.closest('.hidden-presets > summary'))) { showHiddenPresets = !b.parentElement.open; return; }
-      if ((b = e.target.closest('[data-swatch]'))) { lookSet({ preset: 'custom', custom: b.dataset.swatch, play: null }); route(true); return; }
-      if ((b = e.target.closest('[data-goal]'))) { var gk = b.dataset.goal; S.goals[gk] = Math.max(1, Math.min(gk === 'fix' ? 20 : 120, S.goals[gk] + +b.dataset.d)); save(); document.getElementById('goal-' + gk).textContent = S.goals[gk]; return; }
-      if ((b = e.target.closest('[data-qn]'))) { var n = Math.max(10, Math.min(50, quickCount() + +b.dataset.qn)); lsSet('dp600.quickN', String(n)); document.getElementById('qnVal').textContent = n; }
+    if (curView !== 'settings') return;
+    var b;
+    if ((b = e.target.closest('[data-setedit]'))) { SET_EDIT = !SET_EDIT; SET_Q = ''; route(true); return; }
+    if ((b = e.target.closest('[data-pin]'))) { e.preventDefault(); if (pinSet(b.dataset.pin, true)) route(true); return; }
+    if ((b = e.target.closest('[data-unpin]'))) { e.preventDefault(); pinSet(b.dataset.unpin, false); route(true); return; }
+    if ((b = e.target.closest('[data-reset]'))) { var rk = b.dataset.reset; askConfirm(SETS[rk].t + ' auf die Standardwerte zurücksetzen?', 'Zurücksetzen', function () { SETS[rk].reset(); route(true); toast(SETS[rk].t + ' zurückgesetzt'); }); return; }
+    if (e.target.closest('[data-greetnow]')) { showGreeting(true); return; }
+    if ((b = e.target.closest('[data-lsync]'))) {
+      var g = b.dataset.lsync, l = lookLocal().slice(), i = l.indexOf(g);
+      if (i >= 0) l.splice(i, 1); else l.push(g);
+      lookSet({ local: l }); route(true); toast(LOOK_GROUP_NAMES[g] + (i >= 0 ? ': auf allen Geräten gleich' : ': nur auf diesem Gerät')); return;
+    }
+    if ((b = e.target.closest('[data-appicon]'))) { lookSet({ appIcon: b.dataset.appicon }); applyAppIcon(); route(true); toast('Symbol gewählt – jetzt neu zum Home-Bildschirm hinzufügen'); return; }
+    if ((b = e.target.closest('[data-preset]'))) { lookSet({ preset: b.dataset.preset, play: null }); route(true); toast('Design „' + PRESETS[b.dataset.preset].name + '“'); return; }
+    if ((b = e.target.closest('[data-look]'))) {
+      var v = b.dataset.v, patch = {}; patch[b.dataset.look] = v === 'true' ? true : v === 'false' ? false : v;
+      lookSet(patch); route(true); return;
+    }
+    if ((b = e.target.closest('[data-hide]'))) { lookSet({ hidden: (LOOK.hidden || []).concat(b.dataset.hide) }); route(true); toast('„' + PRESETS[b.dataset.hide].name + '“ ausgeblendet'); return; }
+    if ((b = e.target.closest('[data-unhide]'))) { lookSet({ hidden: (LOOK.hidden || []).filter(function (k) { return k !== b.dataset.unhide; }) }); showHiddenPresets = true; route(true); return; }
+    if ((b = e.target.closest('.hidden-presets > summary'))) { showHiddenPresets = !b.parentElement.open; return; }
+    if ((b = e.target.closest('[data-swatch]'))) { lookSet({ preset: 'custom', custom: b.dataset.swatch, play: null }); route(true); return; }
+    if ((b = e.target.closest('[data-goal]'))) {
+      var gk = b.dataset.goal; S.goals[gk] = Math.max(1, Math.min(gk === 'fix' ? 20 : 120, S.goals[gk] + (+b.dataset.d) * (+b.dataset.s || 1))); save();
+      b.parentElement.querySelector('output').textContent = S.goals[gk]; return;
+    }
+    if ((b = e.target.closest('[data-qn]'))) { var n = Math.max(10, Math.min(50, quickCount() + (+b.dataset.d) * 5)); lsSet('dp600.quickN', String(n)); b.parentElement.querySelector('output').textContent = n; }
   });
-  function syncCard() {
-    var l = lookLocal();
-    var how = CLOUD.state === 'on' ? '✓ Geräte-Sync aktiv: Änderungen erscheinen nach wenigen Sekunden auf Ihren anderen Geräten.' :
-      FS.state === 'on' ? 'Abgleich über die Sicherungsdatei und den Übertragungscode.' : 'In dieser Version reisen die Einstellungen mit dem <a href="#/progress">Übertragungscode</a> und dem JSON-Export.';
-    return '<details class="card set-grp" data-grp="sync"' + (SET_OPEN.sync ? ' open' : '') + '><summary><span class="sg-t"><b>Abgleich zwischen Geräten</b><small>Welche Einstellungen auf allen Geräten gleich sind</small></span><span class="sg-chev" aria-hidden="true">›</span></summary><div class="sg-body"><p class="card-sub">' + how + ' Grün = auf allen Geräten gleich, grau = nur auf diesem Gerät.</p><div class="lsync">' +
-      Object.keys(LOOK_GROUPS).map(function (g) { var on = l.indexOf(g) < 0; return '<button type="button" class="chip' + (on ? ' on' : '') + '" data-lsync="' + g + '" aria-pressed="' + on + '">' + (on ? ico('check') + ' ' : '') + esc(LOOK_GROUP_NAMES[g]) + '</button>'; }).join('') +
-      '</div></div></details>';
-  }
+  // Bearbeiten: angeheftete Bereiche am Griff ≡ in eine neue Reihenfolge ziehen
+  (function () {
+    var drag = null;
+    app.addEventListener('pointerdown', function (e) {
+      var g = e.target.closest('[data-grip]'); if (!g || curView !== 'settings') return;
+      e.preventDefault(); drag = g.closest('.st-row'); drag.classList.add('dragging'); g.setPointerCapture && g.setPointerCapture(e.pointerId);
+    });
+    app.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      var list = drag.parentElement, rows = Array.prototype.slice.call(list.children).filter(function (r) { return r !== drag; });
+      var after = rows.filter(function (r) { var b = r.getBoundingClientRect(); return e.clientY > b.top + b.height / 2; }).pop();
+      if (after) after.after(drag); else list.prepend(drag);
+    });
+    var end = function () {
+      if (!drag) return; drag.classList.remove('dragging');
+      var order = Array.prototype.map.call(drag.parentElement.querySelectorAll('[data-sec]'), function (r) { return r.dataset.sec; });
+      drag = null; lookSet({ pins: order });
+    };
+    app.addEventListener('pointerup', end); app.addEventListener('pointercancel', end);
+  })();
   function viewProgress() {
     var ps = statsFor(ALL_MIDS);
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Lokal im Browser gespeichert</div><h1>Fortschritt & Daten</h1>' +
