@@ -2594,14 +2594,16 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 
 /* Einstellungen: aufklappbare Gruppen wie in iOS */
 .set-grp { padding: 0; }
-.set-grp > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 18px var(--card-pad, 24px); cursor: pointer; }
+.set-grp > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 18px 24px; cursor: pointer; }
 .set-grp > summary::-webkit-details-marker { display: none; }
 .sg-t { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sg-t b { font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
 .sg-t small { font-size: 13px; color: var(--text-2); }
 .sg-chev { font-size: 22px; color: var(--text-3); transition: transform .3s cubic-bezier(.32, .72, 0, 1); }
 .set-grp[open] .sg-chev { transform: rotate(90deg); }
-.sg-body { padding: 0 var(--card-pad, 24px) var(--card-pad, 24px); }
+.sg-body { padding: 0 24px 22px; }
+@media (max-width: 900px) { .set-grp > summary { padding: 16px 18px; } .sg-body { padding: 0 18px 18px; } }
+.set-grp .set-row:first-child { border-top: 1px solid var(--hairline); }
 .more-presets { margin-top: 14px; }
 .more-presets > summary { cursor: pointer; color: var(--link); font-weight: 500; font-size: 15px; padding: 6px 0; }
 .more-presets[open] > summary { margin-bottom: 12px; }
@@ -2720,6 +2722,7 @@ small, .small, .muted.small { font-size: var(--fs-cap); letter-spacing: -.005em;
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.17.1', d: '2026-10-16', items: ['Einstellungen: Abstände in den aufklappbaren Gruppen repariert', 'Neu: „Wiederholen“ – beantwortete Fragen kommen nach 1, 3, 7, 14 und 30 Tagen wieder, „Heute fällig“ auf der Startseite'] },
   { v: '1.17', d: '2026-10-16', items: ['Ruhigere Startseite „Heute“; Lernpfade, Schnell-Quiz und Prüfung unter „Entdecken“', 'Neue Fokus-Session: 15 Minuten mit Fehlern, neuen Fragen und einem Lese-Tipp', 'Einstellungen aufgeräumt, Schrift und Symbole im Apple-Stil, großer Titel beim Scrollen am iPhone', 'Hinweis bei neuer Version – ein Tippen aktualisiert die App'] },
   { v: '1.16.1', d: '2026-10-16', items: ['Handy: Lesefortschritt als Linie in Designfarbe am unteren Rand der Abschnittsleiste, der Lesering oben entfällt', 'Lesefortschritt am Seitenende jetzt ganz gefüllt', 'Kleine Leiste und Hell/Dunkel-Kreis rücken als Gruppe mittig zusammen'] },
   { v: '1.16', d: '2026-10-16', items: ['Handy: obere Leiste sitzt etwas tiefer und ist nur ganz oben auf der Seite sichtbar', 'Hell/Dunkel als schwebender Kreis neben der verkleinerten unteren Leiste'] },
@@ -8382,6 +8385,27 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var a = S.answered[qid] || (S.answered[qid] = { ok: false, n: 0, okN: 0 });
     a.n++; if (ok) a.okN++; a.ok = ok; a.last = Date.now();
     if (ok) delete S.wrong[qid]; else S.wrong[qid] = Date.now();
+    // (12) Wiederholen nach Abständen: richtig → nächstes Fach (3, 7, 14, 30 Tage), falsch → zurück auf 1 Tag
+    a.box = ok ? Math.min(SRS_DAYS.length - 1, a.box == null ? 1 : a.box + 1) : 0;
+    a.due = dayKey(new Date(Date.now() + SRS_DAYS[a.box] * 864e5));
+  }
+  var SRS_DAYS = [1, 3, 7, 14, 30];
+  function dueOf(id) { var a = S.answered[id]; if (!a) return null; return a.due || dayKey(new Date((a.last || 0) + (a.ok ? 3 : 1) * 864e5)); }
+  function dueIds() {
+    var t = dayKey();
+    return Object.keys(S.answered).filter(function (id) { var q = QIDX[id]; return q && !q.caseId && qRelevant(q) && dueOf(id) <= t; })
+      .sort(function (a, b) { return dueOf(a) < dueOf(b) ? -1 : dueOf(a) > dueOf(b) ? 1 : (S.answered[a].box || 0) - (S.answered[b].box || 0); });
+  }
+  function viewReview() {
+    var ids = dueIds().slice(0, 20);
+    if (!ids.length) {
+      app.innerHTML = '<div class="container"><div class="page-head"><h1>Wiederholen</h1></div>' + emptyBox('check', 'Heute ist nichts fällig', 'Beantwortete Fragen kommen nach 1, 3, 7, 14 und 30 Tagen wieder – je öfter Sie richtig liegen, desto später.', '<a class="btn" href="#/focus">Fokus-Session starten</a>') + '</div>';
+      return;
+    }
+    var all = dueIds().length;
+    app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Heute fällig</div><h1>Wiederholen</h1>' +
+      '<div class="sub">' + ids.length + (all > ids.length ? ' von ' + all : '') + (ids.length === 1 ? ' Frage, die' : ' Fragen, die') + ' jetzt wieder dran ' + (ids.length === 1 ? 'ist.' : 'sind.') + ' Richtig = später wieder, falsch = morgen erneut.</div></div><div id="revBody"></div></div>';
+    startQuiz(document.getElementById('revBody'), ids, { kind: 'review', title: 'Wiederholen · ' + ids.length + ' Fragen' });
   }
   function wrongIds() { return Object.keys(S.wrong).filter(function (id) { return QIDX[id]; }); }
   // Fragen aus „nicht relevanten" Modulen werden bei aktivierter Einstellung ausgeblendet
@@ -8469,6 +8493,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     else if (view === 'labs') viewLabs(p[1]);
     else if (view === 'discover') viewHome(true);
     else if (view === 'focus') viewFocus();
+    else if (view === 'review') viewReview();
     else if (view === 'result') viewQuizResult();
     else if (view === 'quick') viewQuick(+p[1] || quickCount());
     else if (view === 'resume') { viewResume(); return; }
@@ -8609,12 +8634,12 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // (15) Fokus-Session: ca. 15 Minuten – zuerst offene Fehler, dann unbeantwortete, dann ältere Fragen; danach ein Lese-Vorschlag
   function viewFocus() {
     var pool = Object.keys(QIDX).filter(function (id) { var q = QIDX[id]; return !q.caseId && qRelevant(q); });
-    var wr = shuffle(wrongIds().filter(function (id) { return pool.indexOf(id) >= 0; })).slice(0, 5);
+    var wr = dueIds().concat(shuffle(wrongIds())).filter(function (id, i, a) { return pool.indexOf(id) >= 0 && a.indexOf(id) === i; }).slice(0, 6);
     var fresh = shuffle(pool.filter(function (id) { return !S.answered[id] && wr.indexOf(id) < 0; })).slice(0, 10 - wr.length);
     var old = pool.filter(function (id) { return S.answered[id] && wr.indexOf(id) < 0; }).sort(function (a, b) { return (S.answered[a].last || 0) - (S.answered[b].last || 0); });
     var ids = wr.concat(fresh, old).slice(0, 10);
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Fokus-Session · ca. 15 Minuten</div><h1>Fokus</h1>' +
-      '<div class="sub">' + (wr.length ? wr.length + ' offene Fehler, ' : '') + (ids.length - wr.length) + ' weitere Fragen – danach ein passender Abschnitt zum Lesen.</div></div><div id="focusBody"></div></div>';
+      '<div class="sub">' + (wr.length ? wr.length + ' fällige Fragen und Fehler, ' : '') + (ids.length - wr.length) + ' weitere Fragen – danach ein passender Abschnitt zum Lesen.</div></div><div id="focusBody"></div></div>';
     startQuiz(document.getElementById('focusBody'), ids, { kind: 'focus', title: 'Fokus-Session', started: Date.now() });
   }
   function focusNext() {
@@ -9191,15 +9216,17 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     lsSet('dp600.seen.v1', JSON.stringify({ ready: rd.p, at: Date.now() }));
     var hr = new Date().getHours(), hello = hr < 11 ? 'Guten Morgen.' : hr < 18 ? 'Guten Tag.' : 'Guten Abend.';
     var steps = [], ri0 = resumeInfo(), pdH = planData(), ptH = planToday(pdH);
+    var dueN = dueIds().length;
+    if (dueN) steps.push(['review', 'Heute fällig: ' + dueN + (dueN === 1 ? ' Wiederholung' : ' Wiederholungen'), 'Fragen, die nach ihrem Abstand wieder dran sind', '#/review']);
     if (ptH) steps.push(['learn', 'Heute laut Plan', ptH.label, ptH.href]);
     if (ri0) steps.push(['play', 'Weitermachen', ri0.label, '#/resume']);
-    steps.push(['focus', 'Fokus-Session · 15 Min.', (wn ? 'Erst ' + Math.min(5, wn) + ' Fehler, dann neue Fragen und ein Abschnitt' : '10 Fragen und ein passender Abschnitt zum Lesen'), '#/focus']);
+    steps.push(['focus', 'Fokus-Session · 15 Min.', (wn || dueN ? 'Erst Fälliges und Fehler, dann neue Fragen und ein Abschnitt' : '10 Fragen und ein passender Abschnitt zum Lesen'), '#/focus']);
     if (wn) steps.push(['errors', wn + (wn === 1 ? ' offener Fehler' : ' offene Fehler'), 'Gezielt wiederholen, bis es sitzt', '#/errors']);
     if (MODS[next]) steps.push(['learn', 'M' + CMOD[next].nr + ' · ' + CMOD[next].title, 'Nächstes offenes Modul im ' + CMOD[next].lp.title, '#/module/' + next]);
     var weak = DOMAIN_KEYS.filter(function (k) { return rd.dom[k].ok > 0 || Object.keys(S.answered).length; }).sort(function (x, y) { return rd.dom[x].p - rd.dom[y].p; })[0];
     if (weak && Object.keys(S.answered).length) steps.push(['exam', 'Schwächste Domäne: ' + DOMAINS[weak].label + ' (' + rd.dom[weak].p + ' %)', 'Mit einem Schnell-Quiz aufholen', '#/quick/' + quickCount()]);
     else steps.push(['exam', 'Erstes Schnell-Quiz', quickCount() + ' gemischte Fragen aus allen Modulen', '#/quick/' + quickCount()]);
-    var STEP_ICON = { focus: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6"/>', play: '<path d="M8 5.5v13l10-6.5z"/>', errors: NAV_ICONS.errors, learn: NAV_ICONS.learn, exam: NAV_ICONS.exam };
+    var STEP_ICON = { review: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4v4.5H9"/><path d="M12 8.5V12l2.5 1.5"/>', focus: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6"/>', play: '<path d="M8 5.5v13l10-6.5z"/>', errors: NAV_ICONS.errors, learn: NAV_ICONS.learn, exam: NAV_ICONS.exam };
     var today = '<section class="today"><div class="td-main"><div class="t-eyebrow">Heute</div><h1 class="td-h">' + hello + '</h1>' +
       '<p class="td-sub">' + ps.done + ' von ' + ps.relevant + ' Modulen erledigt · ' + okNow + ' von ' + relQ.length + ' Fragen sicher beantwortet</p>' +
       (pdH && pdH.daysLeft >= 0 ? '<a class="countdown" href="#/plan">' + ico('plan') + '<b>' + (pdH.daysLeft ? 'Noch ' + pdH.daysLeft + (pdH.daysLeft === 1 ? ' Tag' : ' Tage') + ' bis zur Prüfung' : 'Heute ist Prüfung – viel Erfolg!') + '</b><span>' + (pdH.diff < 0 ? (-pdH.diff) + ' Module hinter dem Plan' : pdH.diff > 0 ? pdH.diff + ' Module voraus' : 'im Plan') + '</span></a>' :
@@ -11156,6 +11183,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var it = [], A = function (key, group, title, sub, icon, run, kw) { it.push({ key: key, group: group, title: title, sub: sub || '', icon: icon, run: run, kw: normTxt(title + ' ' + (sub || '') + ' ' + (kw || '')) }); };
     var ri = resumeInfo();
     if (ri) A('a:resume', 'Aktionen', 'Weitermachen', ri.label, 'play', function () { go('#/resume'); }, 'fortsetzen');
+    A('a:review', 'Aktionen', 'Wiederholen', dueIds().length + ' heute fällig', 'errors', function () { go('#/review'); }, 'wiederholen faellig spaced repetition');
     A('a:focus', 'Aktionen', 'Fokus-Session', 'ca. 15 Minuten: Fehler, neue Fragen, ein Abschnitt', 'exam', function () { go('#/focus'); }, 'fokus lernen session');
     A('a:discover', 'Aktionen', 'Entdecken', 'Lernpfade, Schnell-Quiz, Prüfung', 'home', function () { go('#/discover'); }, 'lernpfade entdecken');
     A('a:quick', 'Aktionen', 'Schnell-Quiz starten', quickCount() + ' zufällige Fragen', 'exam', function () { go('#/quick/' + quickCount()); }, 'quiz test ueben');
