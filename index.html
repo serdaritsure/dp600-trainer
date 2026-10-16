@@ -2572,16 +2572,25 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 /* Schwebender Hell/Dunkel-Kreis rechts neben der verkleinerten Leiste */
 .theme-fab { display: none; }
 @media (max-width: 900px) {
-  html.tbnav .theme-fab { display: grid; place-items: center; position: fixed; z-index: 61; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  html.tbnav .theme-fab { display: grid; place-items: center; position: fixed; z-index: 61; left: calc(100% - 60px); bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hairline-strong); color: var(--text); font-size: 18px; cursor: pointer;
     background: color-mix(in srgb, var(--surface) 92%, transparent); -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, .14), 0 1px 3px rgba(0, 0, 0, .06); -webkit-tap-highlight-color: transparent;
     opacity: 0; transform: translateY(12px) scale(.8); pointer-events: none; visibility: hidden;
     transition: opacity .3s ease, transform .5s cubic-bezier(.32, .72, 0, 1), visibility 0s .5s; }
   html.tbnav body.tb-min:not(.ms-open) .theme-fab { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .3s ease .1s, transform .5s cubic-bezier(.32, .72, 0, 1) .05s; }
-  html.tbnav body.tb-min .tb-bar { margin-left: 12px; margin-right: auto; }
+  /* Kleine Leiste + Kreis als Gruppe mittig: Leiste rückt um halbe Kreisbreite + Abstand nach links, der Kreis sitzt 10 px daneben */
+  html.tbnav body.tb-min .tb-bar { width: min(74%, calc(100% - 58px)); translate: -29px 0; }
   html.tbnav .theme-fab:active { transform: scale(.92); }
 }
+
+/* Handy: Lesefortschritt als Linie am unteren Rand der Abschnittsleiste (die freie Linie oben verdeckt iOS unter dem Glas) */
+@media (max-width: 900px) {
+  html.tbnav body:has(.learn-layout) .read-line { display: none !important; }
+  html.tbnav body:has(.learn-layout) .subnav { background-image: linear-gradient(var(--prog), var(--prog)) !important; background-repeat: no-repeat;
+    background-position: left bottom; background-size: calc(var(--read-p, 0) * 100%) 2.5px; transition: background-size .15s linear; }
+}
+@media (max-width: 900px) { html.tbnav body .read-ring { display: none !important; } }
 
 </style>
 <script>
@@ -2640,6 +2649,7 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.16.1', d: '2026-10-16', items: ['Handy: Lesefortschritt als Linie in Designfarbe am unteren Rand der Abschnittsleiste, der Lesering oben entfällt', 'Lesefortschritt am Seitenende jetzt ganz gefüllt', 'Kleine Leiste und Hell/Dunkel-Kreis rücken als Gruppe mittig zusammen'] },
   { v: '1.16', d: '2026-10-16', items: ['Handy: obere Leiste sitzt etwas tiefer und ist nur ganz oben auf der Seite sichtbar', 'Hell/Dunkel als schwebender Kreis neben der verkleinerten unteren Leiste'] },
   { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint – kräftiges Grün, Gelb und Rot, Seitenleiste in der Farbe der Anwendung', '13 App-Symbole, neu u. a. „IT sure Buch“ – die Farbe folgt jetzt immer dem gewählten Design', 'Obere Leiste der Home-Bildschirm-App deckend und scharf'] },
   { v: '1.14.1', d: '2026-10-16', items: ['Obere Leiste am iPhone gestochen scharf, nur noch eine Trennlinie'] },
@@ -8484,7 +8494,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       links.forEach(function (a) { a.classList.toggle('on', a === cur); });
       // Lesefortschritt im Modul (Linie bei „Ausgewogen“, Ring bei „Lebendig“)
       var lm = document.querySelector('.learn-main');
-      if (lm) { var rr = lm.getBoundingClientRect(), pr = Math.max(0, Math.min(1, -rr.top / Math.max(1, rr.height - innerHeight * .6))); document.documentElement.style.setProperty('--read-p', pr.toFixed(3)); var rt = document.getElementById('readRingTxt'); if (rt) rt.textContent = Math.round(pr * 100) + '%'; }
+      if (lm) { var rr = lm.getBoundingClientRect(), pr = Math.max(0, Math.min(1, -rr.top / Math.max(1, rr.height - innerHeight * .6))); if (window.scrollY + innerHeight >= document.documentElement.scrollHeight - 4) pr = 1; document.documentElement.style.setProperty('--read-p', pr.toFixed(3)); var rt = document.getElementById('readRingTxt'); if (rt) rt.textContent = Math.round(pr * 100) + '%'; }
       // „Ruhig“: der Absatz auf Lesehöhe bleibt voll, die übrigen treten leicht zurück
       if (lookVal('play') === 'calm') {
         var best = null, bd = 1e9, mid = innerHeight * .38;
@@ -8955,9 +8965,11 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       var r = bar.getBoundingClientRect(); if (!r.height) return;
       fab.style.width = fab.style.height = r.height + 'px';
       fab.style.bottom = (window.innerHeight - r.bottom) + 'px';
+      if (document.body.classList.contains('tb-min')) fab.style.left = (r.right + 10) + 'px';
     };
     var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(fit).observe(bar); else setTimeout(hook, 300); fit(); };
-    hook(); window.addEventListener('resize', fit);
+    hook(); window.addEventListener('resize', fit); document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('tb-bar')) fit(); });
+    new MutationObserver(function () { setTimeout(fit, 30); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   })();
   // Beim Herunterscrollen schrumpft die Leiste, beim Hochscrollen kommt sie zurück (wie iOS 26)
   (function () {
