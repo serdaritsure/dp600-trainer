@@ -2856,6 +2856,13 @@ html[data-oled="1"] body { background: #000; }
 .cmdk-cancel { display: none; flex: none; border: 0; background: none; color: var(--link); font: inherit; font-size: 17px; padding: 6px 2px 6px 8px; cursor: pointer; }
 @media (max-width: 900px), (pointer: coarse) { .cmdk-esc { display: none; } .cmdk-cancel { display: block; } }
 
+/* Leiste: Reiter dürfen nie breiter als die Leiste werden – lange Beschriftungen („Einstellungen“) werden gekürzt */
+html.tbnav .tb-bar { max-width: 100%; box-sizing: border-box; overflow: hidden; }
+html.tbnav body .tb-item { min-width: 0; overflow: hidden; }
+html.tbnav .tb-items { overflow: hidden; }
+/* Seite nie seitlich verschiebbar (schwebende Kreise liegen zeitweise außerhalb) */
+@media (max-width: 900px) { html, body { overflow-x: clip; } }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2917,6 +2924,7 @@ html[data-oled="1"] body { background: #000; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.22.2', d: '2026-10-16', items: ['Untere Leiste verrutscht nicht mehr seitlich, auch mit dem Reiter „Einstellungen“'] },
   { v: '1.22.1', d: '2026-10-16', items: ['Kleine untere Leiste: Symbole wieder gleichmäßig verteilt, Markierung sitzt auf dem gewählten Reiter'] },
   { v: '1.22', d: '2026-10-16', items: ['Neue Startseite: nächster Schritt als große Karte, Tagesziel, Prüfungsreife, Serie und Prüfungstermin als wischbare Karten', 'Modulseiten mit farbigem Kopf und Kapitel-Übersicht', 'Lernpfad-Seiten mit Fortschrittsring, Lernzeit und „Weiter“-Knopf', 'Quiz auf dem iPhone im Vollbild mit großen Antwortkarten', 'Erscheinungsbild: Automatisch, Hell, Dunkel und neu „Schwarz“ für OLED-Bildschirme', 'Suchknopf neben der verkleinerten unteren Leiste, Suche am iPhone mit „Abbrechen“', 'Punkte unter wischbaren Kartenreihen', 'Leere Seiten mit Illustration', 'Vor/Zurück zwischen Lernpfaden funktioniert in allen Kursen'] },
   { v: '1.21.2', d: '2026-10-16', items: ['Einstellungen: Navigation ist jetzt Teil von „Darstellung“'] },
@@ -10650,7 +10658,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       var bar = document.querySelector('.tb-bar'); if (!bar) return;
       var r = bar.getBoundingClientRect(); if (!r.height) return;
       [fab, sfab].forEach(function (f) { f.style.width = f.style.height = r.height + 'px'; f.style.bottom = (window.innerHeight - r.bottom) + 'px'; });
-      if (document.body.classList.contains('tb-min')) { fab.style.left = (r.right + 10) + 'px'; sfab.style.left = (r.left - 10 - r.height) + 'px'; }
+      if (document.body.classList.contains('tb-min')) { fab.style.left = Math.min(r.right + 10, window.innerWidth - r.height - 4) + 'px'; sfab.style.left = Math.max(r.left - 10 - r.height, 4) + 'px'; }
     };
     var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(function () { fit(); placePill(false); }).observe(bar); else setTimeout(hook, 300); fit(); };
     hook(); window.addEventListener('resize', fit); document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('tb-bar')) { fit(); placePill(false); } });
