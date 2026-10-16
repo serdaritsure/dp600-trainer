@@ -2484,6 +2484,28 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 }
 .greet.settled .gr-in > * { animation: none; }
 
+/* Über die App: App-Symbole, Versionsverlauf, Hinweis „Neu in …“ */
+.icon-row { align-items: flex-start; flex-wrap: wrap; }
+.icon-pick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ip { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 4px; border: 0; border-radius: 14px; background: none; color: var(--text-2); font: inherit; font-size: 12px; cursor: pointer; }
+.ip img { width: 56px; height: 56px; border-radius: 13px; box-shadow: 0 0 0 1px var(--hairline), 0 4px 10px -4px rgba(0, 0, 0, .2); }
+.ip.on { color: var(--accent); font-weight: 600; background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.ip.on img { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.changelog { margin-top: 6px; border-top: 1px solid var(--hairline); padding-top: 10px; }
+.changelog summary { cursor: pointer; font-weight: 600; color: var(--link); }
+.changelog ol { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 14px; }
+.cl-h { display: flex; gap: 10px; align-items: baseline; }
+.cl-h b { font-variant-numeric: tabular-nums; }
+.cl-h span { font-size: 13px; color: var(--text-3); }
+.changelog ul { margin: 4px 0 0; padding-left: 18px; color: var(--text-2); font-size: 15px; }
+.wn-pill { position: fixed; left: 50%; top: calc(var(--topbar-h) + 10px); z-index: 70; translate: -50% 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+  max-width: min(420px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 18px; border: 1px solid var(--hairline-strong); cursor: pointer; text-align: left; font: inherit; color: var(--text);
+  background: color-mix(in srgb, var(--surface) 90%, transparent); -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .25); animation: wnIn .5s cubic-bezier(.34, 1.28, .64, 1) both; }
+.wn-pill b { font-size: 14px; color: var(--accent); } .wn-pill span { font-size: 13px; color: var(--text-2); }
+.wn-pill.out { opacity: 0; translate: -50% -8px; transition: opacity .3s, translate .3s; }
+@keyframes wnIn { from { translate: -50% -16px; scale: .95; } }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2537,6 +2559,28 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 
 <!-- Daten: werden ohne Webserver per <script> geladen und registrieren sich in window.DP600 -->
+<script>
+/* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
+   Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
+window.DP_CHANGELOG = [
+  { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis „Neu in …“ nach Updates', 'Sechs App-Symbole zur Auswahl für den Home-Bildschirm'] },
+  { v: '1.12.2', d: '2026-10-16', items: ['Obere Leiste im App-Modus klar statt dunstig'] },
+  { v: '1.12.1', d: '2026-10-16', items: ['Reiter „Lernen“ wird am Handy immer ausgewählt und führt zur letzten Lernstelle'] },
+  { v: '1.12', d: '2026-10-16', items: ['Als App auf dem iPhone-Home-Bildschirm nutzbar – Vollbild und offline', 'Online unter serdaritsure.github.io/dp600-trainer'] },
+  { v: '1.11', d: '2026-10-16', items: ['Hintergrundton je Lernpfad, Kapitelnummern im Lernbereich, Karten mit Tiefe', 'Kontextmenü per langem Druck oder Rechtsklick', 'Lernpfad als Reisekarte, Begrüßung am Morgen, Lichtreflex auf Glas'] },
+  { v: '1.10', d: '2026-10-16', items: ['Stil und Stilwelt zusammengelegt: Ruhig, Ausgewogen, Lebendig', 'Am Mac wahlweise Leiste unten statt Seitenleiste – mit mehr Reitern bei breitem Fenster'] },
+  { v: '1.9', d: '2026-10-16', items: ['Ziehbare Auswahl-Pille in der Leiste, rastet beim nächsten Reiter ein', 'Neue Seiten fließen langsam herein wie auf Apple-Produktseiten'] },
+  { v: '1.8', d: '2026-10-16', items: ['Neue Handy-Navigation wie Apple Music: schwebende Leiste, Weitermachen-Kapsel, „Mehr“ als Blatt', 'Reiter in den Einstellungen frei wählbar'] },
+  { v: '1.7', d: '2026-10-16', items: ['iPhone: kein seitliches Verrutschen mehr, Lesemodus-Knopf neu gestaltet'] },
+  { v: '1.6', d: '2026-10-16', items: ['Interaktive Labore: DAX-Filterkontext, Speichermodi, Sicherheit, Medallion', 'Prüfungsplan mit Countdown und Kalender-Export, Spickzettel und Notizen'] },
+  { v: '1.5', d: '2026-10-16', items: ['Tagesziele als Ringe, Lernserie, Aktivitätskalender und Abzeichen', 'Befehlspalette mit ⌘K', 'Neue Designs Sonnenuntergang und Wald, eigene Farbe wählbar'] },
+  { v: '1.4', d: '2026-10-15', items: ['Einstellungen mit 8 Designs, Stilen, Schriftgröße und Dichte', 'Startseite „Heute“ mit Prüfungsreife-Ring'] },
+  { v: '1.3', d: '2026-10-15', items: ['Bedienung: Tab-Leiste am Handy, Weitermachen, Schnell-Quiz, Karteikarten im Vollbild, Tastenkürzel', 'Fortschritt per Code auf andere Geräte übertragen'] },
+  { v: '1.2', d: '2026-10-15', items: ['Apple-Stil mit Liquid Glass, Modulseiten wie Produktseiten, ruhiges Quiz-Feedback'] },
+  { v: '1.0', d: '2026-10-15', items: ['Erste Version: 5 Lernpfade, 16 Module, 192 Fragen mit Begründungen', 'Prüfungssimulation mit Fallstudien, Timer und Score 0–1000'] }
+];
+
+</script>
 <script>
 /*
  * Zentrale Registry für alle Lerninhalte.
@@ -9889,12 +9933,16 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
 
   // (10) Als App auf dem Home-Bildschirm: Statusleistenfarbe und Web-App-Manifest (Symbol kommt aus updateIcon)
+  function applyAppIcon() {
+    var l = document.querySelector('link[data-static-icon]'); if (l) l.href = 'icons/' + (LOOK.appIcon || 'ring') + '.png';
+  }
   function appIcon() {
     try {
       var cs = getComputedStyle(document.documentElement), bg = (cs.getPropertyValue('--bg') || '#ffffff').trim();
       var tc = document.querySelector('meta[name="theme-color"]') || document.createElement('meta'); tc.name = 'theme-color'; tc.content = bg; document.head.appendChild(tc);
       // Web-App-Version: echtes Manifest liegt bei; Offline-Fähigkeit per Service Worker
       if (document.querySelector('link[rel="manifest"][data-static]')) {
+        applyAppIcon();
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(function () {});
         return;
       }
@@ -10567,6 +10615,36 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       '<div class="cb-r"><span>Kontrast Akzent hell ' + ok(r.light, 4.5) + '</span><span>Kontrast Akzent dunkel ' + ok(r.dark, 4.5) + '</span><span>Kontrast Nebentext ' + ok(r.text, 4.5) + '</span></div></div>';
   }
   var showHiddenPresets = false;
+  // Versionsverlauf, App-Symbole (nur Web-App) – unterster Abschnitt der Einstellungen
+  var CHANGES = window.DP_CHANGELOG || [], APP_VER = CHANGES[0] ? CHANGES[0].v : '1.0';
+  var APP_ICONS = [['ring', 'Reife-Ring'], ['bars', 'Balken'], ['cube', 'Datenwürfel'], ['mono', 'Monogramm'], ['path', 'Lernpfad'], ['check', 'Bestanden']];
+  function isWebApp() { return !!document.querySelector('link[data-static-icon]'); }
+  function fmtDay(k) { return parseDay(k).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function aboutCard() {
+    var cur = LOOK.appIcon || 'ring';
+    var icons = isWebApp() ? '<div class="set-row icon-row"><div class="set-l"><b>App-Symbol</b><span>Wähle ein Symbol und lege die App danach in Safari über Teilen → „Zum Home-Bildschirm“ ab. Für ein neues Symbol die alte Verknüpfung löschen und neu hinzufügen.</span></div>' +
+      '<div class="set-c icon-pick">' + APP_ICONS.map(function (x) {
+        return '<button type="button" class="ip' + (x[0] === cur ? ' on' : '') + '" data-appicon="' + x[0] + '" aria-pressed="' + (x[0] === cur) + '"><img src="icons/' + x[0] + '.png" alt="" width="56" height="56"><span>' + x[1] + '</span></button>';
+      }).join('') + '</div></div>'
+      : '<div class="set-row"><div class="set-l"><b>App-Symbol</b><span>Auswählbar in der Web-App unter serdaritsure.github.io/dp600-trainer – dort lässt sich die App auch auf den Home-Bildschirm legen.</span></div></div>';
+    return '<section class="card" id="about"><h2>Über die App</h2>' + icons +
+      '<div class="set-row"><div class="set-l"><b>Version ' + esc(APP_VER) + '</b><span>' + (CHANGES[0] ? fmtDay(CHANGES[0].d) : '') + '</span></div></div>' +
+      '<details class="changelog" id="changelog"' + (openChangelog ? ' open' : '') + '><summary>Versionsverlauf</summary><ol>' + CHANGES.map(function (c) {
+        return '<li><div class="cl-h"><b>' + esc(c.v) + '</b><span>' + fmtDay(c.d) + '</span></div><ul>' + c.items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></li>';
+      }).join('') + '</ol></details></section>';
+  }
+  var openChangelog = false;
+  // Nach einem Update einmalig „Neu in …“ zeigen (nicht beim allerersten Start)
+  function whatsNew() {
+    var seen = lsGet('dp600.ver'); lsSet('dp600.ver', APP_VER);
+    if (!seen || seen === APP_VER || !CHANGES[0]) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'wn-pill';
+    b.innerHTML = '<b>Neu in ' + esc(APP_VER) + '</b><span>' + esc(CHANGES[0].items[0]) + '</span>';
+    document.body.appendChild(b);
+    var close = function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 400); };
+    b.addEventListener('click', function () { close(); openChangelog = true; go('#/settings'); setTimeout(function () { var c = document.getElementById('about'); if (c) c.scrollIntoView({ behavior: 'smooth' }); openChangelog = false; }, 450); });
+    setTimeout(close, 9000);
+  }
   function viewSettings() {
     var seg = function (key, opts, cur) {
       return '<span class="seg" role="group">' + opts.map(function (o) {
@@ -10619,7 +10697,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         row('Tagesziel: Lesen', 'Minuten in der Vertiefung pro Tag', goalStep('min', 5)) +
         row('Tagesziel: Fehler', 'Abgebaute Fehler pro Tag', goalStep('fix', 1)) +
         row('Schnell-Quiz', 'Standard-Anzahl Fragen', '<div class="stepper"><button class="st-btn" data-qn="-5" aria-label="5 weniger">−</button><output id="qnVal">' + quickCount() + '</output><button class="st-btn" data-qn="5" aria-label="5 mehr">+</button></div>') +
-      '</section></div>';
+      '</section>' + aboutCard() + '</div>';
     document.getElementById('setSkip').addEventListener('change', function () { S.settings.ignoreSkipped = this.checked; cfg.excludeSkipped = null; save(); renderSidebar(); });
     document.getElementById('setShuffle').addEventListener('change', function () { S.settings.shuffle = this.checked; save(); });
     document.getElementById('setWhy').addEventListener('change', function () { S.settings.whyOpen = this.checked; save(); });
@@ -10651,6 +10729,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   app.addEventListener('click', function (e) {
       if (curView !== 'settings') return;
       var b;
+      if ((b = e.target.closest('[data-appicon]'))) { lookSet({ appIcon: b.dataset.appicon }); applyAppIcon(); route(true); toast('Symbol gewählt – jetzt über Teilen → „Zum Home-Bildschirm“ ablegen'); return; }
       if ((b = e.target.closest('[data-preset]'))) { lookSet({ preset: b.dataset.preset, play: null }); route(true); toast('Design „' + PRESETS[b.dataset.preset].name + '“ aktiv'); return; }
       if ((b = e.target.closest('[data-look]'))) {
         var v = b.dataset.v, patch = {}; patch[b.dataset.look] = v === 'true' ? true : v === 'false' ? false : v;
@@ -11070,6 +11149,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   route();
   setTimeout(function () { try { showGreeting(); } catch (e) {} }, 200);
   setTimeout(appIcon, 400);
+  setTimeout(function () { try { whatsNew(); } catch (e) {} }, 1500);
   cloudInit();
 })();
 
