@@ -2506,6 +2506,17 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 .wn-pill.out { opacity: 0; translate: -50% -8px; transition: opacity .3s, translate .3s; }
 @keyframes wnIn { from { translate: -50% -16px; scale: .95; } }
 
+/* Abgleich der Einstellungen + Sicherungs-Erinnerung (Version 2.x) */
+.lsync { display: flex; flex-wrap: wrap; gap: 8px; }
+.lsync .chip.on { background: var(--accent); color: var(--on-accent); }
+.lsync .chip svg { width: 14px; height: 14px; vertical-align: -2px; }
+.bk-bar { display: flex; align-items: center; gap: 16px; margin: 0 12px 12px; padding: 18px 28px; background: var(--surface); border: 1px solid var(--border, rgba(127,127,127,.25)); border-radius: var(--r-card, 18px); }
+.bk-ic svg { width: 26px; height: 26px; color: var(--accent); }
+.bk-t { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.bk-t span { color: var(--text-2); font-size: 14px; }
+.bk-a { display: flex; gap: 8px; }
+@media (max-width: 900px) { .bk-bar { margin: 0 0 12px; padding: 16px; flex-wrap: wrap; } .bk-a { width: 100%; } }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2563,6 +2574,7 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden mit dem Fortschritt auf andere Geräte übertragen', 'Selbst festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Speicher wird vor automatischem Löschen geschützt, Erinnerung nach 7 Tagen ohne Sicherung'] },
   { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis „Neu in …“ nach Updates', 'Sechs App-Symbole zur Auswahl für den Home-Bildschirm'] },
   { v: '1.12.2', d: '2026-10-16', items: ['Obere Leiste im App-Modus klar statt dunstig'] },
   { v: '1.12.1', d: '2026-10-16', items: ['Reiter „Lernen“ wird am Handy immer ausgewählt und führt zur letzten Lernstelle'] },
@@ -8065,8 +8077,30 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   function lookSet(patch) {
     Object.keys(patch).forEach(function (k) { LOOK[k] = patch[k]; });
+    var ks = Object.keys(patch), sk = syncedKeys();
+    if (S && (ks.indexOf('local') >= 0 || ks.some(function (k) { return sk.indexOf(k) >= 0; }))) { lookPush(); save(); }
     lsSet(LOOK_KEY, JSON.stringify(LOOK)); lsDel('dp600.theme');
     applyLook();
+  }
+  // Darstellung geräteübergreifend: S.look = {v: Werte, at: Zeitpunkt}; Gruppen in LOOK.local bleiben auf diesem Gerät
+  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav'], extras: ['greet', 'tilt', 'appIcon'] };
+  var LOOK_GROUP_NAMES = { design: 'Design & Stil', mode: 'Hell/Dunkel', motion: 'Animationen', text: 'Schrift & Lesebreite', nav: 'Navigation & Reiter', extras: 'Begrüßung, Neigung, App-Symbol' };
+  function lookLocal() { return LOOK.local || ['nav', 'extras']; }
+  function syncedKeys() { var l = lookLocal(), ks = []; Object.keys(LOOK_GROUPS).forEach(function (g) { if (l.indexOf(g) < 0) ks = ks.concat(LOOK_GROUPS[g]); }); return ks; }
+  function lookPush(at) {
+    var v = Object.assign({}, S.look && S.look.v);
+    syncedKeys().forEach(function (k) { if (LOOK[k] == null) delete v[k]; else v[k] = LOOK[k]; });
+    S.look = { v: v, at: at != null ? at : Date.now() }; LOOK._at = S.look.at;
+  }
+  // Neueren Stand eines anderen Geräts übernehmen (nach Cloud-Abgleich, Code, Import)
+  function lookPull() {
+    if (!S.look || !S.look.v || (S.look.at || 0) <= (LOOK._at || 0)) return false;
+    var v = S.look.v;
+    syncedKeys().forEach(function (k) { if (k in v) LOOK[k] = v[k]; else delete LOOK[k]; });
+    if (!PRESETS[LOOK.preset]) LOOK.preset = 'fabric';
+    LOOK._at = S.look.at; lsSet(LOOK_KEY, JSON.stringify(LOOK)); applyLook();
+    if (typeof renderTabbar === 'function') try { renderTabbar(); } catch (e) {}
+    return true;
   }
   applyLook();
   function isReduced() { var m = lookVal('motion'); return m !== 'on' || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
@@ -8086,6 +8120,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     try { var raw = lsGet(STORE_KEY); if (raw) { var o = JSON.parse(raw); if (o && o.v === 1) return normalize(o); } } catch (e) {}
     return emptyState();
   })();
+  // Erststart dieser Version: vorhandene Darstellung als Stand mit Zeitpunkt 0 eintragen (verliert gegen jede echte Änderung)
+  if (!S.look) lookPush(LOOK._at || 0); else lookPull();
   function save() { S.updated = Date.now(); lsSet(STORE_KEY, JSON.stringify(S)); fileSyncSchedule(); cloudSchedule(); }
   // Zwei Fortschrittsstände zusammenführen (anderes Gerät, Übertragungscode, Cloud-Speicher):
   // je Frage gilt die zuletzt gegebene Antwort, Bestwerte das Maximum, Status und Einstellungen vom neueren Stand.
@@ -8109,6 +8145,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     r.status = newer ? Object.assign({}, r.status, b.status) : Object.assign({}, b.status, r.status);
     if (newer) { r.settings = Object.assign({}, b.settings); r.goals = Object.assign({}, b.goals); }
     if (newer && b.plan !== undefined) r.plan = b.plan;
+    if (b.look && (!r.look || (b.look.at || 0) > (r.look.at || 0))) r.look = b.look;
     // Markierungen, Notizen, Lesezeichen: vereinen; bei gleicher Notiz gewinnt die neuere
     Object.keys(b.marks).forEach(function (k) {
       var list = r.marks[k] || (r.marks[k] = []), byId = {}; list.forEach(function (m) { byId[m.id] = m; });
@@ -8948,7 +8985,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var quick = '<section class="quick-bar"><div class="qb-copy"><b>Schnell-Quiz</b><span>Zufällige Fragen aus allen Modulen – ideal für zwischendurch.</span></div>' +
       '<div class="stepper" role="group" aria-label="Anzahl Fragen"><button class="st-btn" data-qn="-5" aria-label="5 weniger">−</button><output id="qnVal">' + qn + '</output><button class="st-btn" data-qn="5" aria-label="5 mehr">+</button></div>' +
       '<a class="btn" id="qnGo" href="#/quick/' + qn + '">Starten</a></section>';
-    app.innerHTML = '<div class="home">' + today + carousel + quick + examRow +
+    app.innerHTML = '<div class="home">' + today + backupBar() + carousel + quick + examRow +
       '<footer class="home-foot">Inhalte basieren ausschließlich auf Microsoft Learn (Kurs DP-600T00-A) und dem offiziellen DP-600 Study Guide. Keine offiziellen Prüfungsfragen. Microsoft und Microsoft Fabric sind Marken der Microsoft Corporation. © IT sure GmbH</footer></div>';
     initCarousel(app.querySelector('.lp-carousel'));
     app.querySelector('.stepper').addEventListener('click', function (e) {
@@ -9996,7 +10033,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     try {
       var w = await FS.handle.createWritable();
       await w.write(fsPayload()); await w.close();
-      FS.lastWrite = Date.now(); FS.error = '';
+      FS.lastWrite = Date.now(); FS.error = ''; markBackup();
       fsUpdateUI();
     } catch (e) { FS.state = 'error'; FS.error = e.message || String(e); fsUpdateUI(); }
   }
@@ -10015,7 +10052,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   async function fsReconcile() {
     var p = await fsReadFile();
     if (p && (p.updated || 0) > (S.updated || 0)) {
-      S = normalize(p); lsSet(STORE_KEY, JSON.stringify(S));
+      S = normalize(p); lsSet(STORE_KEY, JSON.stringify(S)); lookPull();
       toast('Fortschritt aus der Sicherungsdatei übernommen'); route(true);
     } else await fsWrite();
   }
@@ -10667,7 +10704,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var hiddenBox = hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ') · ' + hiddenL.map(function (k) { return esc(PRESETS[k].name); }).join(', ') + '</summary>' +
       '<div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '';
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Einstellungen</div><h1>Darstellung und Lernen</h1>' +
-      '<div class="sub">Die Darstellung gilt nur für dieses Gerät. Lern-Einstellungen werden mit Ihren anderen Geräten abgeglichen.</div></div>' +
+      '<div class="sub">Design, Stil und Animationen reisen mit Ihrem Fortschritt auf andere Geräte. Was nur hier gelten soll, legen Sie unten unter „Abgleich“ fest.</div></div>' +
       '<section class="card"><h2>Design</h2><p class="card-sub">Ein Klick setzt Farben und Stil. Einzelne Optionen darunter passen Sie danach an.</p><div class="preset-grid">' + presets + '</div>' + hiddenBox + customBox() + '</section>' +
       '<section class="card" id="lookBox"><h2>Erscheinungsbild</h2>' +
         row('Hell oder dunkel', '„System“ folgt Mac oder iPhone, „Tageszeit“ ist von 7 bis 19 Uhr hell', seg('mode', [['system', 'System'], ['time', 'Tageszeit'], ['light', 'Hell'], ['dark', 'Dunkel']], lookVal('mode'))) +
@@ -10684,7 +10721,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<div class="set-row tabs-row"><div class="set-l"><b>Reiter unten</b><span>Vier Reiter nach Wahl; „Mehr“ bleibt immer rechts. Am Mac kommen je nach Fensterbreite weitere dazu</span></div><div class="set-c tab-pick">' + tabKeys().map(function (k, i) {
           return '<label class="tp-slot"><small>' + (i + 1) + '</small><select data-tabslot="' + i + '" aria-label="Reiter ' + (i + 1) + '">' + Object.keys(TAB_OPTS).map(function (o) { return '<option value="' + o + '"' + (o === k ? ' selected' : '') + '>' + TAB_OPTS[o][1] + '</option>'; }).join('') + '</select></label>';
         }).join('') + '</div></div>' +
-        '<div class="actions"><button class="btn ghost" data-look-reset="1">Auf Design-Standard zurücksetzen</button></div></section>' +
+        '<div class="actions"><button class="btn ghost" data-look-reset="1">Auf Design-Standard zurücksetzen</button></div></section>' + syncCard() +
       '<section class="card"><h2>Lernen</h2>' +
         row('„Nicht relevante“ Module ignorieren', 'Bei Fortschritt, Fragenpool und Prüfungssimulation', sw('setSkip', S.settings.ignoreSkipped)) +
         row('Antwortoptionen mischen', 'Reihenfolge 1–4 bei jedem Durchgang neu', sw('setShuffle', S.settings.shuffle !== false)) +
@@ -10729,6 +10766,11 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   app.addEventListener('click', function (e) {
       if (curView !== 'settings') return;
       var b;
+      if ((b = e.target.closest('[data-lsync]'))) {
+        var g = b.dataset.lsync, l = lookLocal().slice(), i = l.indexOf(g);
+        if (i >= 0) l.splice(i, 1); else l.push(g);
+        lookSet({ local: l }); route(true); toast(LOOK_GROUP_NAMES[g] + (i >= 0 ? ': auf allen Geräten gleich' : ': nur auf diesem Gerät')); return;
+      }
       if ((b = e.target.closest('[data-appicon]'))) { lookSet({ appIcon: b.dataset.appicon }); applyAppIcon(); route(true); toast('Symbol gewählt – jetzt über Teilen → „Zum Home-Bildschirm“ ablegen'); return; }
       if ((b = e.target.closest('[data-preset]'))) { lookSet({ preset: b.dataset.preset, play: null }); route(true); toast('Design „' + PRESETS[b.dataset.preset].name + '“ aktiv'); return; }
       if ((b = e.target.closest('[data-look]'))) {
@@ -10743,6 +10785,14 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       if ((b = e.target.closest('[data-goal]'))) { var gk = b.dataset.goal; S.goals[gk] = Math.max(1, Math.min(gk === 'fix' ? 20 : 120, S.goals[gk] + +b.dataset.d)); save(); document.getElementById('goal-' + gk).textContent = S.goals[gk]; return; }
       if ((b = e.target.closest('[data-qn]'))) { var n = Math.max(10, Math.min(50, quickCount() + +b.dataset.qn)); lsSet('dp600.quickN', String(n)); document.getElementById('qnVal').textContent = n; }
   });
+  function syncCard() {
+    var l = lookLocal();
+    var how = CLOUD.state === 'on' ? '✓ Geräte-Sync aktiv: Änderungen erscheinen nach wenigen Sekunden auf Ihren anderen Geräten.' :
+      FS.state === 'on' ? 'Abgleich über die Sicherungsdatei und den Übertragungscode.' : 'In dieser Version reisen die Einstellungen mit dem <a href="#/progress">Übertragungscode</a> und dem JSON-Export.';
+    return '<section class="card"><h2>Abgleich zwischen Geräten</h2><p class="card-sub">' + how + ' Grün = auf allen Geräten gleich, grau = nur auf diesem Gerät.</p><div class="lsync">' +
+      Object.keys(LOOK_GROUPS).map(function (g) { var on = l.indexOf(g) < 0; return '<button type="button" class="chip' + (on ? ' on' : '') + '" data-lsync="' + g + '" aria-pressed="' + on + '">' + (on ? ico('check') + ' ' : '') + esc(LOOK_GROUP_NAMES[g]) + '</button>'; }).join('') +
+      '</div></section>';
+  }
   function viewProgress() {
     var ps = statsFor(ALL_MIDS);
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Lokal im Browser gespeichert</div><h1>Fortschritt & Daten</h1>' +
@@ -10756,6 +10806,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
           return '<tr><td><a href="#/exam/result/' + x.i + '">' + fmtDate(e.date) + '</a></td><td>' + e.total + '</td><td>' + e.correct + '</td><td><b>' + e.score + '</b></td><td><span class="tag ' + (e.passed ? 'ok' : 'bad') + '">' + (e.passed ? 'bestanden' : 'nicht bestanden') + '</span></td></tr>';
         }).join('') + '</tbody></table>' : emptyBox('exam', 'Noch keine Simulation', 'Die Ergebnisse jeder Prüfungssimulation erscheinen hier mit Score und Datum.', '<a class="btn" href="#/exam">Erste Simulation starten</a>')) + '</div>' +
       '<div class="card" id="trBox"><h2>Fortschritt auf ein anderes Gerät übertragen</h2>' +
+        '<p class="muted small">Speicher ' + (PERSIST === 'yes' ? 'vom Browser geschützt – wird nicht automatisch gelöscht.' : PERSIST === 'no' ? 'nicht dauerhaft geschützt: Der Browser darf ihn bei Platzmangel oder längerer Pause löschen. Bitte regelmäßig sichern.' : 'wird geprüft …') + (+lsGet('dp600.backup') ? ' Letzte Sicherung: ' + new Date(+lsGet('dp600.backup')).toLocaleDateString('de-DE') + '.' : '') + ' Der Code enthält auch Design und Stil.</p>' +
         (CLOUD.state === 'on' ? '<p class="sync-on">✓ Geräte-Sync aktiv: In der claude.ai-Version wird Ihr Fortschritt automatisch auf allen Geräten abgeglichen, auf denen Sie angemeldet sind.</p>' : '') +
         '<p class="card-sub">Ohne Datei: Code auf diesem Gerät erzeugen, kopieren (z. B. per AirDrop, Notiz oder Nachricht an sich selbst) und auf dem anderen Gerät einfügen. Beide Stände werden zusammengeführt – nichts geht verloren.</p>' +
         '<div class="tr-grid"><div><b>1. Hier erzeugen</b><div class="actions"><button class="btn" data-tr="make">Code erzeugen</button><button class="btn sec" data-tr="copy" hidden>Kopieren</button></div>' +
@@ -10805,6 +10856,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     }).join('') + '</div></div>';
   }
   function exportData() {
+    markBackup();
     saveFile('dp600-fortschritt-' + new Date().toISOString().slice(0, 10) + '.json', 'application/json', JSON.stringify({ app: 'dp600-trainer', exported: new Date().toISOString(), progress: S }, null, 2));
   }
   document.getElementById('importFile').addEventListener('change', function () {
@@ -10814,7 +10866,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       try {
         var o = JSON.parse(rd.result), p = o.progress || o;
         if (!p || p.v !== 1 || typeof p.answered !== 'object') throw new Error('Format');
-        S = normalize(p); save(); toast('Fortschritt importiert'); route();
+        S = normalize(p); lookPull(); save(); toast('Fortschritt importiert'); route();
       } catch (e) { toast('Import fehlgeschlagen: keine gültige DP-600-Exportdatei'); }
     };
     rd.readAsText(f);
@@ -11013,6 +11065,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function b64FromBytes(bytes) { var s = ''; for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); }
   function bytesFromB64(b) { var s = atob(b), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
   async function makeTransferCode() {
+    markBackup();
     var bytes = new TextEncoder().encode(JSON.stringify(S));
     if (window.CompressionStream) {
       var z = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
@@ -11044,7 +11097,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       } else if (b.dataset.tr === 'apply') {
         try {
           var inc = await readTransferCode(inp.value);
-          S = mergeStates(S, inc); save(); toast('Fortschritt übernommen und zusammengeführt'); route();
+          S = mergeStates(S, inc); lookPull(); save(); toast('Fortschritt und Einstellungen übernommen'); route();
         } catch (err) { toast(err.message || 'Code ungültig'); }
       }
     });
@@ -11054,6 +11107,29 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
      Gemeinsamer Speicher, wenn die App als Claude-Artefakt läuft:
      Fortschritt liegt privat pro Person im Artefakt-Speicher und gilt so auf Mac und iPhone.
      --------------------------------------------------------------------- */
+  // Speicher absichern: Browser bitten, die Daten nicht von sich aus zu löschen (Safari räumt sonst nach ~7 Tagen ohne Besuch auf)
+  var PERSIST = 'unknown';
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(function (p) { return p || navigator.storage.persist(); }).then(function (p) { PERSIST = p ? 'yes' : 'no'; }, function () {});
+  function markBackup() { lsSet('dp600.backup', String(Date.now())); }
+  function isIOS() { return /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  function isStandalone() { return window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches); }
+  // Erinnerung, wenn ohne automatischen Abgleich länger als 7 Tage nicht gesichert wurde
+  function backupBar() {
+    var auto = (window.claude && typeof window.claude.use === 'function') || FS.state === 'on';
+    if (auto || Object.keys(S.answered).length < 10) return '';
+    var now = Date.now(), last = +lsGet('dp600.backup') || 0;
+    if (!last) { markBackup(); return ''; }
+    if (now - last < 7 * 864e5 || now < (+lsGet('dp600.backupSnooze') || 0)) return '';
+    var d = Math.floor((now - last) / 864e5);
+    return '<section class="bk-bar" role="status"><span class="bk-ic">' + ico('clock') + '</span><div class="bk-t"><b>Seit ' + d + ' Tagen nicht gesichert</b><span>Ihr Fortschritt liegt nur auf diesem Gerät. Ein Übertragungscode oder Export schützt ihn und bringt ihn samt Design auf Ihre anderen Geräte.' +
+      (isIOS() && !isStandalone() ? ' Tipp: Über Teilen → „Zum Home-Bildschirm“ bleiben die Daten auf dem iPhone zuverlässiger erhalten.' : '') + '</span></div>' +
+      '<div class="bk-a"><a class="btn sm" href="#/progress">Jetzt sichern</a><button type="button" class="btn sm ghost" data-bk-later="1">Später</button></div></section>';
+  }
+  app.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-bk-later]')) return;
+    lsSet('dp600.backupSnooze', String(Date.now() + 3 * 864e5));
+    var bar = e.target.closest('.bk-bar'); if (bar) bar.remove();
+  });
   var CLOUD = { ref: null, state: 'off', lastJson: '', timer: null, busy: Promise.resolve() };
   async function cloudInit() {
     if (!window.claude || typeof window.claude.use !== 'function') return;
@@ -11070,7 +11146,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         var inc; try { inc = JSON.parse(d.json); } catch (err) { return; }
         CLOUD.lastJson = d.json;
         S = mergeStates(S, inc);
-        lsSet(STORE_KEY, JSON.stringify(S)); applyHlVars();
+        lsSet(STORE_KEY, JSON.stringify(S)); applyHlVars(); lookPull();
         // Ein laufendes Quiz oder eine Simulation nicht unterbrechen
         if (document.querySelector('.quiz-card, .exam-bar')) renderSidebar(); else route(true);
         if (JSON.stringify(S) !== d.json) CLOUD.dirty = true;
