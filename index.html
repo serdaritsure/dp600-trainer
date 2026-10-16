@@ -2526,6 +2526,36 @@ html.tbnav .topbar::before { content: ''; position: absolute; inset: 0; z-index:
   -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
 html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 
+/* Office-Designs Excel, Power BI, PowerPoint (Kontraste per Skript geprüft) */
+[data-palette="excel"] { --bg:#F2F7F3;--surface:#FFFFFF;--surface-2:#E8F2EB;--surface-3:#CFE5D6;--text:#0F241A;--text-2:#3D5547;--text-3:#5E7567;--accent:#107C41;--accent-soft:#E1F2E7;--on-accent:#FFFFFF;--link:#0E6B38;--prog:#107C41;--on-prog:#FFFFFF;--btn-bg:#107C41;--btn-bg-hover:#0B5F31;--on-btn:#FFFFFF;--ok:#2D7354;--ok-bg:#E3F1EA;--bad:#A8322C;--bad-bg:#F8E7E4;--warn:#8A5A0F;--warn-bg:#F7EFDD;--info:#4B6A8A;--info-bg:#E9EFF5;--dom-prep:#107C41;--dom-maintain:#21A366;--dom-model:#185C37;--sidebar-bg:#E3F1E7;--hairline:rgba(15,36,26,.09);--hairline-strong:rgba(15,36,26,.18);--on-ok:#FFFFFF;--on-bad:#FFFFFF;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 70%, transparent);--glass-border:rgba(255,255,255,.7);--glass-hi:rgba(255,255,255,.9);--glass-shade:rgba(0,0,0,.05);--shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);--shadow-hover:0 2px 6px rgba(0,0,0,.06), 0 14px 34px rgba(0,0,0,.08);color-scheme:light; }
+:root[data-theme="dark"][data-palette="excel"], :root[data-theme="dark"] [data-palette="excel"] { --bg:#0C1410;--surface:#131D17;--surface-2:#1A2820;--surface-3:#26392D;--text:#E7F2EB;--text-2:#A7BDAF;--text-3:#788E80;--accent:#33C481;--accent-soft:rgba(51,196,129,.14);--on-accent:#04200F;--link:#5FD49A;--prog:#33C481;--on-prog:#04200F;--btn-bg:#33C481;--btn-bg-hover:#5FD49A;--on-btn:#04200F;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#F08A80;--bad-bg:rgba(240,138,128,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#33C481;--dom-maintain:#8FE0B5;--dom-model:#1E8C52;--sidebar-bg:#0F1913;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-palette="excel"], :root:not([data-theme="light"]) [data-palette="excel"] { --bg:#0C1410;--surface:#131D17;--surface-2:#1A2820;--surface-3:#26392D;--text:#E7F2EB;--text-2:#A7BDAF;--text-3:#788E80;--accent:#33C481;--accent-soft:rgba(51,196,129,.14);--on-accent:#04200F;--link:#5FD49A;--prog:#33C481;--on-prog:#04200F;--btn-bg:#33C481;--btn-bg-hover:#5FD49A;--on-btn:#04200F;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#F08A80;--bad-bg:rgba(240,138,128,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#33C481;--dom-maintain:#8FE0B5;--dom-model:#1E8C52;--sidebar-bg:#0F1913;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; } }
+[data-palette="powerbi"] { --bg:#FBF8EB;--surface:#FFFFFF;--surface-2:#F7F0D3;--surface-3:#EFE1A6;--text:#252423;--text-2:#54514A;--text-3:#716D63;--accent:#7D6300;--accent-soft:#FCF1C2;--on-accent:#FFFFFF;--link:#735B00;--prog:#F2C811;--on-prog:#252423;--btn-bg:#F2C811;--btn-bg-hover:#E3B800;--on-btn:#252423;--ok:#2D7354;--ok-bg:#E3F1EA;--bad:#A8322C;--bad-bg:#F8E7E4;--warn:#8A5A0F;--warn-bg:#F7EFDD;--info:#4B6A8A;--info-bg:#E9EFF5;--dom-prep:#D9AE00;--dom-maintain:#E66C37;--dom-model:#118DFF;--sidebar-bg:#FCF0BF;--hairline:rgba(37,36,35,.09);--hairline-strong:rgba(37,36,35,.18);--on-ok:#FFFFFF;--on-bad:#FFFFFF;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 70%, transparent);--glass-border:rgba(255,255,255,.7);--glass-hi:rgba(255,255,255,.9);--glass-shade:rgba(0,0,0,.05);--shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);--shadow-hover:0 2px 6px rgba(0,0,0,.06), 0 14px 34px rgba(0,0,0,.08);color-scheme:light; }
+:root[data-theme="dark"][data-palette="powerbi"], :root[data-theme="dark"] [data-palette="powerbi"] { --bg:#1B1A19;--surface:#252423;--surface-2:#2F2E2C;--surface-3:#3D3B39;--text:#F3F2F1;--text-2:#C8C6C4;--text-3:#9A9794;--accent:#F2C811;--accent-soft:rgba(242,200,17,.14);--on-accent:#252423;--link:#F7D84A;--prog:#F2C811;--on-prog:#252423;--btn-bg:#F2C811;--btn-bg-hover:#F7D84A;--on-btn:#252423;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#F08A80;--bad-bg:rgba(240,138,128,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#F2C811;--dom-maintain:#F08A5D;--dom-model:#5AAEFF;--sidebar-bg:#201F1E;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-palette="powerbi"], :root:not([data-theme="light"]) [data-palette="powerbi"] { --bg:#1B1A19;--surface:#252423;--surface-2:#2F2E2C;--surface-3:#3D3B39;--text:#F3F2F1;--text-2:#C8C6C4;--text-3:#9A9794;--accent:#F2C811;--accent-soft:rgba(242,200,17,.14);--on-accent:#252423;--link:#F7D84A;--prog:#F2C811;--on-prog:#252423;--btn-bg:#F2C811;--btn-bg-hover:#F7D84A;--on-btn:#252423;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#F08A80;--bad-bg:rgba(240,138,128,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#F2C811;--dom-maintain:#F08A5D;--dom-model:#5AAEFF;--sidebar-bg:#201F1E;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; } }
+[data-palette="powerpoint"] { --bg:#FBF5F3;--surface:#FFFFFF;--surface-2:#F7EAE5;--surface-3:#EED4CA;--text:#2A1610;--text-2:#5C443D;--text-3:#7C625A;--accent:#C43E1C;--accent-soft:#FBE6DE;--on-accent:#FFFFFF;--link:#B03516;--prog:#D35230;--on-prog:#FFFFFF;--btn-bg:#C43E1C;--btn-bg-hover:#A33217;--on-btn:#FFFFFF;--ok:#2D7354;--ok-bg:#E3F1EA;--bad:#A3172B;--bad-bg:#F9E3E6;--warn:#8A5A0F;--warn-bg:#F7EFDD;--info:#4B6A8A;--info-bg:#E9EFF5;--dom-prep:#C43E1C;--dom-maintain:#ED6C47;--dom-model:#7A2A12;--sidebar-bg:#FBE8E1;--hairline:rgba(42,22,16,.09);--hairline-strong:rgba(42,22,16,.18);--on-ok:#FFFFFF;--on-bad:#FFFFFF;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 70%, transparent);--glass-border:rgba(255,255,255,.7);--glass-hi:rgba(255,255,255,.9);--glass-shade:rgba(0,0,0,.05);--shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);--shadow-hover:0 2px 6px rgba(0,0,0,.06), 0 14px 34px rgba(0,0,0,.08);color-scheme:light; }
+:root[data-theme="dark"][data-palette="powerpoint"], :root[data-theme="dark"] [data-palette="powerpoint"] { --bg:#17110F;--surface:#211815;--surface-2:#2B201C;--surface-3:#3B2C27;--text:#F7EDEA;--text-2:#CBB5AE;--text-3:#99827A;--accent:#FF8F6B;--accent-soft:rgba(255,143,107,.14);--on-accent:#2A0D05;--link:#FFA384;--prog:#ED6C47;--on-prog:#1F0A04;--btn-bg:#ED6C47;--btn-bg-hover:#FF8F6B;--on-btn:#1F0A04;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#FF7A8A;--bad-bg:rgba(255,122,138,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#FF8F6B;--dom-maintain:#F5B79E;--dom-model:#D35230;--sidebar-bg:#1A1210;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])[data-palette="powerpoint"], :root:not([data-theme="light"]) [data-palette="powerpoint"] { --bg:#17110F;--surface:#211815;--surface-2:#2B201C;--surface-3:#3B2C27;--text:#F7EDEA;--text-2:#CBB5AE;--text-3:#99827A;--accent:#FF8F6B;--accent-soft:rgba(255,143,107,.14);--on-accent:#2A0D05;--link:#FFA384;--prog:#ED6C47;--on-prog:#1F0A04;--btn-bg:#ED6C47;--btn-bg-hover:#FF8F6B;--on-btn:#1F0A04;--ok:#7FCDA6;--ok-bg:rgba(127,205,166,.12);--bad:#FF7A8A;--bad-bg:rgba(255,122,138,.12);--warn:#E5BC6B;--warn-bg:rgba(229,188,107,.12);--info:#9DB8D6;--info-bg:rgba(157,184,214,.12);--dom-prep:#FF8F6B;--dom-maintain:#F5B79E;--dom-model:#D35230;--sidebar-bg:#1A1210;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--on-ok:#0B1A0B;--on-bad:#2A0B09;--tile-light:var(--surface);--callout:var(--text-2);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark; } }
+/* Office-Designs: Seitenleiste in der Systemfarbe der Anwendung (hell und dunkel) */
+:root[data-palette="excel"] { --sidebar-bg: #107C41; }
+:root[data-palette="powerbi"] { --sidebar-bg: #252423; }
+:root[data-palette="powerpoint"] { --sidebar-bg: #C43E1C; }
+:root[data-palette="excel"] .sidebar { --text: #FFFFFF; --text-2: #D7EFE0; --text-3: #A9D9BC; --accent: #FFFFFF; --accent-soft: rgba(255,255,255,.16); --hairline: rgba(255,255,255,.14); --surface-3: rgba(255,255,255,.16); color: var(--text); border-right-color: transparent; }
+:root[data-palette="powerbi"] .sidebar { --text: #F3F2F1; --text-2: #C8C6C4; --text-3: #9A9794; --accent: #F2C811; --accent-soft: rgba(242,200,17,.16); --hairline: rgba(255,255,255,.1); --surface-3: rgba(255,255,255,.12); color: var(--text); border-right-color: transparent; }
+:root[data-palette="powerpoint"] .sidebar { --text: #FFFFFF; --text-2: #FBE0D6; --text-3: #F2B8A4; --accent: #FFFFFF; --accent-soft: rgba(255,255,255,.16); --hairline: rgba(255,255,255,.14); --surface-3: rgba(255,255,255,.16); color: var(--text); border-right-color: transparent; }
+:root[data-palette="excel"] .nav-item.active, :root[data-palette="powerpoint"] .nav-item.active { background: rgba(255,255,255,.2); }
+:root[data-palette="powerbi"] .nav-item.active { background: rgba(242,200,17,.18); }
+:root[data-palette="powerbi"] .next-item.first .ni-ic { background: #F2C811; color: #252423; }
+.ip-img { display: block; width: 56px; height: 56px; border-radius: 13px; overflow: hidden; box-shadow: 0 0 0 1px var(--hairline), 0 4px 10px -4px rgba(0, 0, 0, .2); }
+.ip-img svg { display: block; width: 100%; height: 100%; }
+.ip.on .ip-img { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+
+/* Home-Bildschirm-App: obere Leiste ganz ohne Glas (deckende Fläche) – iOS zeichnet Text über backdrop-filter im Statusleisten-Bereich unscharf */
+@media (display-mode: standalone) {
+  html .topbar::before { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; }
+  html body .topbar { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; }
+}
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2533,7 +2563,7 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
   (function () {
     var r = document.documentElement, L = {};
     try { L = JSON.parse(localStorage.getItem('dp600.look.v1')) || {}; } catch (e) {}
-    var P = { fabric: ['fabric', 'balanced'], studio: ['studio', 'calm'], itsure: ['itsure', 'balanced'], learn: ['learn', 'calm'], anthropic: ['anthropic', 'balanced'], google: ['google', 'calm'], ocean: ['ocean', 'balanced'], aubergine: ['aubergine', 'lively'], sunset: ['sunset', 'balanced'], forest: ['forest', 'calm'], custom: ['custom', 'balanced'] };
+    var P = { fabric: ['fabric', 'balanced'], studio: ['studio', 'calm'], itsure: ['itsure', 'balanced'], learn: ['learn', 'calm'], anthropic: ['anthropic', 'balanced'], google: ['google', 'calm'], ocean: ['ocean', 'balanced'], aubergine: ['aubergine', 'lively'], sunset: ['sunset', 'balanced'], forest: ['forest', 'calm'], excel: ['excel', 'balanced'], powerbi: ['powerbi', 'balanced'], powerpoint: ['powerpoint', 'balanced'], custom: ['custom', 'balanced'] };
     var pr = P[L.preset] ? L.preset : 'fabric';
     var legacy = null; try { legacy = localStorage.getItem('dp600.theme'); } catch (e) {}
     var mode = L.mode || legacy || 'system';
@@ -2583,6 +2613,7 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint – kräftiges Grün, Gelb und Rot, Seitenleiste in der Farbe der Anwendung', '13 App-Symbole, neu u. a. „IT sure Buch“ – die Farbe folgt jetzt immer dem gewählten Design', 'Obere Leiste der Home-Bildschirm-App deckend und scharf'] },
   { v: '1.14.1', d: '2026-10-16', items: ['Obere Leiste am iPhone gestochen scharf, nur noch eine Trennlinie'] },
   { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden mit dem Fortschritt auf andere Geräte übertragen', 'Selbst festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Speicher wird vor automatischem Löschen geschützt, Erinnerung nach 7 Tagen ohne Sicherung'] },
   { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis „Neu in …“ nach Updates', 'Sechs App-Symbole zur Auswahl für den Home-Bildschirm'] },
@@ -7995,6 +8026,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     aubergine: { name: 'Aubergine', palette: 'aubergine', play: 'lively', desc: 'Pflaume und Lavendel mit Gold, lebendiger Stil' },
     sunset: { name: 'Sonnenuntergang', palette: 'sunset', play: 'balanced', desc: 'Koralle und Pfirsich, warm' },
     forest: { name: 'Wald', palette: 'forest', play: 'calm', desc: 'Moos, Holz und Schiefer, ruhig' },
+    excel: { name: 'Excel', palette: 'excel', play: 'balanced', desc: 'Kräftiges Excel-Grün in vier Abstufungen' },
+    powerbi: { name: 'Power BI', palette: 'powerbi', play: 'balanced', desc: 'Power-BI-Gelb auf Graphit, Knöpfe und Ringe in Gelb' },
+    powerpoint: { name: 'PowerPoint', palette: 'powerpoint', play: 'balanced', desc: 'PowerPoint-Rot und Koralle, warm und kräftig' },
     custom: { name: 'Eigene Farbe', palette: 'custom', play: 'balanced', desc: 'Aus einer Akzentfarbe Ihrer Wahl erzeugt' }
   };
   var LOOK = (function () { try { return JSON.parse(lsGet(LOOK_KEY)) || {}; } catch (e) { return {}; } })();
@@ -8050,19 +8084,48 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     st.textContent = css;
   }
   // App-Symbol (Browser-Tab und iPhone-Home-Bildschirm) in der Farbe des Designs
+  // App-Symbole: Form frei wählbar, Farbe kommt immer aus dem aktiven Design (C = Knopffarbe, F = Schrift darauf)
+  var IT_GLYPH = '<path d="M7.3,31.8H0V0h7.3V31.8z"/><path d="M35.4,0v6.3h-8.8v25.6h-7.2V6.3h-8.8V0H35.4z"/>';
+  var ICON_SVG = {
+    book: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><g fill="' + c.F + '" transform="translate(203 176) scale(3.3)">' + IT_GLYPH + '</g>' +
+      '<path d="M100 300c56-22 112-18 148 14M412 300c-56-22-112-18-148 14" fill="none" stroke="' + c.F + '" stroke-width="14" stroke-linecap="round"/>' +
+      '<path d="M100 344c56-22 112-18 156 18 44-36 100-40 156-18" fill="none" stroke="' + c.F + '" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>'; },
+    ring: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><path d="M138 338 A143 143 0 1 1 374 338" fill="none" stroke="' + c.F + '" stroke-width="36" stroke-linecap="round"/><text x="256" y="292" font-family="Helvetica Neue, Helvetica, Arial" font-weight="700" font-size="104" fill="' + c.F + '" text-anchor="middle">600</text>'; },
+    bars: function (c) { return '<rect width="512" height="512" fill="' + c.W + '"/><rect x="112" y="296" width="72" height="104" rx="16" fill="' + c.M + '"/><rect x="220" y="224" width="72" height="176" rx="16" fill="' + c.C + '" opacity=".8"/><rect x="328" y="132" width="72" height="268" rx="16" fill="' + c.C + '"/>'; },
+    cube: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><g fill="none" stroke="' + c.F + '" stroke-width="26" stroke-linejoin="round"><path d="M256 92 400 174v164L256 420 112 338V174z"/><path d="M112 174l144 82 144-82M256 256v164" opacity=".7"/></g>'; },
+    mono: function (c) { return '<rect width="512" height="512" fill="' + c.W + '"/><text x="256" y="318" font-family="Helvetica Neue, Helvetica, Arial" font-weight="800" font-size="196" fill="' + c.K + '" text-anchor="middle" letter-spacing="-6">DP</text><rect x="154" y="358" width="204" height="26" rx="13" fill="' + c.C + '"/>'; },
+    path: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><path d="M164 360V196l92 82 92-82v164" fill="none" stroke="' + c.F + '" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/><circle cx="368" cy="144" r="36" fill="' + c.F + '" opacity=".6"/>'; },
+    check: function (c) { return '<rect width="512" height="512" fill="' + c.L + '"/><circle cx="256" cy="256" r="154" fill="' + c.C + '"/><path d="M194 258l42 42 84-88" fill="none" stroke="' + c.F + '" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>'; },
+    grid: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><rect x="112" y="128" width="288" height="256" rx="28" fill="' + c.F + '"/><path d="M112 213h288M112 298h288M208 128v256M304 128v256" stroke="' + c.C + '" stroke-width="14"/><rect x="304" y="213" width="96" height="85" fill="' + c.M + '"/>'; },
+    bi: function (c) { return '<rect width="512" height="512" fill="' + c.K + '"/><rect x="136" y="250" width="64" height="134" rx="14" fill="' + c.C + '" opacity=".55"/><rect x="224" y="186" width="64" height="198" rx="14" fill="' + c.C + '" opacity=".8"/><rect x="312" y="122" width="64" height="262" rx="14" fill="' + c.C + '"/>'; },
+    slide: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><rect x="104" y="148" width="304" height="200" rx="22" fill="' + c.F + '"/><path d="M256 348v58M206 406h100" stroke="' + c.F + '" stroke-width="22" stroke-linecap="round"/><circle cx="196" cy="248" r="48" fill="' + c.M + '"/><path d="M276 222h92M276 262h64" stroke="' + c.C + '" stroke-width="18" stroke-linecap="round"/>'; },
+    lake: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/>' + [220, 296, 372].map(function (y, i) { return '<path d="M96 ' + y + 'c40-30 80-30 120 0s80 30 120 0 60-24 80-10" fill="none" stroke="' + c.F + '" stroke-opacity="' + [.45, .7, 1][i] + '" stroke-width="28" stroke-linecap="round"/>'; }).join(''); },
+    spark: function (c) { return '<rect width="512" height="512" fill="' + c.C + '"/><path d="M286 88 150 290h96l-24 134 140-206h-98z" fill="' + c.F + '" stroke="' + c.F + '" stroke-width="12" stroke-linejoin="round"/>'; },
+    trio: function (c) { return '<rect width="512" height="512" fill="' + c.W + '"/><circle cx="256" cy="186" r="84" fill="' + c.C + '"/><circle cx="182" cy="314" r="84" fill="' + c.M + '" opacity=".9"/><circle cx="330" cy="314" r="84" fill="' + c.K + '" opacity=".85"/>'; }
+  };
+  function hexMix(a, b, t) {
+    var p = function (h) { h = h.replace('#', ''); if (h.length === 3) h = h.replace(/./g, '$&$&'); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };
+    var x = p(a), y = p(b); return '#' + x.map(function (v, i) { return ('0' + Math.round(v + (y[i] - v) * t).toString(16)).slice(-2); }).join('');
+  }
+  function iconColors() {
+    var cs = getComputedStyle(document.documentElement), C = cs.getPropertyValue('--btn-bg').trim(), F = cs.getPropertyValue('--on-btn').trim();
+    if (!/^#[0-9a-f]{3,6}$/i.test(C)) C = '#0B6F64'; if (!/^#[0-9a-f]{3,6}$/i.test(F)) F = '#FFFFFF';
+    return { C: C, F: F, W: '#FFFFFF', L: hexMix(C, '#FFFFFF', .88), M: hexMix(C, '#FFFFFF', .45), K: hexMix(C, '#000000', .72) };
+  }
+  function iconSvg(k, px) { var f = ICON_SVG[k] || ICON_SVG.ring; return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"' + (px ? ' width="' + px + '" height="' + px + '"' : '') + '>' + f(iconColors()) + '</svg>'; }
+  var ICON_SIG = '';
   function updateIcon() {
     try {
-      var cs = getComputedStyle(document.documentElement), bg = cs.getPropertyValue('--btn-bg').trim() || '#0B6F64', fg = cs.getPropertyValue('--on-btn').trim() || '#FFFFFF';
-      var cv = document.createElement('canvas'); cv.width = cv.height = 180; var x = cv.getContext('2d');
-      x.fillStyle = bg; x.beginPath(); if (x.roundRect) x.roundRect(0, 0, 180, 180, 40); else x.rect(0, 0, 180, 180); x.fill();
-      x.fillStyle = fg; x.font = '700 64px -apple-system, "SF Pro Display", "Segoe UI", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-      x.fillText('600', 90, 96); x.globalAlpha = .75; x.font = '600 24px -apple-system, "Segoe UI", sans-serif'; x.fillText('DP', 90, 46);
-      var url = cv.toDataURL('image/png');
-      // In der Web-App-Version (dist/pwa) liegen echte Symboldateien bei – die nicht überschreiben
-      (document.querySelector('link[data-static-icon]') ? ['icon'] : ['icon', 'apple-touch-icon']).forEach(function (rel) {
-        var l = document.querySelector('link[rel="' + rel + '"]'); if (!l) { l = document.createElement('link'); l.rel = rel; document.head.appendChild(l); }
-        l.href = url;
-      });
+      var k = LOOK.appIcon || 'ring', sig = k + JSON.stringify(iconColors()); if (sig === ICON_SIG) return; ICON_SIG = sig;
+      var img = new Image(); img.onload = function () {
+        var cv = document.createElement('canvas'); cv.width = cv.height = 180; cv.getContext('2d').drawImage(img, 0, 0, 180, 180);
+        var url = cv.toDataURL('image/png');
+        ['icon', 'apple-touch-icon'].forEach(function (rel) {
+          var l = document.querySelector('link[rel="' + rel + '"]'); if (!l) { l = document.createElement('link'); l.rel = rel; document.head.appendChild(l); }
+          l.removeAttribute('type'); l.href = url;
+        });
+      };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg(k, 180));
     } catch (e) {}
   }
   function timeTheme() { var h = new Date().getHours(); return h >= 7 && h < 19 ? 'light' : 'dark'; }
@@ -9981,7 +10044,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
 
   // (10) Als App auf dem Home-Bildschirm: Statusleistenfarbe und Web-App-Manifest (Symbol kommt aus updateIcon)
   function applyAppIcon() {
-    var l = document.querySelector('link[data-static-icon]'); if (l) l.href = 'icons/' + (LOOK.appIcon || 'ring') + '.png';
+    ICON_SIG = ''; updateIcon();
   }
   function appIcon() {
     try {
@@ -10664,14 +10727,14 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   var showHiddenPresets = false;
   // Versionsverlauf, App-Symbole (nur Web-App) – unterster Abschnitt der Einstellungen
   var CHANGES = window.DP_CHANGELOG || [], APP_VER = CHANGES[0] ? CHANGES[0].v : '1.0';
-  var APP_ICONS = [['ring', 'Reife-Ring'], ['bars', 'Balken'], ['cube', 'Datenwürfel'], ['mono', 'Monogramm'], ['path', 'Lernpfad'], ['check', 'Bestanden']];
+  var APP_ICONS = [['book', 'IT sure Buch'], ['ring', 'Reife-Ring'], ['bars', 'Balken'], ['cube', 'Datenwürfel'], ['mono', 'Monogramm'], ['path', 'Lernpfad'], ['check', 'Bestanden'], ['grid', 'Tabelle'], ['bi', 'Power BI'], ['slide', 'Folie'], ['lake', 'OneLake'], ['spark', 'Blitz'], ['trio', 'Office-Trio']];
   function isWebApp() { return !!document.querySelector('link[data-static-icon]'); }
   function fmtDay(k) { return parseDay(k).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }); }
   function aboutCard() {
     var cur = LOOK.appIcon || 'ring';
-    var icons = isWebApp() ? '<div class="set-row icon-row"><div class="set-l"><b>App-Symbol</b><span>Wähle ein Symbol und lege die App danach in Safari über Teilen → „Zum Home-Bildschirm“ ab. Für ein neues Symbol die alte Verknüpfung löschen und neu hinzufügen.</span></div>' +
+    var icons = isWebApp() ? '<div class="set-row icon-row"><div class="set-l"><b>App-Symbol</b><span>Die Farbe folgt Ihrem Design. Wähle ein Symbol und lege die App danach in Safari über Teilen → „Zum Home-Bildschirm“ ab. Für ein neues Symbol die alte Verknüpfung löschen und neu hinzufügen.</span></div>' +
       '<div class="set-c icon-pick">' + APP_ICONS.map(function (x) {
-        return '<button type="button" class="ip' + (x[0] === cur ? ' on' : '') + '" data-appicon="' + x[0] + '" aria-pressed="' + (x[0] === cur) + '"><img src="icons/' + x[0] + '.png" alt="" width="56" height="56"><span>' + x[1] + '</span></button>';
+        return '<button type="button" class="ip' + (x[0] === cur ? ' on' : '') + '" data-appicon="' + x[0] + '" aria-pressed="' + (x[0] === cur) + '"><span class="ip-img">' + iconSvg(x[0]) + '</span><span>' + x[1] + '</span></button>';
       }).join('') + '</div></div>'
       : '<div class="set-row"><div class="set-l"><b>App-Symbol</b><span>Auswählbar in der Web-App unter serdaritsure.github.io/dp600-trainer – dort lässt sich die App auch auf den Home-Bildschirm legen.</span></div></div>';
     return '<section class="card" id="about"><h2>Über die App</h2>' + icons +
