@@ -2940,6 +2940,7 @@ body.reading .theme-fab { display: none !important; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.22.4', d: '2026-10-16', items: ['Eigene Farbe wird genau übernommen: Knöpfe und Balken in der gewählten Farbe, nur Links und farbiger Text werden bei Bedarf für die Lesbarkeit angepasst'] },
   { v: '1.22.3', d: '2026-10-16', items: ['Tabellen trennen keine Wörter mehr; breite Tabellen lassen sich seitlich wischen', 'Suche am iPhone: Suchfeld und „Abbrechen“ bleiben oben sichtbar', 'Im Lesemodus sind auch Such- und Hell/Dunkel-Knopf ausgeblendet'] },
   { v: '1.22.2', d: '2026-10-16', items: ['Untere Leiste verrutscht nicht mehr seitlich, auch mit dem Reiter „Einstellungen“'] },
   { v: '1.22.1', d: '2026-10-16', items: ['Kleine untere Leiste: Symbole wieder gleichmäßig verteilt, Markierung sitzt auf dem gewählten Reiter'] },
@@ -9634,17 +9635,20 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // Helligkeit so lange verschieben, bis der Kontrast zum Hintergrund reicht
   function fitL(hu, sa, li, bg, need, dir) { var c = hsl(hu, sa, li); for (var i = 0; i < 60 && contrastOf(c, bg) < need; i++) { li += dir; c = hsl(hu, sa, Math.max(0, Math.min(100, li))); } return c; }
   function customPalette(hex) {
-    var h = rgbHsl(hex), hu = h[0], sa = Math.max(35, Math.min(85, h[1]));
+    // Gewählte Farbe möglichst unverändert: Knöpfe und Balken exakt in der Farbe, Schrift darauf schwarz oder weiß.
+    // Nur wenn die Farbe als Text/Link zu wenig Kontrast hat, wird ihre Helligkeit minimal verschoben (WCAG AA 4,5 : 1).
+    hex = '#' + hexRgb(hex).map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join(''); var h = rgbHsl(hex), hu = h[0], sa = h[1];
+    var onOf = function (c, dark) { return contrastOf('#FFFFFF', c) >= contrastOf(dark, c) ? '#FFFFFF' : dark; };
     var L = { bg: hsl(hu, 22, 97), surface: '#FFFFFF', s2: hsl(hu, 20, 95), s3: hsl(hu, 16, 88), text: hsl(hu, 30, 12), text2: hsl(hu, 12, 34), text3: hsl(hu, 10, 46), sidebar: hsl(hu, 18, 94) };
-    L.accent = fitL(hu, sa, Math.min(h[2], 45), '#FFFFFF', 4.6, -2); L.btn = L.accent; L.btnh = fitL(hu, sa, rgbHsl(L.accent)[2] - 8, '#FFFFFF', 5.5, -2);
-    L.prog = hsl(hu, sa, Math.max(45, Math.min(60, h[2]))); L.onprog = contrastOf('#FFFFFF', L.prog) >= 3 ? '#FFFFFF' : hsl(hu, 40, 12); L.soft = hsl(hu, 60, 95);
+    L.accent = fitL(hu, sa, h[2], '#FFFFFF', 4.5, -1); L.btn = hex; L.onbtn = onOf(hex, hsl(hu, 40, 10)); L.btnh = hsl(hu, sa, Math.max(0, h[2] - 6));
+    L.prog = hex; L.onprog = L.onbtn; L.soft = hsl(hu, Math.min(sa, 60), 95);
     var D = { bg: hsl(hu, 24, 7), surface: hsl(hu, 18, 11), s2: hsl(hu, 16, 15), s3: hsl(hu, 14, 22), text: hsl(hu, 20, 94), text2: hsl(hu, 12, 72), text3: hsl(hu, 10, 55), sidebar: hsl(hu, 20, 9) };
-    D.accent = fitL(hu, sa, Math.max(h[2], 65), D.surface, 6, 2); D.btn = D.accent; D.btnh = hsl(hu, sa, Math.min(95, rgbHsl(D.accent)[2] + 8));
-    D.prog = hsl(hu, sa, 62); D.onprog = hsl(hu, 40, 10); D.soft = 'color-mix(in srgb, ' + D.accent + ' 14%, transparent)';
+    D.accent = fitL(hu, sa, h[2], D.surface, 4.5, 1); D.btn = hex; D.onbtn = onOf(hex, D.bg); D.btnh = hsl(hu, sa, Math.min(100, h[2] + 6));
+    D.prog = hex; D.onprog = D.onbtn; D.soft = 'color-mix(in srgb, ' + D.accent + ' 14%, transparent)';
     var tok = function (c, dark) {
       return '--bg:' + c.bg + ';--surface:' + c.surface + ';--surface-2:' + c.s2 + ';--surface-3:' + c.s3 + ';--text:' + c.text + ';--text-2:' + c.text2 + ';--text-3:' + c.text3 +
-        ';--accent:' + c.accent + ';--accent-soft:' + c.soft + ';--on-accent:' + (dark ? c.bg : '#FFFFFF') + ';--link:' + c.accent + ';--prog:' + c.prog + ';--on-prog:' + c.onprog +
-        ';--btn-bg:' + c.btn + ';--btn-bg-hover:' + c.btnh + ';--on-btn:' + (dark ? c.bg : '#FFFFFF') + ';--sidebar-bg:' + c.sidebar +
+        ';--accent:' + c.accent + ';--accent-soft:' + c.soft + ';--on-accent:' + c.onbtn + ';--link:' + c.accent + ';--prog:' + c.prog + ';--on-prog:' + c.onprog +
+        ';--btn-bg:' + c.btn + ';--btn-bg-hover:' + c.btnh + ';--on-btn:' + c.onbtn + ';--sidebar-bg:' + c.sidebar +
         ';--dom-prep:' + c.accent + ';--dom-maintain:' + hsl(hu + 120, dark ? 45 : 50, dark ? 70 : 38) + ';--dom-model:' + hsl(hu + 240, dark ? 45 : 50, dark ? 72 : 40) +
         (dark ? ';--ok:#86CF95;--ok-bg:rgba(134,207,149,.12);--bad:#F28B82;--bad-bg:rgba(242,139,130,.12);--warn:#EDBA62;--warn-bg:rgba(237,186,98,.12);--info:#9DB8E8;--info-bg:rgba(157,184,232,.12);--on-ok:#0B1A0B;--on-bad:#2A0B09;--hairline:rgba(255,255,255,.08);--hairline-strong:rgba(255,255,255,.16);--glass-bg:color-mix(in srgb, var(--surface) 72%, transparent);--glass-border:rgba(255,255,255,.08);--glass-hi:rgba(255,255,255,.08);--glass-shade:transparent;--shadow:none;--shadow-hover:0 8px 28px rgba(0,0,0,.45);color-scheme:dark;'
           : ';--ok:#2E7A45;--ok-bg:#E7F3EA;--bad:#B3261E;--bad-bg:#FCEBEA;--warn:#8F5A06;--warn-bg:#FDF3E3;--info:#3A5FA0;--info-bg:#ECF1F8;--on-ok:#FFFFFF;--on-bad:#FFFFFF;--hairline:rgba(0,0,0,.09);--hairline-strong:rgba(0,0,0,.18);--glass-bg:color-mix(in srgb, var(--surface) 70%, transparent);--glass-border:rgba(255,255,255,.7);--glass-hi:rgba(255,255,255,.9);--glass-shade:rgba(0,0,0,.05);--shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);--shadow-hover:0 2px 6px rgba(0,0,0,.06), 0 14px 34px rgba(0,0,0,.08);color-scheme:light;') +
@@ -12555,7 +12559,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function customBox() {
     var cp = customPalette(LOOK.custom), r = cp.report, ok = function (v, n) { return '<b class="' + (v >= n ? 'ok' : 'bad') + '">' + v.toFixed(1).replace('.', ',') + ' : 1</b>'; };
     var sw = ['#0B6F64', '#2563EB', '#7C3AED', '#DB2777', '#E11D48', '#EA580C', '#CA8A04', '#16A34A', '#0891B2', '#475569'];
-    return '<div class="custom-box' + (LOOK.preset === 'custom' ? ' on' : '') + '"><div class="cb-l"><b>Eigene Akzentfarbe</b><span>Die App erzeugt daraus ein ganzes Design für hell und dunkel und passt die Helligkeit an, bis die Kontraste stimmen.</span>' +
+    return '<div class="custom-box' + (LOOK.preset === 'custom' ? ' on' : '') + '"><div class="cb-l"><b>Eigene Akzentfarbe</b><span>Knöpfe und Balken erscheinen genau in dieser Farbe. Nur Links und farbiger Text werden bei Bedarf leicht aufgehellt oder abgedunkelt, damit sie lesbar bleiben.</span>' +
       '<div class="cb-sw">' + sw.map(function (c) { return '<button class="swatch' + (LOOK.custom.toLowerCase() === c.toLowerCase() ? ' on' : '') + '" data-swatch="' + c + '" style="background:' + c + '" aria-label="Farbe ' + c + '"></button>'; }).join('') +
       '<label class="swatch pick" title="Beliebige Farbe wählen"><input type="color" id="customColor" value="' + LOOK.custom + '">' + ico('settings') + '</label></div></div>' +
       '<div class="cb-r"><span>Kontrast Akzent hell ' + ok(r.light, 4.5) + '</span><span>Kontrast Akzent dunkel ' + ok(r.dark, 4.5) + '</span><span>Kontrast Nebentext ' + ok(r.text, 4.5) + '</span></div></div>';
