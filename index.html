@@ -2862,6 +2862,22 @@ html.tbnav body .tb-item { min-width: 0; overflow: hidden; }
 html.tbnav .tb-items { overflow: hidden; }
 /* Seite nie seitlich verschiebbar (schwebende Kreise liegen zeitweise außerhalb) */
 @media (max-width: 900px) { html, body { overflow-x: clip; } }
+/* Suche am Handy: unter der Statusleiste, Höhe folgt dem sichtbaren Bereich (Tastatur) */
+@media (max-width: 600px) {
+  .cmdk-backdrop { padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; }
+  .cmdk { max-height: 100%; }
+  .cmdk-in { flex: none; }
+}
+
+/* Tabellen: Wörter nie mitten im Wort trennen – lieber breiter und seitlich wischen */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+table.cmp, table.hist { width: max-content; min-width: 100%; }
+table.cmp th, table.cmp td, table.hist th, table.hist td { overflow-wrap: normal; word-break: normal; hyphens: manual; -webkit-hyphens: manual; min-width: 7.5em; max-width: 19em; }
+table.cmp tbody th:first-child, table.cmp thead th:first-child { min-width: 0; max-width: 15em; }
+table.cmp code { overflow-wrap: normal; word-break: normal; white-space: normal; }
+table.cmp td:has(code) { max-width: 24em; }
+/* Lesemodus: schwebende Kreise mit der Leiste ausblenden */
+body.reading .theme-fab { display: none !important; }
 
 </style>
 <script>
@@ -2924,6 +2940,7 @@ html.tbnav .tb-items { overflow: hidden; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.22.3', d: '2026-10-16', items: ['Tabellen trennen keine Wörter mehr; breite Tabellen lassen sich seitlich wischen', 'Suche am iPhone: Suchfeld und „Abbrechen“ bleiben oben sichtbar', 'Im Lesemodus sind auch Such- und Hell/Dunkel-Knopf ausgeblendet'] },
   { v: '1.22.2', d: '2026-10-16', items: ['Untere Leiste verrutscht nicht mehr seitlich, auch mit dem Reiter „Einstellungen“'] },
   { v: '1.22.1', d: '2026-10-16', items: ['Kleine untere Leiste: Symbole wieder gleichmäßig verteilt, Markierung sitzt auf dem gewählten Reiter'] },
   { v: '1.22', d: '2026-10-16', items: ['Neue Startseite: nächster Schritt als große Karte, Tagesziel, Prüfungsreife, Serie und Prüfungstermin als wischbare Karten', 'Modulseiten mit farbigem Kopf und Kapitel-Übersicht', 'Lernpfad-Seiten mit Fortschrittsring, Lernzeit und „Weiter“-Knopf', 'Quiz auf dem iPhone im Vollbild mit großen Antwortkarten', 'Erscheinungsbild: Automatisch, Hell, Dunkel und neu „Schwarz“ für OLED-Bildschirme', 'Suchknopf neben der verkleinerten unteren Leiste, Suche am iPhone mit „Abbrechen“', 'Punkte unter wischbaren Kartenreihen', 'Leere Seiten mit Illustration', 'Vor/Zurück zwischen Lernpfaden funktioniert in allen Kursen'] },
@@ -13006,9 +13023,13 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     list.addEventListener('click', function (e) { var b = e.target.closest('[data-i]'); if (b) run(+b.dataset.i); });
     ov.addEventListener('mousedown', function (e) { if (e.target === ov) closeCmdk(); });
     ov.addEventListener('click', function (e) { if (e.target === ov || e.target.closest('[data-cmdk-close]')) closeCmdk(); });
-    input.value = initial || ''; draw(); input.focus();
+    // iPhone: Tastatur verkleinert den sichtbaren Bereich – Suche bleibt darin, Suchfeld oben sichtbar
+    var vv = window.visualViewport;
+    CMDK.vfit = function () { if (!vv) return; ov.style.top = vv.offsetTop + 'px'; ov.style.height = vv.height + 'px'; ov.style.bottom = 'auto'; };
+    if (vv) { vv.addEventListener('resize', CMDK.vfit); vv.addEventListener('scroll', CMDK.vfit); CMDK.vfit(); }
+    input.value = initial || ''; draw(); input.focus({ preventScroll: true });
   }
-  function closeCmdk() { if (!CMDK) return; CMDK.el.remove(); CMDK = null; }
+  function closeCmdk() { if (!CMDK) return; var vv = window.visualViewport; if (vv && CMDK.vfit) { vv.removeEventListener('resize', CMDK.vfit); vv.removeEventListener('scroll', CMDK.vfit); } CMDK.el.remove(); CMDK = null; }
   document.addEventListener('keydown', function (e) {
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); if (CMDK) closeCmdk(); else openCmdk(); }
   });
