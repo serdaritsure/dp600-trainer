@@ -2845,7 +2845,10 @@ html[data-oled="1"] body { background: #000; }
 /* Such-Kreis links neben der kleinen Leiste (wie Hell/Dunkel rechts) */
 .search-fab svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
 @media (max-width: 900px) {
-  html.tbnav body.tb-min .tb-bar { width: min(64%, calc(100% - 116px)) !important; translate: 0 0 !important; }
+  html.tbnav body.tb-min .tb-bar { width: min(68%, calc(100% - 124px)) !important; translate: 0 0 !important; }
+  /* Kleine Leiste: alle Symbole gleich breit, Beschriftung nimmt keinen Platz mehr ein */
+  html.tbnav body.tb-min .tb-item { flex: 1 1 0; padding-left: 0; padding-right: 0; }
+  html.tbnav body.tb-min .tb-lbl { max-width: 0; padding: 0; }
 }
 
 /* Suche schließen: am Mac „esc“ (anklickbar), am Handy „Abbrechen“ wie in iOS */
@@ -2914,6 +2917,7 @@ html[data-oled="1"] body { background: #000; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.22.1', d: '2026-10-16', items: ['Kleine untere Leiste: Symbole wieder gleichmäßig verteilt, Markierung sitzt auf dem gewählten Reiter'] },
   { v: '1.22', d: '2026-10-16', items: ['Neue Startseite: nächster Schritt als große Karte, Tagesziel, Prüfungsreife, Serie und Prüfungstermin als wischbare Karten', 'Modulseiten mit farbigem Kopf und Kapitel-Übersicht', 'Lernpfad-Seiten mit Fortschrittsring, Lernzeit und „Weiter“-Knopf', 'Quiz auf dem iPhone im Vollbild mit großen Antwortkarten', 'Erscheinungsbild: Automatisch, Hell, Dunkel und neu „Schwarz“ für OLED-Bildschirme', 'Suchknopf neben der verkleinerten unteren Leiste, Suche am iPhone mit „Abbrechen“', 'Punkte unter wischbaren Kartenreihen', 'Leere Seiten mit Illustration', 'Vor/Zurück zwischen Lernpfaden funktioniert in allen Kursen'] },
   { v: '1.21.2', d: '2026-10-16', items: ['Einstellungen: Navigation ist jetzt Teil von „Darstellung“'] },
   { v: '1.21.1', d: '2026-10-16', items: ['Lichtreflex auf Glasflächen am Mac erscheint nur noch unter dem Mauszeiger'] },
@@ -10648,8 +10652,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       [fab, sfab].forEach(function (f) { f.style.width = f.style.height = r.height + 'px'; f.style.bottom = (window.innerHeight - r.bottom) + 'px'; });
       if (document.body.classList.contains('tb-min')) { fab.style.left = (r.right + 10) + 'px'; sfab.style.left = (r.left - 10 - r.height) + 'px'; }
     };
-    var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(fit).observe(bar); else setTimeout(hook, 300); fit(); };
-    hook(); window.addEventListener('resize', fit); document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('tb-bar')) fit(); });
+    var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(function () { fit(); placePill(false); }).observe(bar); else setTimeout(hook, 300); fit(); };
+    hook(); window.addEventListener('resize', fit); document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('tb-bar')) { fit(); placePill(false); } });
     new MutationObserver(function () { setTimeout(fit, 30); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   })();
   // Beim Herunterscrollen schrumpft die Leiste, beim Hochscrollen kommt sie zurück (wie iOS 26)
