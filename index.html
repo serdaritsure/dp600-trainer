@@ -2363,9 +2363,9 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 :root { --glare: rgba(255, 255, 255, .55); }
 :root[data-theme="dark"] { --glare: rgba(255, 255, 255, .09); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glare: rgba(255, 255, 255, .09); } }
-:root:not([data-play="calm"]):not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu) {
+:root:not([data-play="calm"]):not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu):is(.glare-on, html.glare-tilt *) {
   background-image: radial-gradient(220px 120px at calc(var(--gx, .5) * 100%) calc(var(--gy, .2) * 140% - 20%), var(--glare), transparent 70%); }
-:root[data-play="lively"]:not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu) {
+:root[data-play="lively"]:not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu):is(.glare-on, html.glare-tilt *) {
   background-image: radial-gradient(260px 150px at calc(var(--gx, .5) * 100%) calc(var(--gy, .2) * 140% - 20%), var(--glare), transparent 70%); }
 
 /* (9) Begrüßung beim ersten Öffnen des Tages */
@@ -2780,6 +2780,7 @@ html[data-glass="off"] .ctx-scrim { -webkit-backdrop-filter: none !important; ba
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.21.1', d: '2026-10-16', items: ['Lichtreflex auf Glasflächen am Mac erscheint nur noch unter dem Mauszeiger'] },
   { v: '1.21', d: '2026-10-16', items: ['Neue Einstellung „Liquid Glass“ unter Darstellung: ein- und ausschaltbar, Deckkraft der Leisten von transparent bis eingefärbt regelbar', 'Ausgeschaltet sind Leisten und Knöpfe deckend – auch am Mac'] },
   { v: '1.20', d: '2026-10-16', items: ['Einstellungen neu gegliedert: Übersicht mit Unterseiten, Suchfeld und aktuellen Werten', 'Bereiche lassen sich oben anheften (bis zu drei) – über „Bearbeiten“ oder langes Drücken', '„Zurücksetzen“ für jeden Bereich einzeln', 'Symbole in Einstellungen und „Mehr“-Menü einheitlich in der Farbe des Designs', 'Hintergrund der Lernpfade und Farben der Prüfungsdomänen passen sich dem Design an', 'Tagesziel-Ringe in festen Farben: Rot, Grün, Türkis', 'Standard-Design ist jetzt „IT sure“'] },
   { v: '1.19', d: '2026-10-16', items: ['Mehrere Kurse: neue Seite „Meine Kurse“ und Kursauswahl oben rechts', 'Neuer Kurs PL-300 Power BI Data Analyst mit Lesetexten, Karteikarten, 69 Quizfragen und Prüfungssimulation', 'Kurse lassen sich per Link aus Microsoft Learn übernehmen', 'Tagesziele wahlweise für alle Kurse gemeinsam oder je Kurs', 'Details zu einer Kachel erscheinen direkt unter ihr', 'Fehlerhafte Links in den Power-BI-Modulen korrigiert', 'Neuer App-Name: Lernwerk'] },
@@ -11592,13 +11593,22 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   (function () {
     var raf = 0, px = .5, py = .3;
     var push = function () { raf = 0; glare(px, py); };
+    // Maus (Mac): Reflex nur auf dem Glaselement unter dem Zeiger, an der Zeigerposition
+    var hot = null;
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType !== 'mouse') return;
-      px = e.clientX / window.innerWidth; py = e.clientY / window.innerHeight;
-      if (!raf) raf = requestAnimationFrame(push);
+      var el = e.target.closest && e.target.closest('.tb-bar, .tb-resume, .ctx-menu');
+      if (hot && hot !== el) { hot.classList.remove('glare-on'); hot = null; }
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--gx', ((e.clientX - r.left) / r.width).toFixed(3));
+      el.style.setProperty('--gy', ((e.clientY - r.top) / r.height * .7 + .15).toFixed(3));
+      el.classList.add('glare-on'); hot = el;
     }, { passive: true });
+    document.addEventListener('pointerleave', function () { if (hot) { hot.classList.remove('glare-on'); hot = null; } });
     window.addEventListener('deviceorientation', function (e) {
       if (!tiltOn || e.gamma == null) return;
+      document.documentElement.classList.add('glare-tilt');
       px = .5 + Math.max(-30, Math.min(30, e.gamma)) / 60; py = .5 + Math.max(-30, Math.min(30, (e.beta || 45) - 45)) / 60;
       if (!raf) raf = requestAnimationFrame(push);
     });
