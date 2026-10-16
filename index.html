@@ -2592,6 +2592,77 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 }
 @media (max-width: 900px) { html.tbnav body .read-ring { display: none !important; } }
 
+/* Einstellungen: aufklappbare Gruppen wie in iOS */
+.set-grp { padding: 0; }
+.set-grp > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 18px var(--card-pad, 24px); cursor: pointer; }
+.set-grp > summary::-webkit-details-marker { display: none; }
+.sg-t { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sg-t b { font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
+.sg-t small { font-size: 13px; color: var(--text-2); }
+.sg-chev { font-size: 22px; color: var(--text-3); transition: transform .3s cubic-bezier(.32, .72, 0, 1); }
+.set-grp[open] .sg-chev { transform: rotate(90deg); }
+.sg-body { padding: 0 var(--card-pad, 24px) var(--card-pad, 24px); }
+.more-presets { margin-top: 14px; }
+.more-presets > summary { cursor: pointer; color: var(--link); font-weight: 500; font-size: 15px; padding: 6px 0; }
+.more-presets[open] > summary { margin-bottom: 12px; }
+#lookBox .set-row:last-child { border-bottom: 0; }
+
+/* (6) Apple-Typografie: SF Pro Text für Fließtext, SF Pro Display ab 20 px, Stufen nach den iOS-Textstilen
+   Large Title 34 · Title 2 22 · Headline 17 · Body 17 (Mac 16) · Subhead 15 · Footnote 13 */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter', 'Segoe UI Variable Text', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-title: -apple-system-headline, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI Variable Display', 'Segoe UI', sans-serif;
+  --fs-display: clamp(30px, 3.4vw, 40px); --fs-h2: 22px; --fs-h3: 17px; --fs-body: 16px; --fs-small: 15px; --fs-cap: 13px;
+}
+@media (max-width: 900px) { :root { --fs-display: 34px; --fs-body: 17px; } }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; font-feature-settings: "kern" 1; }
+:root:not([data-world="editorial"]) :is(.page-head h1, .mod-hero h1, .td-h) { font-family: var(--font-title); font-size: var(--fs-display); font-weight: 700; letter-spacing: -.022em; line-height: 1.1; }
+:root:not([data-world="editorial"]) :is(.card > h2, section.card > h2, .lsec > h2) { font-family: var(--font-title); font-size: var(--fs-h2); font-weight: 700; letter-spacing: -.017em; line-height: 1.2; }
+.page-head .eyebrow, .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: -.005em; }
+.page-head .sub, .card-sub { font-size: var(--fs-small); line-height: 1.45; letter-spacing: -.01em; color: var(--text-2); }
+small, .small, .muted.small { font-size: var(--fs-cap); letter-spacing: -.005em; }
+.btn { letter-spacing: -.01em; }
+
+/* (3) Startseite: Zugang zu „Entdecken“ als ruhige Zeile */
+.home-more { display: flex; align-items: center; gap: 14px; margin: 0 12px 12px; padding: 18px 24px; border-radius: var(--r-card, 18px); background: var(--surface); color: var(--text); text-decoration: none; box-shadow: var(--depth, var(--shadow)); }
+.home-more:hover { text-decoration: none; }
+.home-more .ico { width: 26px; height: 26px; color: var(--accent); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.home-more span:not(.ni-go) { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.home-more b { font-size: 17px; font-weight: 600; letter-spacing: -.02em; }
+.home-more small { color: var(--text-2); font-size: 13px; }
+.home-more .ni-go { font-size: 22px; color: var(--text-3); }
+.home.discover .page-head { padding-top: 28px; }
+@media (max-width: 900px) { .home-more { margin: 0 0 12px; padding: 16px 18px; } }
+
+/* (7) Kleiner Titel oben beim Scrollen (nur Handy; nicht im Lernbereich mit eigener Abschnittsleiste) */
+.lt-bar { display: none; }
+@media (max-width: 900px) {
+  html.tbnav .lt-bar { display: flex; align-items: flex-end; justify-content: center; position: fixed; left: 0; right: 0; top: 0; z-index: 39;
+    height: calc(44px + env(safe-area-inset-top, 0px)); padding: 0 56px 11px; box-sizing: border-box;
+    background: var(--surface); border-bottom: .5px solid var(--hairline-strong, var(--hairline));
+    transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .4s cubic-bezier(.32, .72, 0, 1), opacity .25s ease; }
+  html.tbnav .lt-bar span { font-family: var(--font-title, var(--font)); font-size: 17px; font-weight: 600; letter-spacing: -.02em; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html.tbnav body.lt-on:not(.at-top):not(:has(.learn-layout)):not(.ms-open) .lt-bar { transform: none; opacity: 1; }
+  html.tbnav body.lt-on:not(:has(.learn-layout)) { --topbar-h: calc(44px + env(safe-area-inset-top, 0px)); }
+}
+
+/* (11) Einheitliche Symbolsprache wie SF Symbols: runde Enden, eine Strichstärke, optisch nach Größe ausgeglichen
+   klein (≤ 18 px) 1,8 · mittel 1,6 · groß (≥ 24 px) 1,45; aktive Reiter/Einträge eine Stufe kräftiger */
+:is(.ico, .nav-ico svg, .tb-ic svg, .ni-ic svg, .ci-ic svg, .ms-tile svg, .ctx-menu svg, .bm-btn svg, .sb-toggle svg, .home-more .ico, .empty-ic .ico, .lp-num .ico) {
+  fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
+:is(.ci-ic svg, .lp-num .ico, .sb-toggle svg, .ctx-menu svg) { stroke-width: 1.8; }
+:is(.home-more .ico, .empty-ic .ico, html.tbnav .tb-ic svg, .nav-ico svg) { stroke-width: 1.5; }
+:is(.nav-item.active .nav-ico svg, html.tbnav .tb-item.on .tb-ic svg) { stroke-width: 1.9; }
+.nav-ico svg { stroke: var(--accent); }
+
+/* (18) Hinweis auf neue Version */
+.upd-bar { position: fixed; z-index: 80; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 12px); translate: -50% -140%; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 10px 22px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: var(--surface); color: var(--text); font: inherit; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .16); transition: translate .5s cubic-bezier(.32, .72, 0, 1); }
+.upd-bar.in { translate: -50% 0; }
+.upd-bar b { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.upd-bar span { font-size: 12.5px; color: var(--accent); }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2649,6 +2720,7 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.17', d: '2026-10-16', items: ['Ruhigere Startseite „Heute“; Lernpfade, Schnell-Quiz und Prüfung unter „Entdecken“', 'Neue Fokus-Session: 15 Minuten mit Fehlern, neuen Fragen und einem Lese-Tipp', 'Einstellungen aufgeräumt, Schrift und Symbole im Apple-Stil, großer Titel beim Scrollen am iPhone', 'Hinweis bei neuer Version – ein Tippen aktualisiert die App'] },
   { v: '1.16.1', d: '2026-10-16', items: ['Handy: Lesefortschritt als Linie in Designfarbe am unteren Rand der Abschnittsleiste, der Lesering oben entfällt', 'Lesefortschritt am Seitenende jetzt ganz gefüllt', 'Kleine Leiste und Hell/Dunkel-Kreis rücken als Gruppe mittig zusammen'] },
   { v: '1.16', d: '2026-10-16', items: ['Handy: obere Leiste sitzt etwas tiefer und ist nur ganz oben auf der Seite sichtbar', 'Hell/Dunkel als schwebender Kreis neben der verkleinerten unteren Leiste'] },
   { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint – kräftiges Grün, Gelb und Rot, Seitenleiste in der Farbe der Anwendung', '13 App-Symbole, neu u. a. „IT sure Buch“ – die Farbe folgt jetzt immer dem gewählten Design', 'Obere Leiste der Home-Bildschirm-App deckend und scharf'] },
@@ -8395,11 +8467,14 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     else if (view === 'notes') viewNotes();
     else if (view === 'marks') viewMarks();
     else if (view === 'labs') viewLabs(p[1]);
+    else if (view === 'discover') viewHome(true);
+    else if (view === 'focus') viewFocus();
     else if (view === 'result') viewQuizResult();
     else if (view === 'quick') viewQuick(+p[1] || quickCount());
     else if (view === 'resume') { viewResume(); return; }
     else { curView = 'home'; viewHome(); }
-    document.body.classList.toggle('view-home', curView === 'home');
+    document.body.classList.toggle('view-home', curView === 'home' || curView === 'discover');
+    ltBind();
     // (1) Hintergrundton je Lernpfad
     var lpNow = curView === 'module' && CMOD[curSub] ? CMOD[curSub].lp.nr : curView === 'path' ? (COURSE.filter(function (l) { return l.id === curSub; })[0] || {}).nr : '';
     document.documentElement.setAttribute('data-lp', lpNow || '');
@@ -8531,6 +8606,25 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
 
   // Schnell-Quiz: zufällige Fragen aus allen Modulen (ohne Fallstudien)
   function quickCount() { var n = +lsGet('dp600.quickN'); return n >= 10 && n <= 50 ? n : 20; }
+  // (15) Fokus-Session: ca. 15 Minuten – zuerst offene Fehler, dann unbeantwortete, dann ältere Fragen; danach ein Lese-Vorschlag
+  function viewFocus() {
+    var pool = Object.keys(QIDX).filter(function (id) { var q = QIDX[id]; return !q.caseId && qRelevant(q); });
+    var wr = shuffle(wrongIds().filter(function (id) { return pool.indexOf(id) >= 0; })).slice(0, 5);
+    var fresh = shuffle(pool.filter(function (id) { return !S.answered[id] && wr.indexOf(id) < 0; })).slice(0, 10 - wr.length);
+    var old = pool.filter(function (id) { return S.answered[id] && wr.indexOf(id) < 0; }).sort(function (a, b) { return (S.answered[a].last || 0) - (S.answered[b].last || 0); });
+    var ids = wr.concat(fresh, old).slice(0, 10);
+    app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Fokus-Session · ca. 15 Minuten</div><h1>Fokus</h1>' +
+      '<div class="sub">' + (wr.length ? wr.length + ' offene Fehler, ' : '') + (ids.length - wr.length) + ' weitere Fragen – danach ein passender Abschnitt zum Lesen.</div></div><div id="focusBody"></div></div>';
+    startQuiz(document.getElementById('focusBody'), ids, { kind: 'focus', title: 'Fokus-Session', started: Date.now() });
+  }
+  function focusNext() {
+    var mid = ALL_MIDS.filter(function (m) { return MODS[m] && statusOf(m) === 'open'; })[0];
+    if (!mid) return '';
+    var deep = MODS[mid].deep || [], read = S.read[mid] || [], i = 0;
+    while (i < deep.length && read.indexOf(i) >= 0) i++;
+    var sec = deep[i] ? (deep[i].title || deep[i].t || '') : '';
+    return '<div class="card focus-next"><h2>Als Nächstes lesen</h2><p class="card-sub">M' + CMOD[mid].nr + ' · ' + esc(CMOD[mid].title) + (sec ? ' – ' + esc(sec) : '') + '</p><div class="actions"><a class="btn" href="#/module/' + mid + '/learn">Weiterlesen ›</a></div></div>';
+  }
   function viewQuick(n) {
     n = Math.max(10, Math.min(50, Math.round(n / 5) * 5));
     lsSet('dp600.quickN', String(n));
@@ -8588,7 +8682,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     notes: '<path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4-6.5 4v-16a1 1 0 0 1 1-1z"/>',
     settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/><circle cx="12" cy="12" r="6.5"/>',
     learn: '<path d="M4 5.5h6.5a2 2 0 0 1 1.5.7 2 2 0 0 1 1.5-.7H20v13h-6.5a2 2 0 0 0-1.5.7 2 2 0 0 0-1.5-.7H4z"/><path d="M12 6.2v13"/>',
-    search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20.5 20.5"/>'
+    search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20.5 20.5"/>',
+    discover: '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>'
   };
   function navItem(href, key, label, active, badge) {
     return '<a class="nav-item' + (active ? ' active' : '') + '" href="' + href + '" data-vt="tab" title="' + label + '"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS[key] + '</svg></span>' +
@@ -8608,6 +8703,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var w = wrongIds().length;
     var h = '<div class="nav-group">' +
       navItem('#/home', 'home', 'Übersicht', curView === 'home') +
+      navItem('#/discover', 'discover', 'Entdecken', curView === 'discover') +
       navItem('#/exam', 'exam', 'Prüfungssimulation', curView === 'exam') +
       navItem('#/errors', 'errors', 'Fehler-Training', curView === 'errors', w || '') +
       navItem('#/glossary', 'glossary', 'Glossar & Cheat-Sheet', curView === 'glossary') +
@@ -8699,7 +8795,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // vier frei wählbare Reiter + fest „Mehr“ (öffnet die Navigation als Blatt von unten), darüber „Weitermachen“
   var tabbar = document.getElementById('tabbar');
   var TAB_OPTS = {
-    home: ['#/home', 'Übersicht'], learn: ['', 'Lernen'], exam: ['#/exam', 'Prüfung'], errors: ['#/errors', 'Fehler'],
+    home: ['#/home', 'Übersicht'], discover: ['#/discover', 'Entdecken'], learn: ['', 'Lernen'], exam: ['#/exam', 'Prüfung'], errors: ['#/errors', 'Fehler'],
     glossary: ['#/glossary', 'Glossar'], labs: ['#/labs', 'Labore'], plan: ['#/plan', 'Plan'], notes: ['#/notes', 'Spickzettel'],
     marks: ['#/marks', 'Markierungen'], progress: ['#/progress', 'Fortschritt'], search: ['', 'Suche'], settings: ['#/settings', 'Einstellungen']
   };
@@ -8718,12 +8814,12 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   // „Mehr“: eigenes Blatt von unten (wie iOS) – gruppierte Listen und der Kursbaum
   var MS_ROWS = {
-    home: ['Übersicht', 'var(--accent)'], exam: ['Prüfungssimulation', 'var(--dom-maintain)'], errors: ['Fehler-Training', 'var(--bad)'],
+    home: ['Übersicht', 'var(--accent)'], discover: ['Entdecken', 'var(--accent)'], exam: ['Prüfungssimulation', 'var(--dom-maintain)'], errors: ['Fehler-Training', 'var(--bad)'],
     glossary: ['Glossar & Cheat-Sheet', 'var(--accent)'], labs: ['Labore', 'var(--dom-model)'], plan: ['Prüfungsplan', 'var(--info)'],
     search: ['Suche', 'var(--text-2)'], notes: ['Mein Spickzettel', 'var(--warn)'], marks: ['Markierungen', 'var(--dom-prep)'],
     progress: ['Fortschritt & Daten', 'var(--prog)'], settings: ['Einstellungen', 'var(--text-2)'], import: ['Lernpfade hinzufügen', 'var(--text-2)']
   };
-  var MS_GROUPS = [['Lernen & Üben', ['home', 'exam', 'errors', 'glossary', 'labs', 'plan', 'search']], ['Meine Inhalte', ['notes', 'marks']], ['App', ['progress', 'settings', 'import']]];
+  var MS_GROUPS = [['Lernen & Üben', ['home', 'discover', 'exam', 'errors', 'glossary', 'labs', 'plan', 'search']], ['Meine Inhalte', ['notes', 'marks']], ['App', ['progress', 'settings', 'import']]];
   var CHEV = '<svg class="ms-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg>';
   var msheet = document.createElement('div'), msScrim = document.createElement('div');
   msheet.className = 'msheet'; msheet.id = 'msheet'; msheet.setAttribute('role', 'dialog'); msheet.setAttribute('aria-modal', 'true'); msheet.setAttribute('aria-label', 'Mehr');
@@ -8951,10 +9047,41 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       }, 120);
     });
   })();
+  // (18) Web-App: neue Version erkennen (beim Öffnen und bei Rückkehr in die App) und per Tippen aktualisieren
+  (function () {
+    var busy = false, shown = false;
+    function check() {
+      if (busy || shown || !isWebApp() || !navigator.onLine) return; busy = true;
+      fetch('./index.html?u=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (t) {
+        busy = false;
+        var m = /DP_CHANGELOG = \[\s*\{ v: '([^']+)'/.exec(t || ''); if (!m || m[1] === APP_VER) return;
+        shown = true;
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'upd-bar';
+        b.innerHTML = '<b>Neue Version ' + esc(m[1]) + '</b><span>Tippen zum Aktualisieren</span>';
+        b.addEventListener('click', function () { b.classList.add('go'); location.reload(); });
+        document.body.appendChild(b); requestAnimationFrame(function () { b.classList.add('in'); });
+      }, function () { busy = false; });
+    }
+    setTimeout(check, 4000);
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(); });
+  })();
+  // (7) Große Titel wie in iOS: verlässt die Seitenüberschrift den Bildschirm, steht der Titel klein oben in der Mitte
+  var ltBar = document.createElement('div'); ltBar.className = 'lt-bar'; ltBar.setAttribute('aria-hidden', 'true'); ltBar.innerHTML = '<span></span>';
+  document.body.appendChild(ltBar);
+  var ltObs = null;
+  function ltBind() {
+    if (ltObs) { ltObs.disconnect(); ltObs = null; }
+    document.body.classList.remove('lt-on');
+    var h = document.querySelector('#app .page-head h1, #app .mod-hero h1');
+    if (!h || !window.IntersectionObserver) return;
+    ltBar.firstChild.textContent = h.textContent;
+    ltObs = new IntersectionObserver(function (en) { document.body.classList.toggle('lt-on', !en[0].isIntersecting && en[0].boundingClientRect.top < 0); }, { threshold: 0 });
+    ltObs.observe(h);
+  }
   // Handy: obere Leiste nur ganz oben auf der Seite (body.at-top); Hell/Dunkel als schwebender Kreis neben der kleinen Leiste
   (function () {
     var set = function () { var top = window.scrollY <= 6; if (top !== document.body.classList.contains('at-top')) document.body.classList.toggle('at-top', top); };
-    set(); window.addEventListener('scroll', set, { passive: true }); window.addEventListener('hashchange', function () { setTimeout(set, 60); });
+    set(); window.addEventListener('scroll', set, { passive: true }); window.addEventListener('hashchange', function () { setTimeout(set, 60); }); window.addEventListener('load', function () { setTimeout(set, 100); }); window.addEventListener('pageshow', set);
     var fab = document.createElement('button'); fab.type = 'button'; fab.className = 'theme-fab'; fab.id = 'themeFab';
     fab.setAttribute('aria-label', 'Hell/Dunkel umschalten'); fab.innerHTML = '<span aria-hidden="true">◐</span>';
     fab.addEventListener('click', function () { document.getElementById('themeBtn').click(); });
@@ -9048,7 +9175,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     DOMAIN_KEYS.forEach(function (k) { var d = dom[k], w = DOMAINS[k].share || 1 / DOMAIN_KEYS.length; d.p = pct(d.ok, d.t); wsum += w; r += w * (d.t ? d.ok / d.t : 0); });
     return { p: Math.round(wsum ? r / wsum * 100 : 0), dom: dom };
   }
-  function viewHome() {
+  function viewHome(discover) {
     var ps = statsFor(ALL_MIDS);
     var relQ = Object.keys(QIDX).filter(function (id) { return qRelevant(QIDX[id]); });
     var okNow = relQ.filter(function (id) { return S.answered[id] && S.answered[id].ok; }).length;
@@ -9066,12 +9193,13 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var steps = [], ri0 = resumeInfo(), pdH = planData(), ptH = planToday(pdH);
     if (ptH) steps.push(['learn', 'Heute laut Plan', ptH.label, ptH.href]);
     if (ri0) steps.push(['play', 'Weitermachen', ri0.label, '#/resume']);
+    steps.push(['focus', 'Fokus-Session · 15 Min.', (wn ? 'Erst ' + Math.min(5, wn) + ' Fehler, dann neue Fragen und ein Abschnitt' : '10 Fragen und ein passender Abschnitt zum Lesen'), '#/focus']);
     if (wn) steps.push(['errors', wn + (wn === 1 ? ' offener Fehler' : ' offene Fehler'), 'Gezielt wiederholen, bis es sitzt', '#/errors']);
     if (MODS[next]) steps.push(['learn', 'M' + CMOD[next].nr + ' · ' + CMOD[next].title, 'Nächstes offenes Modul im ' + CMOD[next].lp.title, '#/module/' + next]);
     var weak = DOMAIN_KEYS.filter(function (k) { return rd.dom[k].ok > 0 || Object.keys(S.answered).length; }).sort(function (x, y) { return rd.dom[x].p - rd.dom[y].p; })[0];
     if (weak && Object.keys(S.answered).length) steps.push(['exam', 'Schwächste Domäne: ' + DOMAINS[weak].label + ' (' + rd.dom[weak].p + ' %)', 'Mit einem Schnell-Quiz aufholen', '#/quick/' + quickCount()]);
     else steps.push(['exam', 'Erstes Schnell-Quiz', quickCount() + ' gemischte Fragen aus allen Modulen', '#/quick/' + quickCount()]);
-    var STEP_ICON = { play: '<path d="M8 5.5v13l10-6.5z"/>', errors: NAV_ICONS.errors, learn: NAV_ICONS.learn, exam: NAV_ICONS.exam };
+    var STEP_ICON = { focus: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6"/>', play: '<path d="M8 5.5v13l10-6.5z"/>', errors: NAV_ICONS.errors, learn: NAV_ICONS.learn, exam: NAV_ICONS.exam };
     var today = '<section class="today"><div class="td-main"><div class="t-eyebrow">Heute</div><h1 class="td-h">' + hello + '</h1>' +
       '<p class="td-sub">' + ps.done + ' von ' + ps.relevant + ' Modulen erledigt · ' + okNow + ' von ' + relQ.length + ' Fragen sicher beantwortet</p>' +
       (pdH && pdH.daysLeft >= 0 ? '<a class="countdown" href="#/plan">' + ico('plan') + '<b>' + (pdH.daysLeft ? 'Noch ' + pdH.daysLeft + (pdH.daysLeft === 1 ? ' Tag' : ' Tage') + ' bis zur Prüfung' : 'Heute ist Prüfung – viel Erfolg!') + '</b><span>' + (pdH.diff < 0 ? (-pdH.diff) + ' Module hinter dem Plan' : pdH.diff > 0 ? pdH.diff + ' Module voraus' : 'im Plan') + '</span></a>' :
@@ -9116,10 +9244,13 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var quick = '<section class="quick-bar"><div class="qb-copy"><b>Schnell-Quiz</b><span>Zufällige Fragen aus allen Modulen – ideal für zwischendurch.</span></div>' +
       '<div class="stepper" role="group" aria-label="Anzahl Fragen"><button class="st-btn" data-qn="-5" aria-label="5 weniger">−</button><output id="qnVal">' + qn + '</output><button class="st-btn" data-qn="5" aria-label="5 mehr">+</button></div>' +
       '<a class="btn" id="qnGo" href="#/quick/' + qn + '">Starten</a></section>';
-    app.innerHTML = '<div class="home">' + today + backupBar() + carousel + quick + examRow +
+    // (3) Startseite nur noch „Heute“; Lernpfade, Schnell-Quiz und Prüfung liegen unter „Entdecken“
+    var more = '<a class="home-more" href="#/discover"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.discover + '</svg><span><b>Entdecken</b><small>Lernpfade, Schnell-Quiz und Prüfungssimulation</small></span><span class="ni-go" aria-hidden="true">›</span></a>';
+    app.innerHTML = discover ? '<div class="home discover">' + carousel + quick + examRow :
+      '<div class="home">' + today + backupBar() + more +
       '<footer class="home-foot">Inhalte basieren ausschließlich auf Microsoft Learn (Kurs DP-600T00-A) und dem offiziellen DP-600 Study Guide. Keine offiziellen Prüfungsfragen. Microsoft und Microsoft Fabric sind Marken der Microsoft Corporation. © IT sure GmbH</footer></div>';
-    initCarousel(app.querySelector('.lp-carousel'));
-    app.querySelector('.stepper').addEventListener('click', function (e) {
+    if (app.querySelector('.lp-carousel')) initCarousel(app.querySelector('.lp-carousel'));
+    if (app.querySelector('.stepper')) app.querySelector('.stepper').addEventListener('click', function (e) {
       var b = e.target.closest('[data-qn]'); if (!b) return;
       var v = Math.max(10, Math.min(50, quickCount() + +b.dataset.qn));
       lsSet('dp600.quickN', String(v));
@@ -9554,6 +9685,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       (wrongIds().length ? '<a class="btn ghost" href="#/errors">Fehler-Training (' + wrongIds().length + ')</a>' : '') + '</div></div></div>' +
       (r.readyFrom != null ? '<div class="card ready-delta"><div class="ring ring-rd" data-pfrom="' + r.readyFrom + '" style="--ring-c:var(--prog);--to:' + r.readyTo + '"><span data-from="' + r.readyFrom + '">' + r.readyTo + '%</span></div>' +
         '<div><b>Prüfungsreife</b><p class="muted">' + (r.readyTo > r.readyFrom ? 'Von ' + r.readyFrom + ' % auf ' + r.readyTo + ' % gestiegen – <span class="delta-chip">+' + (r.readyTo - r.readyFrom) + ' %</span>' : r.readyTo < r.readyFrom ? 'Von ' + r.readyFrom + ' % auf ' + r.readyTo + ' % gesunken – die falschen Antworten liegen jetzt im Fehler-Training.' : 'Unverändert bei ' + r.readyTo + ' %.') + '</p></div></div>' : '') +
+      (Q.ctx.kind === 'focus' ? '<div class="card"><h2>Fokus-Session geschafft</h2><p class="card-sub">' + Math.max(1, Math.round((Date.now() - (Q.ctx.started || Date.now())) / 60000)) + ' Minuten · ' + r.ok + ' von ' + r.total + ' richtig' + (wrongIds().length ? ' · noch ' + wrongIds().length + ' offene Fehler' : ' · keine offenen Fehler mehr') + '</p></div>' + focusNext() : '') +
       '<div class="card"><h2>Fragen im Überblick</h2>' + Q.ids.map(function (id, i) {
         var q = QIDX[id], ok = Q.checked[id];
         return '<div class="review-item"><div class="rq"><span class="rqt">' + (i + 1) + '. ' + md(q.q) + '</span><span class="tag ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'richtig' : 'falsch') + '</span></div>' +
@@ -10783,6 +10915,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       '<div class="cb-r"><span>Kontrast Akzent hell ' + ok(r.light, 4.5) + '</span><span>Kontrast Akzent dunkel ' + ok(r.dark, 4.5) + '</span><span>Kontrast Nebentext ' + ok(r.text, 4.5) + '</span></div></div>';
   }
   var showHiddenPresets = false;
+  var FEATURED = ['fabric', 'itsure', 'studio', 'excel', 'powerbi'];
+  var SET_OPEN = {};
+  app.addEventListener('toggle', function (e) { var d = e.target; if (d.dataset && d.dataset.grp) SET_OPEN[d.dataset.grp] = d.open; }, true);
   // Versionsverlauf, App-Symbole (nur Web-App) – unterster Abschnitt der Einstellungen
   var CHANGES = window.DP_CHANGELOG || [], APP_VER = CHANGES[0] ? CHANGES[0].v : '1.0';
   var APP_ICONS = [['book', 'IT sure Buch'], ['ring', 'Reife-Ring'], ['bars', 'Balken'], ['cube', 'Datenwürfel'], ['mono', 'Monogramm'], ['path', 'Lernpfad'], ['check', 'Bestanden'], ['grid', 'Tabelle'], ['bi', 'Power BI'], ['slide', 'Folie'], ['lake', 'OneLake'], ['spark', 'Blitz'], ['trio', 'Office-Trio']];
@@ -10831,15 +10966,21 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<span class="pv-dom"><i class="d1"></i><i class="d2"></i><i class="d3"></i></span><span class="pv-btn">Weiter</span></span></span>' +
         '<span class="pr-name">' + esc(p.name) + (on ? ' ' + ico('check') : '') + '</span><span class="pr-desc">' + esc(p.desc) + '</span></button></div>';
     };
-    var presets = Object.keys(PRESETS).filter(function (k) { return hiddenL.indexOf(k) < 0; }).map(function (k) { return card(k, false); }).join('');
+    // Fünf kuratierte Designs sichtbar (plus das aktive), der Rest eingeklappt unter „Mehr Designs“
+    var shown = Object.keys(PRESETS).filter(function (k) { return hiddenL.indexOf(k) < 0; });
+    var feat = shown.filter(function (k) { return FEATURED.indexOf(k) >= 0 || k === LOOK.preset; }), more = shown.filter(function (k) { return feat.indexOf(k) < 0; });
+    var presets = feat.map(function (k) { return card(k, false); }).join('');
+    var moreBox = '<details class="more-presets" data-grp="more"' + (SET_OPEN.more ? ' open' : '') + '><summary>Mehr Designs (' + more.length + ') und eigene Farbe</summary><div class="preset-grid">' + more.map(function (k) { return card(k, false); }).join('') + '</div>' + customBox() + '</details>';
+    var grp = function (id, title, hint, body) { return '<details class="card set-grp" data-grp="' + id + '"' + (SET_OPEN[id] ? ' open' : '') + '><summary><span class="sg-t"><b>' + title + '</b><small>' + hint + '</small></span><span class="sg-chev" aria-hidden="true">›</span></summary><div class="sg-body">' + body + '</div></details>'; };
     var hiddenBox = hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ') · ' + hiddenL.map(function (k) { return esc(PRESETS[k].name); }).join(', ') + '</summary>' +
       '<div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '';
-    app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Einstellungen</div><h1>Darstellung und Lernen</h1>' +
-      '<div class="sub">Design, Stil und Animationen reisen mit Ihrem Fortschritt auf andere Geräte. Was nur hier gelten soll, legen Sie unten unter „Abgleich“ fest.</div></div>' +
-      '<section class="card"><h2>Design</h2><p class="card-sub">Ein Klick setzt Farben und Stil. Einzelne Optionen darunter passen Sie danach an.</p><div class="preset-grid">' + presets + '</div>' + hiddenBox + customBox() + '</section>' +
-      '<section class="card" id="lookBox"><h2>Erscheinungsbild</h2>' +
+    app.innerHTML = '<div class="container"><div class="page-head"><h1>Einstellungen</h1>' +
+      '</div>' +
+      '<section class="card"><h2>Design</h2><div class="preset-grid">' + presets + '</div>' + moreBox + hiddenBox + '</section>' +
+      '<section class="card" id="lookBox">' +
         row('Hell oder dunkel', '„System“ folgt Mac oder iPhone, „Tageszeit“ ist von 7 bis 19 Uhr hell', seg('mode', [['system', 'System'], ['time', 'Tageszeit'], ['light', 'Hell'], ['dark', 'Dunkel']], lookVal('mode'))) +
         row('Stil', 'Schrift, Formen, Glas und Bewegung der ganzen App', seg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))) +
+      '</section>' + grp('adv', 'Weitere Darstellung', 'Animationen, Schrift, Lesebreite, Navigation, Begrüßung', '' +
         row('Begrüßung beim ersten Öffnen am Tag', 'Ziele, Countdown und ein Fakt des Tages', sw('setGreet', LOOK.greet !== false) + ' <button type="button" class="btn sm ghost" id="greetNow">Ansehen</button>') +
         row('Glas reagiert auf Neigung', 'iPhone: Lichtreflex wandert beim Kippen über Leiste und Glas (fragt einmal nach Erlaubnis). Am Mac folgt er der Maus', sw('setTilt', !!LOOK.tilt)) +
         row('Animationen', 'Übergänge und Einblendungen', seg('motion', [['on', 'An'], ['reduced', 'Reduziert'], ['off', 'Aus']], lookVal('motion'))) +
@@ -10852,8 +10993,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<div class="set-row tabs-row"><div class="set-l"><b>Reiter unten</b><span>Vier Reiter nach Wahl; „Mehr“ bleibt immer rechts. Am Mac kommen je nach Fensterbreite weitere dazu</span></div><div class="set-c tab-pick">' + tabKeys().map(function (k, i) {
           return '<label class="tp-slot"><small>' + (i + 1) + '</small><select data-tabslot="' + i + '" aria-label="Reiter ' + (i + 1) + '">' + Object.keys(TAB_OPTS).map(function (o) { return '<option value="' + o + '"' + (o === k ? ' selected' : '') + '>' + TAB_OPTS[o][1] + '</option>'; }).join('') + '</select></label>';
         }).join('') + '</div></div>' +
-        '<div class="actions"><button class="btn ghost" data-look-reset="1">Auf Design-Standard zurücksetzen</button></div></section>' + syncCard() +
-      '<section class="card"><h2>Lernen</h2>' +
+        '<div class="actions"><button class="btn ghost" data-look-reset="1">Auf Design-Standard zurücksetzen</button></div>') + syncCard() +
+      grp('learn', 'Lernen und Tagesziele', 'Mischen, Begründungen, Markierungsfarben, Ziele, Schnell-Quiz', '' +
         row('„Nicht relevante“ Module ignorieren', 'Bei Fortschritt, Fragenpool und Prüfungssimulation', sw('setSkip', S.settings.ignoreSkipped)) +
         row('Antwortoptionen mischen', 'Reihenfolge 1–4 bei jedem Durchgang neu', sw('setShuffle', S.settings.shuffle !== false)) +
         row('Begründungen immer aufgeklappt', 'Auch bei richtigen Antworten', sw('setWhy', !!S.settings.whyOpen)) +
@@ -10865,7 +11006,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         row('Tagesziel: Lesen', 'Minuten in der Vertiefung pro Tag', goalStep('min', 5)) +
         row('Tagesziel: Fehler', 'Abgebaute Fehler pro Tag', goalStep('fix', 1)) +
         row('Schnell-Quiz', 'Standard-Anzahl Fragen', '<div class="stepper"><button class="st-btn" data-qn="-5" aria-label="5 weniger">−</button><output id="qnVal">' + quickCount() + '</output><button class="st-btn" data-qn="5" aria-label="5 mehr">+</button></div>') +
-      '</section>' + aboutCard() + '</div>';
+      '') + aboutCard() + '</div>';
     document.getElementById('setSkip').addEventListener('change', function () { S.settings.ignoreSkipped = this.checked; cfg.excludeSkipped = null; save(); renderSidebar(); });
     document.getElementById('setShuffle').addEventListener('change', function () { S.settings.shuffle = this.checked; save(); });
     document.getElementById('setWhy').addEventListener('change', function () { S.settings.whyOpen = this.checked; save(); });
@@ -10920,9 +11061,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var l = lookLocal();
     var how = CLOUD.state === 'on' ? '✓ Geräte-Sync aktiv: Änderungen erscheinen nach wenigen Sekunden auf Ihren anderen Geräten.' :
       FS.state === 'on' ? 'Abgleich über die Sicherungsdatei und den Übertragungscode.' : 'In dieser Version reisen die Einstellungen mit dem <a href="#/progress">Übertragungscode</a> und dem JSON-Export.';
-    return '<section class="card"><h2>Abgleich zwischen Geräten</h2><p class="card-sub">' + how + ' Grün = auf allen Geräten gleich, grau = nur auf diesem Gerät.</p><div class="lsync">' +
+    return '<details class="card set-grp" data-grp="sync"' + (SET_OPEN.sync ? ' open' : '') + '><summary><span class="sg-t"><b>Abgleich zwischen Geräten</b><small>Welche Einstellungen auf allen Geräten gleich sind</small></span><span class="sg-chev" aria-hidden="true">›</span></summary><div class="sg-body"><p class="card-sub">' + how + ' Grün = auf allen Geräten gleich, grau = nur auf diesem Gerät.</p><div class="lsync">' +
       Object.keys(LOOK_GROUPS).map(function (g) { var on = l.indexOf(g) < 0; return '<button type="button" class="chip' + (on ? ' on' : '') + '" data-lsync="' + g + '" aria-pressed="' + on + '">' + (on ? ico('check') + ' ' : '') + esc(LOOK_GROUP_NAMES[g]) + '</button>'; }).join('') +
-      '</div></section>';
+      '</div></div></details>';
   }
   function viewProgress() {
     var ps = statsFor(ALL_MIDS);
@@ -11015,6 +11156,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var it = [], A = function (key, group, title, sub, icon, run, kw) { it.push({ key: key, group: group, title: title, sub: sub || '', icon: icon, run: run, kw: normTxt(title + ' ' + (sub || '') + ' ' + (kw || '')) }); };
     var ri = resumeInfo();
     if (ri) A('a:resume', 'Aktionen', 'Weitermachen', ri.label, 'play', function () { go('#/resume'); }, 'fortsetzen');
+    A('a:focus', 'Aktionen', 'Fokus-Session', 'ca. 15 Minuten: Fehler, neue Fragen, ein Abschnitt', 'exam', function () { go('#/focus'); }, 'fokus lernen session');
+    A('a:discover', 'Aktionen', 'Entdecken', 'Lernpfade, Schnell-Quiz, Prüfung', 'home', function () { go('#/discover'); }, 'lernpfade entdecken');
     A('a:quick', 'Aktionen', 'Schnell-Quiz starten', quickCount() + ' zufällige Fragen', 'exam', function () { go('#/quick/' + quickCount()); }, 'quiz test ueben');
     A('a:exam', 'Aktionen', 'Prüfungssimulation', 'Konfigurieren und starten', 'exam', function () { go('#/exam'); }, 'pruefung simulation');
     A('a:errors', 'Aktionen', 'Fehler-Training', wrongIds().length + ' offene Fehler', 'errors', function () { go('#/errors'); }, 'fehler wiederholen');
