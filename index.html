@@ -2517,6 +2517,15 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 .bk-a { display: flex; gap: 8px; }
 @media (max-width: 900px) { .bk-bar { margin: 0 0 12px; padding: 16px; flex-wrap: wrap; } .bk-a { width: 100%; } }
 
+/* Handy/Leiste unten: Topbar gestochen scharf. Glas liegt auf eigener Ebene (::before) statt auf dem Element selbst –
+   iOS rastert sonst Text in Elementen mit backdrop-filter bzw. View-Transition-Namen unscharf. Nur eine Trennlinie. */
+html.tbnav .topbar { view-transition-name: none; isolation: isolate; background: transparent !important; background-image: none !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; box-shadow: none !important; border-bottom: 0; }
+html.tbnav .topbar::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--surface) 88%, transparent); border-bottom: .5px solid var(--hairline-strong, var(--hairline));
+  -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
+html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2574,6 +2583,7 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.14.1', d: '2026-10-16', items: ['Obere Leiste am iPhone gestochen scharf, nur noch eine Trennlinie'] },
   { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden mit dem Fortschritt auf andere Geräte übertragen', 'Selbst festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Speicher wird vor automatischem Löschen geschützt, Erinnerung nach 7 Tagen ohne Sicherung'] },
   { v: '1.13', d: '2026-10-16', items: ['Versionsverlauf in den Einstellungen und Hinweis „Neu in …“ nach Updates', 'Sechs App-Symbole zur Auswahl für den Home-Bildschirm'] },
   { v: '1.12.2', d: '2026-10-16', items: ['Obere Leiste im App-Modus klar statt dunstig'] },
