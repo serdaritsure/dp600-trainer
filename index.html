@@ -2448,9 +2448,9 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 :root { --glare: rgba(255, 255, 255, .55); }
 :root[data-theme="dark"] { --glare: rgba(255, 255, 255, .09); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glare: rgba(255, 255, 255, .09); } }
-:root:not([data-play="calm"]):not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu, .topbar) {
+:root:not([data-play="calm"]):not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu) {
   background-image: radial-gradient(220px 120px at calc(var(--gx, .5) * 100%) calc(var(--gy, .2) * 140% - 20%), var(--glare), transparent 70%); }
-:root[data-play="lively"]:not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu, .topbar) {
+:root[data-play="lively"]:not([data-motion="off"]) :is(.tb-bar, .tb-resume, .ctx-menu) {
   background-image: radial-gradient(260px 150px at calc(var(--gx, .5) * 100%) calc(var(--gy, .2) * 140% - 20%), var(--glare), transparent 70%); }
 
 /* (9) Begrüßung beim ersten Öffnen des Tages */
@@ -2478,7 +2478,9 @@ html:not(.tbnav) .tabs-row { display: none !important; }
 /* (10) Als App vom Home-Bildschirm (Vollbild, durchscheinende Statusleiste): Topbar unter die Uhrzeit verlängern */
 @media (display-mode: standalone) {
   :root { --topbar-h: calc(48px + env(safe-area-inset-top, 0px)); }
-  html body .topbar { padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
+  /* Statusleisten-Bereich ruhig und klar: kein Lichtreflex, kräftigeres Glas, scharfe Kante */
+  html body .topbar { padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; background-image: none;
+    background-color: color-mix(in srgb, var(--surface) 94%, transparent); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
 }
 .greet.settled .gr-in > * { animation: none; }
 
