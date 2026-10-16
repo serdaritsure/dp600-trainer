@@ -2556,6 +2556,33 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
   html body .topbar { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; }
 }
 
+/* Handy: obere Leiste etwas tiefer, nur ganz oben sichtbar; gleitet beim Scrollen nach oben weg */
+@media (max-width: 900px) {
+  html.tbnav body .topbar { --tb-drop: 10px; height: calc(var(--topbar-h) + var(--tb-drop)); padding-top: var(--tb-drop);
+    transition: transform .45s cubic-bezier(.32, .72, 0, 1), opacity .3s ease; }
+  html.tbnav body:not(.at-top) .topbar { transform: translateY(-105%); opacity: 0; pointer-events: none; }
+  /* Ohne obere Leiste rücken haftende Leisten (Abschnitte, Prüfung, Lesefortschritt) bis an den Rand */
+  html.tbnav body:not(.at-top) { --topbar-h: env(safe-area-inset-top, 0px); }
+  html.tbnav body .topbar { height: calc(48px + var(--tb-drop)); }
+  html.tbnav body #themeBtn { display: none; }
+}
+@media (max-width: 900px) and (display-mode: standalone) {
+  html.tbnav body .topbar { padding-top: calc(env(safe-area-inset-top, 0px) + var(--tb-drop)); height: calc(48px + env(safe-area-inset-top, 0px) + var(--tb-drop)); }
+}
+/* Schwebender Hell/Dunkel-Kreis rechts neben der verkleinerten Leiste */
+.theme-fab { display: none; }
+@media (max-width: 900px) {
+  html.tbnav .theme-fab { display: grid; place-items: center; position: fixed; z-index: 61; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hairline-strong); color: var(--text); font-size: 18px; cursor: pointer;
+    background: color-mix(in srgb, var(--surface) 92%, transparent); -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .14), 0 1px 3px rgba(0, 0, 0, .06); -webkit-tap-highlight-color: transparent;
+    opacity: 0; transform: translateY(12px) scale(.8); pointer-events: none; visibility: hidden;
+    transition: opacity .3s ease, transform .5s cubic-bezier(.32, .72, 0, 1), visibility 0s .5s; }
+  html.tbnav body.tb-min:not(.ms-open) .theme-fab { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .3s ease .1s, transform .5s cubic-bezier(.32, .72, 0, 1) .05s; }
+  html.tbnav body.tb-min .tb-bar { margin-left: 12px; margin-right: auto; }
+  html.tbnav .theme-fab:active { transform: scale(.92); }
+}
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -2613,6 +2640,7 @@ html.tbnav .topbar > * { -webkit-font-smoothing: antialiased; }
 /* Versionsverlauf der App (neueste zuerst). Bei jeder Veröffentlichung oben einen Eintrag ergänzen.
    Zweite Zahl = neue Funktionen/sichtbares Design, dritte Zahl = reine Fehlerbehebung. */
 window.DP_CHANGELOG = [
+  { v: '1.16', d: '2026-10-16', items: ['Handy: obere Leiste sitzt etwas tiefer und ist nur ganz oben auf der Seite sichtbar', 'Hell/Dunkel als schwebender Kreis neben der verkleinerten unteren Leiste'] },
   { v: '1.15', d: '2026-10-16', items: ['Neue Designs Excel, Power BI und PowerPoint – kräftiges Grün, Gelb und Rot, Seitenleiste in der Farbe der Anwendung', '13 App-Symbole, neu u. a. „IT sure Buch“ – die Farbe folgt jetzt immer dem gewählten Design', 'Obere Leiste der Home-Bildschirm-App deckend und scharf'] },
   { v: '1.14.1', d: '2026-10-16', items: ['Obere Leiste am iPhone gestochen scharf, nur noch eine Trennlinie'] },
   { v: '1.14', d: '2026-10-16', items: ['Design, Stil und Animationen werden mit dem Fortschritt auf andere Geräte übertragen', 'Selbst festlegen, welche Einstellungen nur auf diesem Gerät gelten', 'Speicher wird vor automatischem Löschen geschützt, Erinnerung nach 7 Tagen ohne Sicherung'] },
@@ -8912,6 +8940,24 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         renderTabbar(); placePill(false);
       }, 120);
     });
+  })();
+  // Handy: obere Leiste nur ganz oben auf der Seite (body.at-top); Hell/Dunkel als schwebender Kreis neben der kleinen Leiste
+  (function () {
+    var set = function () { var top = window.scrollY <= 6; if (top !== document.body.classList.contains('at-top')) document.body.classList.toggle('at-top', top); };
+    set(); window.addEventListener('scroll', set, { passive: true }); window.addEventListener('hashchange', function () { setTimeout(set, 60); });
+    var fab = document.createElement('button'); fab.type = 'button'; fab.className = 'theme-fab'; fab.id = 'themeFab';
+    fab.setAttribute('aria-label', 'Hell/Dunkel umschalten'); fab.innerHTML = '<span aria-hidden="true">◐</span>';
+    fab.addEventListener('click', function () { document.getElementById('themeBtn').click(); });
+    document.body.appendChild(fab);
+    // Kreis genauso hoch wie die Leiste und auf derselben Grundlinie
+    var fit = function () {
+      var bar = document.querySelector('.tb-bar'); if (!bar) return;
+      var r = bar.getBoundingClientRect(); if (!r.height) return;
+      fab.style.width = fab.style.height = r.height + 'px';
+      fab.style.bottom = (window.innerHeight - r.bottom) + 'px';
+    };
+    var hook = function () { var bar = document.querySelector('.tb-bar'); if (bar && window.ResizeObserver) new ResizeObserver(fit).observe(bar); else setTimeout(hook, 300); fit(); };
+    hook(); window.addEventListener('resize', fit);
   })();
   // Beim Herunterscrollen schrumpft die Leiste, beim Hochscrollen kommt sie zurück (wie iOS 26)
   (function () {
