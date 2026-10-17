@@ -2962,6 +2962,30 @@ html body .topbar { padding-left: 28px; padding-right: 22px; }
   html.tbnav body.tb-idle .tb-resume .tbr-play { width: 46px; height: 46px; }
   html.tbnav body.tb-idle .tb-resume .tbr-play svg { width: 17px; height: 17px; }
 }
+/* Platzhalter für die Animation Weitermachen ↔ Play-Kreis (nur transform/opacity) */
+.tb-ghost { position: fixed; z-index: 61; pointer-events: none; will-change: transform; transform-origin: center; }
+.tb-ghost i { position: absolute; top: 0; height: 100%; background: var(--surface); will-change: transform; }
+.tb-ghost .g-l, .tb-ghost .g-r { border-radius: 50%; box-shadow: 0 0 0 1px var(--hairline-strong); }
+.tb-ghost .g-m { box-shadow: 0 1px 0 0 var(--hairline-strong), 0 -1px 0 0 var(--hairline-strong); }
+.tb-ghost .tbr-play { border-radius: 50%; display: grid; place-items: center; background: var(--btn-bg); color: var(--on-btn); will-change: transform; }
+.tb-ghost .tbr-play svg { width: 14px; height: 14px; fill: currentColor; margin-left: 2px; }
+body.tb-anim .tb-resume { opacity: 0 !important; }
+body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--surface) !important; will-change: transform; }
+/* Mac/iPad: in „Weitermachen“ steht der Play-Knopf links, der Fortschrittsring rechts */
+@media (min-width: 901px) {
+  html.tbnav .tb-resume .tbr-play { order: -1; }
+  html.tbnav .tb-resume .tbr-ring { order: 2; }
+  html.tbnav body:not(.tb-idle) .tb-resume { padding: 6px 12px 6px 6px; }
+}
+/* Mac/iPad: Karte „Weitermachen“ so hoch wie Play-Kreis und Leiste – Play-Knopf gleich groß in beiden Formen */
+@media (min-width: 901px) {
+  html.tbnav body .tb-resume { height: var(--tb-h, 64px); box-sizing: border-box; padding-top: 0; padding-bottom: 0; }
+  html.tbnav body .tb-resume .tbr-play { width: 46px; height: 46px; }
+  html.tbnav body .tb-resume .tbr-play svg { width: 17px; height: 17px; }
+  html.tbnav body.tb-idle:not(.tb-nores):not(.ms-open) .tb-resume { width: var(--tb-h, 64px); height: var(--tb-h, 64px); }
+  html.tbnav body:not(.tb-idle) .tb-resume { padding-left: 9px; }
+}
+.tb-ghost .g-m { transform-origin: left center; }
 
 </style>
 <script>
@@ -3025,6 +3049,7 @@ html body .topbar { padding-left: 28px; padding-right: 22px; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.4', d: '2026-10-17', items: ['Mac und iPad: „Weitermachen“ klappt nur beim Scrollen wieder auf, mit flüssiger Animation in beide Richtungen', 'Play-Knopf links, Fortschrittsring rechts; Karte, Play-Kreis und untere Leiste gleich hoch'] },
   { v: '1.23.3', d: '2026-10-17', items: ['Mac und iPad: nach 5 Sekunden ohne Bedienung wird „Weitermachen“ zum Play-Kreis links neben der unteren Leiste'] },
   { v: '1.23.2', d: '2026-10-17', items: ['Kleiner Seitentitel beim Scrollen mit Glas-Effekt, Deckkraft über den Liquid-Glass-Regler'] },
   { v: '1.23.1', d: '2026-10-17', items: ['Obere Leiste als schwebende Kapsel, auf iPhone und Mac', 'Am Mac: Abschnittsleiste im Modul als Kapsel, Inhaltsverzeichnis mit runden Markierungen', 'iPhone: nach 5 Sekunden ohne Bedienung wechselt die untere Leiste in die kleine Form mit Such- und Hell/Dunkel-Knopf'] },
@@ -10770,6 +10795,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var fit = function () {
       var bar = document.querySelector('.tb-bar'); if (!bar) return;
       var r = bar.getBoundingClientRect(); if (!r.height) return;
+      if (!isNarrow()) document.documentElement.style.setProperty('--tb-h', Math.round(r.height) + 'px');
       [fab, sfab].forEach(function (f) { f.style.width = f.style.height = r.height + 'px'; f.style.bottom = (window.innerHeight - r.bottom) + 'px'; });
       if (document.body.classList.contains('tb-min')) { fab.style.left = Math.min(r.right + 10, window.innerWidth - r.height - 4) + 'px'; sfab.style.left = Math.max(r.left - 10 - r.height, 4) + 'px'; }
     };
@@ -10794,17 +10820,85 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       }, 90);
     }, { passive: true });
     // Nach 5 Sekunden ohne Scrollen/Tippen: kleine Leiste mit Such- und Hell/Dunkel-Knopf
+    // Mac/iPad: „Weitermachen“ ↔ Play-Kreis neben der Leiste.
+    // Flüssig mit voller Bildrate: animiert wird ein Platzhalter aus zwei Halbkreisen und einem Mittelstück,
+    // ausschließlich über transform/opacity (Grafikkarte); Unschärfe der Leisten ist währenddessen aus.
+    var morph = null, MT = 720, ME = 'cubic-bezier(.4, 0, .2, 1)';
+    var noMotion = function () { return matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.getAttribute('data-motion') === 'off'; };
+    var stopMorph = function (soft) {
+      if (!morph) return; var g = morph.ghost, an = morph.anims; morph = null; document.body.classList.remove('tb-anim');
+      if (!soft) { an.forEach(function (x) { x.cancel(); }); g.remove(); return; }
+      // weicher Übergang: Platzhalter blendet aus, während die echte Karte/der echte Kreis einblendet
+      an.slice(1).forEach(function (x) { if (x.effect && x.effect.target && !g.contains(x.effect.target)) x.cancel(); });
+      g.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-out', fill: 'forwards' }).onfinish = function () { g.remove(); };
+    };
+    // R: Karte (groß), P: Play-Knopf in der Karte, C: Kreis neben der Leiste; dir 'normal' = aufklappen
+    var runMorph = function (R, P, C, dir, done) {
+      // Aufklappen: 1. Kreis wandert auf direktem Weg an den linken Rand der Karte, 2. Karte breitet sich nach rechts aus.
+      // Verkleinern läuft genau rückwärts: erst zusammenziehen auf Kreisgröße, dann wandern.
+      var W = R.width, H = R.height, ghost = document.createElement('div');
+      ghost.className = 'tb-ghost'; ghost.style.cssText = 'left:' + R.left + 'px;top:' + R.top + 'px;width:' + W + 'px;height:' + H + 'px';
+      ghost.innerHTML = '<i class="g-l" style="width:' + H + 'px"></i><i class="g-r" style="width:' + H + 'px;left:' + (W - H) + 'px"></i><i class="g-m" style="left:' + H / 2 + 'px;width:' + (W - H) + 'px"></i>' +
+        '<span class="tbr-play" style="position:absolute;left:' + (P.left - R.left) + 'px;top:' + (P.top - R.top) + 'px;width:' + P.width + 'px;height:' + P.height + 'px"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>';
+      document.body.appendChild(ghost);
+      var dx = C.left - R.left, dy = C.top - R.top, pc = C.width / 2 - (P.left + P.width / 2 - R.left), M = .5;
+      var mv = 'cubic-bezier(.45, 0, .2, 1)', gr = 'cubic-bezier(.3, 0, .15, 1)';
+      var o = { duration: MT, direction: dir, fill: 'both' };
+      var two = function (a, z, first) { return first ? [{ transform: a, easing: mv }, { transform: z, offset: M }, { transform: z }] : [{ transform: a }, { transform: a, offset: M, easing: gr }, { transform: z }]; };
+      var q = function (sel) { return ghost.querySelector(sel); };
+      var anims = [
+        ghost.animate(two('translate(' + dx + 'px,' + dy + 'px)', 'none', true), o),
+        q('.g-r').animate(two('translateX(' + -(W - H) + 'px)', 'none'), o),
+        q('.g-m').animate(two('scaleX(0)', 'none'), o),
+        q('.tbr-play').animate(two('translateX(' + pc + 'px)', 'none'), o)
+      ];
+      morph = { ghost: ghost, anims: anims };
+      anims[0].onfinish = function () { done(); };
+      return anims;
+    };
+    var expandIdle = function () {
+      var b = document.body;
+      if (morph && morph.dir === 'collapse') { stopMorph(); return; }
+      if (!b.classList.contains('tb-idle') || morph) return;
+      var res = document.querySelector('.tb-resume'), bar = document.querySelector('.tb-bar');
+      if (!res || !res.animate || noMotion()) { b.classList.remove('tb-idle'); return; }
+      var C = res.getBoundingClientRect(), B0 = bar.getBoundingClientRect();
+      b.classList.remove('tb-idle'); b.classList.add('tb-anim');
+      var R = res.getBoundingClientRect(), P = res.querySelector('.tbr-play').getBoundingClientRect(), B1 = bar.getBoundingClientRect();
+      var anims = runMorph(R, P, C, 'normal', function () {
+        stopMorph(true); res.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+      });
+      morph.dir = 'expand';
+      anims.push(bar.animate([{ transform: 'translate(' + (B0.left - B1.left) + 'px,' + (B0.top - B1.top) + 'px)', easing: ME }, { transform: 'none' }], { duration: MT / 2, fill: 'backwards' }));
+    };
+    var collapseIdle = function () {
+      var b = document.body; if (b.classList.contains('tb-idle') || morph) return;
+      var res = document.querySelector('.tb-resume'), bar = document.querySelector('.tb-bar');
+      var vis = res && getComputedStyle(res).visibility !== 'hidden' && res.offsetWidth;
+      if (!vis || !res.animate || noMotion()) { b.classList.add('tb-idle'); return; }
+      var R = res.getBoundingClientRect(), P = res.querySelector('.tbr-play').getBoundingClientRect(), B1 = bar.getBoundingClientRect();
+      b.classList.add('tb-idle'); var C = res.getBoundingClientRect(), B0 = bar.getBoundingClientRect(); b.classList.remove('tb-idle');
+      // Text der Karte blendet kurz aus, dann übernimmt der Platzhalter
+      res.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).onfinish = function () {
+        this.cancel(); if (b.classList.contains('tb-idle')) return;
+        b.classList.add('tb-anim');
+        var anims = runMorph(R, P, C, 'reverse', function () { b.classList.add('tb-idle'); stopMorph(true); });
+        morph.dir = 'collapse';
+        anims.push(bar.animate([{ transform: 'none', easing: ME }, { transform: 'translate(' + (B0.left - B1.left) + 'px,' + (B0.top - B1.top) + 'px)' }], { duration: MT / 2, delay: MT / 2, fill: 'both' }));
+      };
+    };
     var idle = null, arm = function () {
-      clearTimeout(idle); document.body.classList.remove('tb-idle');
+      clearTimeout(idle);
       idle = setTimeout(function () {
         var b = document.body;
         // Mac/iPad: „Weitermachen“ schrumpft zum Play-Kreis neben der Leiste
-        if (!isNarrow() && !sheetOpen() && !b.classList.contains('cs-open') && !document.querySelector('.cmdk-backdrop')) b.classList.add('tb-idle');
+        if (!isNarrow() && !sheetOpen() && !b.classList.contains('cs-open') && !document.querySelector('.cmdk-backdrop')) collapseIdle();
         if (isNarrow() && !sheetOpen() && !b.classList.contains('cs-open') && !document.querySelector('.cmdk-backdrop')) b.classList.add('tb-min');
       }, 5000);
     };
-    ['scroll', 'touchstart', 'pointerdown', 'keydown', 'mousemove'].forEach(function (ev) { window.addEventListener(ev, arm, { passive: true }); });
-    window.addEventListener('hashchange', arm); arm();
+    ['scroll', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) { window.addEventListener(ev, arm, { passive: true }); });
+    window.addEventListener('scroll', expandIdle, { passive: true }); window.addEventListener('wheel', expandIdle, { passive: true });
+    window.addEventListener('hashchange', function () { expandIdle(); arm(); }); arm();
   })();
 
 
