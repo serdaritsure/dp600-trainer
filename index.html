@@ -3127,6 +3127,12 @@ html[data-oled="1"] .topbar::before { background: rgba(0, 0, 0, .85) !important;
   border-top: 0 !important; border-bottom: 0 !important; }
 .learn-main .keypoints li + li, .learn-main .card ul li + li { margin-top: 6px; }
 .learn-main :is(.deep, summary, .code-bar), #modBody :is(.deep, summary, .code-bar) { border-left: 0 !important; border-right: 0 !important; border-top: 0 !important; border-bottom: 0 !important; }
+/* Design löschen (nur bei ausgeblendeten Designs) */
+.pr-del { position: absolute; top: 6px; left: 6px; z-index: 2; width: 26px; height: 26px; border-radius: 50%; border: none; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--surface) 85%, transparent); box-shadow: 0 0 0 1px var(--hairline-strong); color: var(--bad); cursor: pointer; }
+.pr-del svg { width: 14px; height: 14px; }
+.pr-removed { margin: 10px 2px 0; }
+.linklike { border: 0; background: none; padding: 0; font: inherit; color: var(--link); cursor: pointer; }
 
 </style>
 <script>
@@ -3190,6 +3196,7 @@ html[data-oled="1"] .topbar::before { background: rgba(0, 0, 0, .85) !important;
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.24.2', d: '2026-10-17', items: ['Design-Auswahl: oben immer vier Designs, das aktive zuerst; weitere eingeklappt', 'Farbwahl erscheint nur beim Design „Eigene Farbe“', 'Ausgeblendete Designs lassen sich löschen und wiederherstellen; Antippen blendet ein Design wieder ein'] },
   { v: '1.24.1', d: '2026-10-17', items: ['Lernbereich ohne Trennlinien innerhalb der Kacheln', 'Modus „Schwarz“: Ränder um Karten wieder sichtbar'] },
   { v: '1.24', d: '2026-10-17', items: ['Modul-Kopf im Lernbereich schlanker: Lernpfad und Modul in einer Zeile, Eckdaten als eine Zeile, Status darunter', 'Prüfung: Auswahl für Fragenanzahl und Timer gleich groß und kompakt', '„Sehr weich“: alle Kacheln und Kästen der App mit derselben Rundung', '„Lernpfade & Quiz“: Bereiche als runde Karten', 'Umschalter: gewählte Option mit feinem Rand in der Designfarbe, immer einzeilig', 'Modus „Schwarz“: Flächen echtes Schwarz'] },
   { v: '1.23.8', d: '2026-10-17', items: ['Übersicht auf dem iPhone: Kacheln Tagesziel, Prüfungsreife, Serie und Prüfung stehen mittig, Nachbarn werden unscharf', '„Lernpfade & Quiz“ ist so breit wie die Karte darüber'] },
@@ -10006,7 +10013,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   // Darstellung geräteübergreifend: S.look = {v: Werte, at: Zeitpunkt}; Gruppen in LOOK.local bleiben auf diesem Gerät
   var RF = { dezent: .7, standard: 1, weich: 1.3, sehr: 1.65 };
-  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'play', 'glass', 'glassT', 'round'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
+  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'removed', 'play', 'glass', 'glassT', 'round'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
   var LOOK_GROUP_NAMES = { design: 'Design & Stil', mode: 'Hell/Dunkel', motion: 'Animationen', text: 'Schrift & Lesebreite', nav: 'Navigation & Reiter', extras: 'Begrüßung, Neigung, App-Symbol' };
   function lookLocal() { return LOOK.local || ['nav', 'extras']; }
   function syncedKeys() { var l = lookLocal(), ks = []; Object.keys(LOOK_GROUPS).forEach(function (g) { if (l.indexOf(g) < 0) ks = ks.concat(LOOK_GROUPS[g]); }); return ks; }
@@ -12980,27 +12987,34 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function sTgl(key, on) { return '<label class="tgl"><input type="checkbox" data-set="' + key + '"' + (on ? ' checked' : '') + '><i></i></label>'; }
   function sStep(attr, val, label) { return '<div class="stepper"><button class="st-btn" ' + attr + ' data-d="-1" aria-label="' + label + ' verringern">−</button><output>' + val + '</output><button class="st-btn" ' + attr + ' data-d="1" aria-label="' + label + ' erhöhen">+</button></div>'; }
   function designBlock() {
-    var hiddenL = (LOOK.hidden || []).filter(function (k) { return PRESETS[k] && k !== LOOK.preset; });
+    var removed = (LOOK.removed || []).filter(function (k) { return PRESETS[k] && k !== LOOK.preset; });
+    var hiddenL = (LOOK.hidden || []).filter(function (k) { return PRESETS[k] && k !== LOOK.preset && removed.indexOf(k) < 0; });
     var card = function (k, isHidden) {
       var p = PRESETS[k], on = LOOK.preset === k;
       return '<div class="preset-wrap' + (isHidden ? ' is-hidden' : '') + '">' + (on ? '' : '<button type="button" class="pr-hide" data-' + (isHidden ? 'unhide' : 'hide') + '="' + k + '" title="' + (isHidden ? 'Wieder einblenden' : 'Ausblenden') + '" aria-label="' + esc(p.name) + (isHidden ? ' einblenden' : ' ausblenden') + '">' + (isHidden ? '＋' : '−') + '</button>') +
+        (isHidden ? '<button type="button" class="pr-del" data-remove="' + k + '" title="Löschen" aria-label="' + esc(p.name) + ' löschen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V5h5v2M6.5 7l1 12.5h9l1-12.5"/></svg></button>' : '') +
         '<button type="button" class="preset' + (on ? ' on' : '') + '" data-preset="' + k + '" aria-pressed="' + on + '">' +
         '<span class="pv" data-palette="' + p.palette + '" data-pv-play="' + p.play + '"><span class="pv-bar"></span><span class="pv-body"><span class="pv-ring"></span><span class="pv-lines"><i></i><i></i></span>' +
         '<span class="pv-dom"><i class="d1"></i><i class="d2"></i><i class="d3"></i></span><span class="pv-btn">Weiter</span></span></span>' +
         '<span class="pr-name">' + esc(p.name) + (on ? ' ' + ico('check') : '') + '</span><span class="pr-desc">' + esc(p.desc) + '</span></button></div>';
     };
-    var shown = Object.keys(PRESETS).filter(function (k) { return hiddenL.indexOf(k) < 0; });
-    var feat = shown.filter(function (k) { return FEATURED.indexOf(k) >= 0 || k === LOOK.preset; }), more = shown.filter(function (k) { return feat.indexOf(k) < 0; });
+    // Feste Regel: oben immer vier Designs (das aktive zuerst, dann die Hausdesigns in fester Reihenfolge),
+    // alles Weitere eingeklappt; die Farbwahl erscheint nur, wenn „Eigene Farbe“ aktiv ist.
+    var shown = Object.keys(PRESETS).filter(function (k) { return hiddenL.indexOf(k) < 0 && removed.indexOf(k) < 0; });
+    var order = [LOOK.preset].concat(FEATURED, shown).filter(function (k, i, a) { return shown.indexOf(k) >= 0 && a.indexOf(k) === i; });
+    var feat = order.slice(0, 4), more = order.slice(4);
     return '<div class="preset-grid">' + feat.map(function (k) { return card(k, false); }).join('') + '</div>' +
-      '<details class="more-presets" data-grp="more"' + (SET_OPEN.more ? ' open' : '') + '><summary>Weitere Designs (' + more.length + ') und eigene Farbe</summary><div class="preset-grid">' + more.map(function (k) { return card(k, false); }).join('') + '</div>' + customBox() + '</details>' +
-      (hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ')</summary><div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '');
+      (LOOK.preset === 'custom' ? customBox() : '') +
+      (more.length ? '<details class="more-presets" data-grp="more"' + (SET_OPEN.more ? ' open' : '') + '><summary>Weitere Designs (' + more.length + ')</summary><div class="preset-grid">' + more.map(function (k) { return card(k, false); }).join('') + '</div></details>' : '') +
+      (hiddenL.length ? '<details class="hidden-presets"' + (showHiddenPresets ? ' open' : '') + '><summary>Ausgeblendet (' + hiddenL.length + ')</summary><p class="muted small" style="margin:6px 2px 10px">Antippen blendet ein Design wieder ein und aktiviert es.</p><div class="preset-grid">' + hiddenL.map(function (k) { return card(k, true); }).join('') + '</div></details>' : '') +
+      (removed.length ? '<p class="muted small pr-removed">' + removed.length + (removed.length === 1 ? ' Design gelöscht' : ' Designs gelöscht') + ' · <button type="button" class="linklike" data-restore-presets="1">Wiederherstellen</button></p>' : '');
   }
   // Regler (jeweils ein Baustein, der auf Unterseite und in angehefteten Karten gleich aussieht)
   var CTRL = {
     design: function () { return '<div class="set-block">' + designBlock() + '</div>'; },
     // Kurzwahl für angeheftete Karte: runde Farbtupfer statt großer Vorschauen
     designMini: function () {
-      var keys = Object.keys(PRESETS).filter(function (k) { return k !== 'custom' && (LOOK.hidden || []).indexOf(k) < 0; });
+      var keys = Object.keys(PRESETS).filter(function (k) { return k !== 'custom' && (LOOK.hidden || []).indexOf(k) < 0 && (LOOK.removed || []).indexOf(k) < 0; });
       return '<div class="dz-row" role="group" aria-label="Design">' + keys.map(function (k) {
         var on = LOOK.preset === k;
         return '<button type="button" class="dz' + (on ? ' on' : '') + '" data-preset="' + k + '" aria-pressed="' + on + '"><span class="dz-dot" data-palette="' + PRESETS[k].palette + '"></span><span class="dz-n">' + esc(PRESETS[k].name) + '</span></button>';
@@ -13074,7 +13088,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   };
   var SETS = {
     darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'play', 'nav', 'tabs'], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
-      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
+      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
     lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
       reset: function () { lookSet({ size: null, serif: null, width: null, density: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
     bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
@@ -13183,12 +13197,15 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       lookSet({ local: l }); route(true); toast(LOOK_GROUP_NAMES[g] + (i >= 0 ? ': auf allen Geräten gleich' : ': nur auf diesem Gerät')); return;
     }
     if ((b = e.target.closest('[data-appicon]'))) { lookSet({ appIcon: b.dataset.appicon }); applyAppIcon(); route(true); toast('Symbol gewählt – jetzt neu zum Home-Bildschirm hinzufügen'); return; }
-    if ((b = e.target.closest('[data-preset]'))) { lookSet({ preset: b.dataset.preset, play: null }); route(true); toast('Design „' + PRESETS[b.dataset.preset].name + '“'); return; }
+    // Ein ausgeblendetes Design anklicken: wird wieder eingeblendet und aktiviert
+    if ((b = e.target.closest('[data-preset]'))) { var pk = b.dataset.preset; lookSet({ preset: pk, play: null, hidden: (LOOK.hidden || []).filter(function (k) { return k !== pk; }) }); route(true); toast('Design „' + PRESETS[pk].name + '“'); return; }
     if ((b = e.target.closest('[data-look]'))) {
       var v = b.dataset.v, patch = {}; patch[b.dataset.look] = v === 'true' ? true : v === 'false' ? false : v;
       lookSet(patch); route(true); return;
     }
     if ((b = e.target.closest('[data-hide]'))) { lookSet({ hidden: (LOOK.hidden || []).concat(b.dataset.hide) }); route(true); toast('„' + PRESETS[b.dataset.hide].name + '“ ausgeblendet'); return; }
+    if ((b = e.target.closest('[data-remove]'))) { var rk = b.dataset.remove; if (!confirm('Design „' + PRESETS[rk].name + '“ löschen? Es verschwindet aus allen Listen und lässt sich unter Darstellung wiederherstellen.')) return; lookSet({ removed: (LOOK.removed || []).concat(rk), hidden: (LOOK.hidden || []).filter(function (k) { return k !== rk; }) }); route(true); toast('„' + PRESETS[rk].name + '“ gelöscht'); return; }
+    if ((b = e.target.closest('[data-restore-presets]'))) { lookSet({ removed: [] }); route(true); toast('Designs wiederhergestellt'); return; }
     if ((b = e.target.closest('[data-unhide]'))) { lookSet({ hidden: (LOOK.hidden || []).filter(function (k) { return k !== b.dataset.unhide; }) }); showHiddenPresets = true; route(true); return; }
     if ((b = e.target.closest('.hidden-presets > summary'))) { showHiddenPresets = !b.parentElement.open; return; }
     if ((b = e.target.closest('[data-swatch]'))) { lookSet({ preset: 'custom', custom: b.dataset.swatch, play: null }); route(true); return; }
@@ -13325,7 +13342,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     A('a:settings', 'Aktionen', 'Einstellungen', 'Design, Stil, Tagesziele', 'settings', function () { go('#/settings'); }, 'darstellung optionen');
     A('a:theme', 'Aktionen', 'Hell/Dunkel umschalten', '', 'settings', function () { document.getElementById('themeBtn').click(); }, 'dark light modus theme');
     if (document.querySelector('.learn-layout')) A('a:read', 'Aktionen', 'Lesemodus umschalten', 'Taste L', 'learn', function () { setReading(!READING); }, 'lesen fokus');
-    Object.keys(PRESETS).filter(function (k) { return (LOOK.hidden || []).indexOf(k) < 0; }).forEach(function (k) { A('d:' + k, 'Design', 'Design: ' + PRESETS[k].name, PRESETS[k].desc, 'settings', function () { lookSet({ preset: k, play: null }); route(true); toast('Design „' + PRESETS[k].name + '“ aktiv'); }, 'farbe theme'); });
+    Object.keys(PRESETS).filter(function (k) { return (LOOK.hidden || []).indexOf(k) < 0 && (LOOK.removed || []).indexOf(k) < 0; }).forEach(function (k) { A('d:' + k, 'Design', 'Design: ' + PRESETS[k].name, PRESETS[k].desc, 'settings', function () { lookSet({ preset: k, play: null }); route(true); toast('Design „' + PRESETS[k].name + '“ aktiv'); }, 'farbe theme'); });
     ALL_MIDS.forEach(function (mid) { var c = CMOD[mid]; A('m:' + mid, 'Module', 'M' + c.nr + ' · ' + c.title, 'Lernpfad ' + c.lp.nr + ' · ' + statusLabel(mid), 'learn', function () { go('#/module/' + mid); }, 'm' + c.nr + ' modul ' + c.nr); });
     ALL_MIDS.forEach(function (mid) { var c = CMOD[mid]; if (MODS[mid]) A('q:' + mid, 'Module', 'Wissenscheck M' + c.nr, c.title, 'exam', function () { go('#/module/' + mid + '/quiz'); }, 'm' + c.nr + ' quiz test'); });
     COURSE.forEach(function (lp) { A('p:' + lp.id, 'Lernpfade', 'Lernpfad ' + lp.nr + ' · ' + lp.title, lp.modules.length + ' Module', 'learn', function () { go('#/path/' + lp.id); }, 'lp' + lp.nr); });
