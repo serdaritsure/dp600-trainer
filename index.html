@@ -3028,6 +3028,14 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
 .learn-top > .btn { grid-column: 1 / -1; justify-self: start; margin-top: 16px; }
 @media (max-width: 600px) { .learn-top > .btn { justify-self: stretch; text-align: center; justify-content: center; } }
 .learn-card summary { padding: 14px 20px; }
+/* Übersicht: Kacheln Tagesziel, Prüfungsreife … wie die Kapitel – eine mittig, Nachbarn unscharf */
+@media (max-width: 900px) {
+  .td-cards { gap: 12px; padding-top: 4px; padding-bottom: 10px; padding-inline: calc(50% - min(33vw, 140px)); scroll-padding-inline: calc(50% - min(33vw, 140px)); }
+  .td-cards .td-card { flex: 0 0 min(66vw, 280px); scroll-snap-align: center; will-change: filter, opacity, transform; }
+  .td-cards.can-swipe:not(.at-end) { -webkit-mask-image: none; mask-image: none; }
+}
+/* „Lernpfade & Quiz“ so breit wie die Karte darüber */
+@media (max-width: 734px) { .home-more { margin: 0 8px 14px; border: 1px solid var(--hairline); padding: 18px 20px; } }
 
 </style>
 <script>
@@ -3091,6 +3099,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.8', d: '2026-10-17', items: ['Übersicht auf dem iPhone: Kacheln Tagesziel, Prüfungsreife, Serie und Prüfung stehen mittig, Nachbarn werden unscharf', '„Lernpfade & Quiz“ ist so breit wie die Karte darüber'] },
   { v: '1.23.7', d: '2026-10-17', items: ['Kapitel-Kacheln auf dem iPhone: die aktuelle Kachel steht mittig, die Nachbarn werden zum Rand hin unscharf', 'Microsoft-Learn-Karte neu aufgebaut: Logo und Quelle oben, Titel und Text in voller Breite'] },
   { v: '1.23.6', d: '2026-10-17', items: ['Abschnittsleiste im Modul wackelt beim Scrollen nicht mehr'] },
   { v: '1.23.5', d: '2026-10-17', items: ['Lernbereich: keine Kapitelnummern mehr, Überschriften größer und fetter in der App-Schrift, ruhigere Abstände', 'Abschnitte blenden beim Scrollen wieder mit Unschärfe ein – jetzt auch in Safari auf iPhone und Mac und in jedem Stil'] },
@@ -10826,7 +10835,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     row.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
     window.addEventListener('resize', upd); setTimeout(upd, 30);
   }
-  new MutationObserver(function () { document.querySelectorAll('#app .ch-grid').forEach(chFocus); }).observe(app, { childList: true, subtree: true });
+  new MutationObserver(function () { document.querySelectorAll('#app .ch-grid, #app .td-cards').forEach(chFocus); }).observe(app, { childList: true, subtree: true });
   // (7) Große Titel wie in iOS: verlässt die Seitenüberschrift den Bildschirm, steht der Titel klein oben in der Mitte
   var ltBar = document.createElement('div'); ltBar.className = 'lt-bar'; ltBar.setAttribute('aria-hidden', 'true'); ltBar.innerHTML = '<span></span>';
   document.body.appendChild(ltBar);
