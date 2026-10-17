@@ -2861,7 +2861,7 @@ html.tbnav .tb-bar { max-width: 100%; box-sizing: border-box; overflow: hidden; 
 html.tbnav body .tb-item { min-width: 0; overflow: hidden; }
 html.tbnav .tb-items { overflow: hidden; }
 /* Seite nie seitlich verschiebbar (schwebende Kreise liegen zeitweise außerhalb) */
-@media (max-width: 900px) { html, body { overflow-x: clip; } }
+@media (max-width: 900px) { #app { overflow-x: clip; } }
 /* Suche am Handy: unter der Statusleiste, Höhe folgt dem sichtbaren Bereich (Tastatur) */
 @media (max-width: 600px) {
   .cmdk-backdrop { padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; }
@@ -2987,6 +2987,24 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
 }
 .tb-ghost .g-m { transform-origin: left center; }
 
+/* ===== Lernbereich aufgeräumt: keine Kapitelnummern, Überschriften in der App-Schrift, größer und fetter ===== */
+.learn-main > .lsec::before { content: none !important; display: none !important; }
+.learn-main > .lsec > h2 + *::before { content: none !important; display: none !important; }
+.learn-main > .lsec > h2 + * { padding-top: 0; }
+:root .learn-main > .lsec > h2, :root[data-play] .learn-main > .lsec > h2, :root[data-world] .learn-main > .lsec > h2 {
+  font-family: var(--font) !important; font-weight: 700 !important; font-size: clamp(26px, 2.6vw, 32px) !important;
+  letter-spacing: -.025em !important; line-height: 1.15; margin: 0 0 12px; }
+.learn-main > .lsec { margin: 0 0 56px; padding-top: 4px; }
+.learn-main > .lsec > .card-sub { margin-top: -4px; margin-bottom: 16px; }
+/* Unschärfe beim Einblenden: bei eingeschalteter Bewegung in jedem Stil (Ruhig dezent, Lebendig deutlich) */
+:root { --flow-b: 4px; }
+:root[data-play="calm"] { --flow-b: 2px; }
+:root[data-play="lively"] { --flow-b: 7px; }
+/* Browser ohne scrollgesteuerte Animation (z. B. Safari): Unschärfe über die Einblendung beim Erscheinen */
+:root[data-motion="on"] .reveal:not(.in) { filter: blur(var(--flow-b)); opacity: var(--flow-o); }
+:root[data-motion="on"] .reveal { transition: transform .9s var(--ease), opacity .9s var(--ease), filter .9s var(--ease); transition-delay: var(--d, 0s); }
+:root[data-motion="on"] .reveal.in { filter: none; opacity: 1; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3049,6 +3067,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.5', d: '2026-10-17', items: ['Lernbereich: keine Kapitelnummern mehr, Überschriften größer und fetter in der App-Schrift, ruhigere Abstände', 'Abschnitte blenden beim Scrollen wieder mit Unschärfe ein – jetzt auch in Safari auf iPhone und Mac und in jedem Stil'] },
   { v: '1.23.4', d: '2026-10-17', items: ['Mac und iPad: „Weitermachen“ klappt nur beim Scrollen wieder auf, mit flüssiger Animation in beide Richtungen', 'Play-Knopf links, Fortschrittsring rechts; Karte, Play-Kreis und untere Leiste gleich hoch'] },
   { v: '1.23.3', d: '2026-10-17', items: ['Mac und iPad: nach 5 Sekunden ohne Bedienung wird „Weitermachen“ zum Play-Kreis links neben der unteren Leiste'] },
   { v: '1.23.2', d: '2026-10-17', items: ['Kleiner Seitentitel beim Scrollen mit Glas-Effekt, Deckkraft über den Liquid-Glass-Regler'] },
@@ -11883,7 +11902,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   function animateView(silent) {
     if (revealObs) revealObs.disconnect();
-    var targets = app.querySelectorAll('.hero, .page-head, .mod-head, .stat, .card, .learn-card, .section-title, .path-card, .tile, .lp-carousel, .err-bar');
+    // Ohne scrollgesteuerte Animation (Safari): Lernabschnitte selbst einblenden – mit Unschärfe
+    var noSDA = !(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+    var targets = app.querySelectorAll('.hero, .page-head, .mod-head, .stat, .card, .learn-card, .section-title, .path-card, .tile, .lp-carousel, .err-bar' + (noSDA ? ', .learn-main > .lsec' : ''));
     if (isReduced() || silent || !('IntersectionObserver' in window)) { fillRings(app); return; }
     // Während eines Seitenwechsels blendet bereits die ganze Seite ein: Elemente im sichtbaren Bereich
     // dann nicht noch einmal einzeln bewegen (das wirkte unruhig), nur die weiter unten beim Scrollen
