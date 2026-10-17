@@ -2954,6 +2954,14 @@ html body .topbar { padding-left: 28px; padding-right: 22px; }
     -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px); }
   :root[data-glass="off"] .lt-bar { background: var(--surface) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 }
+/* Mac/iPad: nach 5 s ohne Bedienung wird „Weitermachen“ zum Play-Kreis links neben der Leiste */
+@media (min-width: 901px) {
+  html.tbnav body.tb-idle:not(.tb-nores):not(.ms-open) .tabbar { flex-direction: row; align-items: center; gap: 10px; }
+  html.tbnav body.tb-idle:not(.tb-nores):not(.ms-open) .tb-resume { order: -1; width: 64px; height: 64px; max-width: none; margin: 0; padding: 0; justify-content: center; flex: none; border-radius: 50%; gap: 0; }
+  html.tbnav body.tb-idle .tb-resume .tbr-ring, html.tbnav body.tb-idle .tb-resume .tbr-txt { display: none; }
+  html.tbnav body.tb-idle .tb-resume .tbr-play { width: 46px; height: 46px; }
+  html.tbnav body.tb-idle .tb-resume .tbr-play svg { width: 17px; height: 17px; }
+}
 
 </style>
 <script>
@@ -3017,6 +3025,7 @@ html body .topbar { padding-left: 28px; padding-right: 22px; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.3', d: '2026-10-17', items: ['Mac und iPad: nach 5 Sekunden ohne Bedienung wird „Weitermachen“ zum Play-Kreis links neben der unteren Leiste'] },
   { v: '1.23.2', d: '2026-10-17', items: ['Kleiner Seitentitel beim Scrollen mit Glas-Effekt, Deckkraft über den Liquid-Glass-Regler'] },
   { v: '1.23.1', d: '2026-10-17', items: ['Obere Leiste als schwebende Kapsel, auf iPhone und Mac', 'Am Mac: Abschnittsleiste im Modul als Kapsel, Inhaltsverzeichnis mit runden Markierungen', 'iPhone: nach 5 Sekunden ohne Bedienung wechselt die untere Leiste in die kleine Form mit Such- und Hell/Dunkel-Knopf'] },
   { v: '1.23', d: '2026-10-17', items: ['Neue Einstellung „Abrundung“ unter Darstellung: Dezent, Standard, Weich, Sehr weich – gilt für Karten, Knöpfe, Leisten und Felder', 'Abschnittsleiste im Modul als schwebende Kapsel mit Lesefortschritt innen', 'Obere Leiste und Startseite ohne durchgehende Linien, mit runden Ecken', 'Vertiefungen als einzelne runde Felder, Tabellenköpfe und Code runder', 'Trennlinien in Listen zarter'] },
@@ -10786,13 +10795,15 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     }, { passive: true });
     // Nach 5 Sekunden ohne Scrollen/Tippen: kleine Leiste mit Such- und Hell/Dunkel-Knopf
     var idle = null, arm = function () {
-      clearTimeout(idle);
+      clearTimeout(idle); document.body.classList.remove('tb-idle');
       idle = setTimeout(function () {
         var b = document.body;
+        // Mac/iPad: „Weitermachen“ schrumpft zum Play-Kreis neben der Leiste
+        if (!isNarrow() && !sheetOpen() && !b.classList.contains('cs-open') && !document.querySelector('.cmdk-backdrop')) b.classList.add('tb-idle');
         if (isNarrow() && !sheetOpen() && !b.classList.contains('cs-open') && !document.querySelector('.cmdk-backdrop')) b.classList.add('tb-min');
       }, 5000);
     };
-    ['scroll', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) { window.addEventListener(ev, arm, { passive: true }); });
+    ['scroll', 'touchstart', 'pointerdown', 'keydown', 'mousemove'].forEach(function (ev) { window.addEventListener(ev, arm, { passive: true }); });
     window.addEventListener('hashchange', arm); arm();
   })();
 
