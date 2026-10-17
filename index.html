@@ -3122,10 +3122,11 @@ html[data-oled="1"] :is(.card, .learn-card, .td-card, .today, .home-more, .lp-ca
   background-color: #000 !important; box-shadow: none !important; border: 1px solid var(--hairline) !important; }
 html[data-oled="1"] :is(.tb-bar, .tb-resume, .theme-fab, .topbar::before, .subnav, .lt-bar, .msheet, .cs-sheet, .cmdk, .toast) { background-color: color-mix(in srgb, #000 calc(var(--glass-a, 85%) + 0%), transparent) !important; }
 html[data-oled="1"] .topbar::before { background: rgba(0, 0, 0, .85) !important; }
-/* „Schwarz“: möglichst wenige Linien – Karten ohne Rand, Trennlinien in Listen ausgeblendet */
-html[data-oled="1"] :is(.card, .learn-card, .td-card, .today, .home-more, .lp-card, .path-card, .ch-tile, .st-group, .set-group, .next-item, .stat, .ex-item, .deep, .tile, .discover section, .mod-hero) { border: 0 !important; }
-html[data-oled="1"] :is(.set-row, .mod-row, .st-row, .learn-card details, .keypoints li, .unit-list li, .mod-hero) { border-top-color: transparent !important; border-bottom-color: transparent !important; }
-html[data-oled="1"] .st-row::after, html[data-oled="1"] .st-row::before { display: none !important; }
+/* Lernbereich: keine Trennlinien innerhalb der Kacheln (Kernpunkte, Units, Vertiefungen, Abschnitte) */
+.learn-main :is(.keypoints li, .kp li, ul li, .unit-list li, .learn-card details, .deep, .card .row, .mod-row, .why, .exp li), #modBody .learn-card details {
+  border-top: 0 !important; border-bottom: 0 !important; }
+.learn-main .keypoints li + li, .learn-main .card ul li + li { margin-top: 6px; }
+.learn-main :is(.deep, summary, .code-bar), #modBody :is(.deep, summary, .code-bar) { border-left: 0 !important; border-right: 0 !important; border-top: 0 !important; border-bottom: 0 !important; }
 
 </style>
 <script>
@@ -3189,7 +3190,8 @@ html[data-oled="1"] .st-row::after, html[data-oled="1"] .st-row::before { displa
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
-  { v: '1.24', d: '2026-10-17', items: ['Modul-Kopf im Lernbereich schlanker: Lernpfad und Modul in einer Zeile, Eckdaten als eine Zeile, Status darunter', 'Prüfung: Auswahl für Fragenanzahl und Timer gleich groß und kompakt', '„Sehr weich“: alle Kacheln und Kästen der App mit derselben Rundung', '„Lernpfade & Quiz“: Bereiche als runde Karten', 'Umschalter: gewählte Option mit feinem Rand in der Designfarbe, immer einzeilig', 'Modus „Schwarz“: Flächen echtes Schwarz, kaum noch Trennlinien'] },
+  { v: '1.24.1', d: '2026-10-17', items: ['Lernbereich ohne Trennlinien innerhalb der Kacheln', 'Modus „Schwarz“: Ränder um Karten wieder sichtbar'] },
+  { v: '1.24', d: '2026-10-17', items: ['Modul-Kopf im Lernbereich schlanker: Lernpfad und Modul in einer Zeile, Eckdaten als eine Zeile, Status darunter', 'Prüfung: Auswahl für Fragenanzahl und Timer gleich groß und kompakt', '„Sehr weich“: alle Kacheln und Kästen der App mit derselben Rundung', '„Lernpfade & Quiz“: Bereiche als runde Karten', 'Umschalter: gewählte Option mit feinem Rand in der Designfarbe, immer einzeilig', 'Modus „Schwarz“: Flächen echtes Schwarz'] },
   { v: '1.23.8', d: '2026-10-17', items: ['Übersicht auf dem iPhone: Kacheln Tagesziel, Prüfungsreife, Serie und Prüfung stehen mittig, Nachbarn werden unscharf', '„Lernpfade & Quiz“ ist so breit wie die Karte darüber'] },
   { v: '1.23.7', d: '2026-10-17', items: ['Kapitel-Kacheln auf dem iPhone: die aktuelle Kachel steht mittig, die Nachbarn werden zum Rand hin unscharf', 'Microsoft-Learn-Karte neu aufgebaut: Logo und Quelle oben, Titel und Text in voller Breite'] },
   { v: '1.23.6', d: '2026-10-17', items: ['Abschnittsleiste im Modul wackelt beim Scrollen nicht mehr'] },
