@@ -3321,6 +3321,43 @@ html[data-calm="on"] .glass-row { display: none; }
 html[data-accent="soft"] { --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent) !important; }
 html[data-accent="soft"] :is(.btn:not(.sec):not(.ghost), .td-hero, .tbr-play) { filter: none !important; }
 
+/* ===== 1.26: Glas-Unschärfe, Tipp-Rückmeldung, Dichte pro Bereich, Akzent ===== */
+/* (6) Unschärfe der Glasflächen frei einstellbar */
+html[data-glass="on"]:not([data-calm="on"]) :is(.tb-bar, .tb-resume, .theme-fab, .subnav, .lt-bar, .msheet, .cs-sheet, .cmdk, .toast, .exam-bar, body.quiz-focus .quiz-card > .actions) {
+  -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)) !important; backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)) !important; }
+html[data-glass="on"]:not([data-calm="on"]) body .topbar::before { -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); }
+.gl-range .gl-lbl { font-size: 12.5px; color: var(--text-3); white-space: nowrap; }
+/* (7) Tipp-Rückmeldung: kurzes Federn */
+html[data-tap="on"][data-motion="on"]:not([data-calm="on"]) :is(.btn, .td-card, .td-hero, .next-item, .ch-tile, .cfg-opt, .ans, .seg button, .preset, .st-row, .home-more, .tb-item, .theme-fab, .tbr-play) {
+  transition: transform .35s cubic-bezier(.3, 1.6, .5, 1), background-color .2s, border-color .2s, box-shadow .2s, color .2s; }
+html[data-tap="on"][data-motion="on"]:not([data-calm="on"]) :is(.btn, .td-card, .td-hero, .next-item, .ch-tile, .cfg-opt, .ans, .preset, .st-row, .home-more, .theme-fab):active { transform: scale(.965); transition-duration: .08s; }
+html[data-tap="on"][data-motion="on"]:not([data-calm="on"]) :is(.seg button, .tb-item, .tbr-play):active { transform: scale(.92); transition-duration: .08s; }
+/* (4) Abstände getrennt für Lernbereich und Listen */
+html[data-densLearn="compact"] .learn-main { --lsec-gap: 28px; } html[data-densLearn="airy"] .learn-main { --lsec-gap: 80px; }
+html[data-densLearn="compact"] .learn-main > .lsec { margin-bottom: 32px !important; } html[data-densLearn="airy"] .learn-main > .lsec { margin-bottom: 84px !important; }
+html[data-densLearn="compact"] .learn-main :is(p, li) { line-height: 1.5 !important; } html[data-densLearn="airy"] .learn-main :is(p, li) { line-height: 1.8 !important; }
+html[data-densLearn="compact"] .learn-main :is(.card, .deep, .learn-card .learn-top) { padding-top: 12px !important; padding-bottom: 12px !important; }
+html[data-densLearn="airy"] .learn-main :is(.card, .deep) { padding-top: 26px !important; padding-bottom: 26px !important; }
+html[data-densList="compact"] :is(.set-row, .st-row, .next-item, .nav-item, .nav-mod, .mod-row) { padding-top: 6px !important; padding-bottom: 6px !important; min-height: 0 !important; }
+html[data-densList="compact"] .st-row { min-height: 42px !important; }
+html[data-densList="airy"] :is(.set-row, .next-item, .nav-item, .mod-row) { padding-top: 18px !important; padding-bottom: 18px !important; }
+html[data-densList="airy"] .st-row { min-height: 62px !important; }
+/* (1) Akzent „Kräftig“ spürbarer, „Leuchtend“ mit Schein */
+html:is([data-accent="strong"], [data-accent="glow"]) { --accent-soft: color-mix(in srgb, var(--accent) 26%, transparent) !important; }
+html:is([data-accent="strong"], [data-accent="glow"]) :is(.subnav a[data-jump].on, .subnav a.on) { background: color-mix(in srgb, var(--accent) 24%, var(--surface-2)) !important; color: var(--accent) !important; }
+html:is([data-accent="strong"], [data-accent="glow"]) .ch-tile, html:is([data-accent="strong"], [data-accent="glow"]) .td-card { border-color: color-mix(in srgb, var(--accent) 30%, var(--hairline)) !important; }
+html:is([data-accent="strong"], [data-accent="glow"]) .ring { --ring-c: var(--accent) !important; }
+html:is([data-accent="strong"], [data-accent="glow"]) :is(.t-eyebrow, .eyebrow, .ch-head b, .set-gh) { color: var(--accent) !important; }
+html[data-accent="glow"] :is(.seg button.on, .tabs .tab.active, .sidebar .nav-item.active, .preset.on, .cfg-opt.sel, .ans.sel, .subnav a.on) { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent) !important; }
+html[data-accent="glow"] :is(.btn:not(.sec):not(.ghost), .td-hero, .tbr-play) { box-shadow: 0 0 24px color-mix(in srgb, var(--btn-bg) 50%, transparent) !important; }
+/* (15) Punkt am Einstellungs-Reiter bei ungelesenen Neuigkeiten */
+html.has-news .tb-item[href="#/settings"] .tb-ic, html.has-news .nav-item[href="#/settings"] svg { position: relative; }
+html.has-news .tb-item[href="#/settings"] .tb-ic::after, html.has-news .nav-item[href="#/settings"]::after { content: ''; position: absolute; top: -1px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 0 2px var(--surface); }
+html.has-news .nav-item[href="#/settings"] { position: relative; }
+html.has-news .nav-item[href="#/settings"]::after { top: 8px; right: 10px; }
+html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic { position: relative; }
+html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::after { content: ''; position: absolute; top: -1px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 0 2px var(--surface); }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3348,7 +3385,8 @@ html[data-accent="soft"] :is(.btn:not(.sec):not(.ghost), .td-hero, .tbr-play) { 
     r.setAttribute('data-density', L.density || 'comfy');
     if (L.serif) r.setAttribute('data-serif', '1');
     if (L.contrast) r.setAttribute('data-contrast', '1');
-    var D = { surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false };
+    var D = { surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, tap: true, densLearn: 'normal', densList: 'normal' };
+    r.style.setProperty('--glass-blur', (L.glassB != null ? L.glassB : 22) + 'px');
     Object.keys(D).forEach(function (k) { var v = L[k] != null ? L[k] : D[k]; r.setAttribute('data-' + k, v === true ? 'on' : v === false ? 'off' : v); });
     var hh = new Date().getHours(); r.setAttribute('data-daypart', hh < 11 ? 'morning' : hh < 17 ? 'day' : hh < 21 ? 'evening' : 'night');
   })();
@@ -3386,6 +3424,7 @@ html[data-accent="soft"] :is(.btn:not(.sec):not(.ghost), .td-hero, .tbr-play) { 
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.26', d: '2026-10-18', items: ['Seitenwechsel wählbar: Automatisch, Überblenden, Schieben oder Aus', 'Liquid Glass: eigener Regler für die Unschärfe, von klar bis milchig', 'Tipp-Rückmeldung: Knöpfe und Kacheln federn beim Antippen kurz nach (abschaltbar)', 'Roter Punkt am Einstellungs-Reiter bei neuen Funktionen; „Neuigkeiten anzeigen“ unter Über die App', 'Abstände getrennt einstellbar für Lernbereich und Listen', 'Akzentstärke: „Kräftig“ färbt mehr ein, neu „Leuchtend“ mit leichtem Schein'] },
   { v: '1.25.1', d: '2026-10-18', items: ['Akzentstärke: Option „Dezent“ entfernt (wählbar sind „Normal“ und „Kräftig“)'] },
   { v: '1.25', d: '2026-10-18', items: ['Sechs neue Designs: Bambus (Naturpapier), Tinte, Nordlicht, Sandstein, Pastell, Hoher Kontrast', 'Darstellung neu gegliedert in Vorschau, Farbe, Form, Licht, Bewegung & Extras und Navigation – mit Live-Vorschau', 'Neue Einstellungen: Akzentstärke, Hintergrund, Kachelstil, Oberfläche, Schrift der Überschriften, Symbole', 'Profile speichern und wechseln, „Überrasch mich“ mit Rückgängig', 'Schalter „Ruhig“ für eine schlichte Oberfläche; Feier-Momente, lebendige Ringe und Farbton nach Tageszeit einzeln abschaltbar', 'Designs über „Bearbeiten“ ausblenden und löschen', 'Quiz: Knopfleiste als Kapsel, Antwortkarten mit maßvoller Rundung', 'iPad: Kacheln als Raster, Leiste mittig, angenehme Zeilenlänge', 'Mac: Übersicht mittig begrenzt, runde Seitenleiste, Kacheln nie abgeschnitten', 'Einheitliche Knopfgrößen, Überschriften in der App-Schrift, freundlichere Hinweise bei leerem Stand'] },
   { v: '1.24.2', d: '2026-10-17', items: ['Design-Auswahl: oben immer vier Designs, das aktive zuerst; weitere eingeklappt', 'Farbwahl erscheint nur beim Design „Eigene Farbe“', 'Ausgeblendete Designs lassen sich löschen und wiederherstellen; Antippen blendet ein Design wieder ein'] },
@@ -10080,7 +10119,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   if (!LOOK.custom) LOOK.custom = '#0B6F64';
   if (!LOOK.mode) { LOOK.mode = lsGet('dp600.theme') || 'system'; }
   function lookVal(k) {
-    var d = { play: PRESETS[LOOK.preset].play, motion: 'on', size: 'm', density: 'comfy', mode: 'system', serif: false, contrast: false, round: 'weich', surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false };
+    var d = { play: PRESETS[LOOK.preset].play, motion: 'on', size: 'm', density: 'comfy', mode: 'system', serif: false, contrast: false, round: 'weich', surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, pagefx: 'auto', glassB: 22, tap: true, densLearn: 'normal', densList: 'normal' };
     return LOOK[k] != null ? LOOK[k] : d[k];
   }
   /* ---------- Farbrechnung für „Eigene Farbe“ (Kontrast nach WCAG) ---------- */
@@ -10198,6 +10237,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     // Abrundung: ein Faktor für alle Eckenradien
     r.style.setProperty('--rf', RF[lookVal('round')] || 1.3); r.setAttribute('data-round', lookVal('round'));
     r.style.setProperty('--glass-a', (45 + (LOOK.glassT == null ? 60 : LOOK.glassT) * .53).toFixed(1) + '%');
+    r.style.setProperty('--glass-blur', (lookVal('glassB') | 0) + 'px');
     if (lookVal('serif')) r.setAttribute('data-serif', '1'); else r.removeAttribute('data-serif');
     if (lookVal('contrast')) r.setAttribute('data-contrast', '1'); else r.removeAttribute('data-contrast');
     // Weitere Gestaltung: Oberfläche, Hintergrund, Akzentstärke, Überschriften-Schrift, Kachelstil, Symbole, Extras, „Ruhig“-Schalter
@@ -10214,8 +10254,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   // Darstellung geräteübergreifend: S.look = {v: Werte, at: Zeitpunkt}; Gruppen in LOOK.local bleiben auf diesem Gerät
   var RF = { dezent: .7, standard: 1, weich: 1.3, sehr: 1.65 };
-  var LOOK_ATTRS = ['surface', 'bg', 'accent', 'hfont', 'tile', 'icons', 'celebrate', 'rings', 'daytint', 'calm'];
-  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'removed', 'play', 'glass', 'glassT', 'round', 'surface', 'bg', 'accent', 'hfont', 'tile', 'icons', 'celebrate', 'rings', 'daytint', 'calm', 'profiles'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
+  var LOOK_ATTRS = ['surface', 'bg', 'accent', 'hfont', 'tile', 'icons', 'celebrate', 'rings', 'daytint', 'calm', 'tap', 'densLearn', 'densList'];
+  var LOOK_GROUPS = { design: ['preset', 'custom', 'hidden', 'removed', 'play', 'glass', 'glassT', 'round', 'surface', 'bg', 'accent', 'hfont', 'tile', 'icons', 'celebrate', 'rings', 'daytint', 'calm', 'profiles', 'pagefx', 'glassB', 'tap', 'densLearn', 'densList'], mode: ['mode'], motion: ['motion'], text: ['size', 'density', 'width', 'serif', 'contrast'], nav: ['tabs', 'nav', 'pins'], extras: ['greet', 'tilt', 'appIcon', 'mix'] };
   var LOOK_GROUP_NAMES = { design: 'Design & Stil', mode: 'Hell/Dunkel', motion: 'Animationen', text: 'Schrift & Lesebreite', nav: 'Navigation & Reiter', extras: 'Begrüßung, Neigung, App-Symbol' };
   function lookLocal() { return LOOK.local || ['nav', 'extras']; }
   function syncedKeys() { var l = lookLocal(), ks = []; Object.keys(LOOK_GROUPS).forEach(function (g) { if (l.indexOf(g) < 0) ks = ks.concat(LOOK_GROUPS[g]); }); return ks; }
@@ -13166,21 +13206,25 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       }).join('') + '</div></div>'
       : '<div class="set-row"><div class="set-l"><b>App-Symbol</b><span>Auswählbar in der Web-App unter serdaritsure.github.io/dp600-trainer – dort lässt sich die App auch auf den Home-Bildschirm legen.</span></div></div>';
     return '<section class="card" id="about"><h2>Über die App</h2>' + icons +
-      '<div class="set-row"><div class="set-l"><b>Version ' + esc(APP_VER) + '</b><span>' + (CHANGES[0] ? fmtDay(CHANGES[0].d) : '') + '</span></div></div>' +
+      '<div class="set-row"><div class="set-l"><b>Version ' + esc(APP_VER) + '</b><span>' + (CHANGES[0] ? fmtDay(CHANGES[0].d) : '') + '</span></div><div class="set-c"><button type="button" class="btn sm sec" data-shownews="1">Neuigkeiten anzeigen</button></div></div>' +
       '<details class="changelog" id="changelog"' + (openChangelog ? ' open' : '') + '><summary>Versionsverlauf</summary><ol>' + CHANGES.map(function (c) {
         return '<li><div class="cl-h"><b>' + esc(c.v) + '</b><span>' + fmtDay(c.d) + '</span></div><ul>' + c.items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></li>';
       }).join('') + '</ol></details></section>';
   }
   var openChangelog = false;
   // Nach einem Update einmalig „Neu in …“ zeigen (nicht beim allerersten Start)
-  function whatsNew() {
+  // Punkt am Einstellungs-Reiter, solange die Neuigkeiten der aktuellen Version nicht angesehen wurden
+  function newsDot() { var on = lsGet('dp600.verRead') !== APP_VER && !!lsGet('dp600.ver'); document.documentElement.classList.toggle('has-news', on); }
+  function newsRead() { lsSet('dp600.verRead', APP_VER); newsDot(); }
+  function whatsNew(force) {
     var seen = lsGet('dp600.ver'); lsSet('dp600.ver', APP_VER);
-    if (!seen || seen === APP_VER || !CHANGES[0]) return;
+    if (!force && (!seen || seen === APP_VER || !CHANGES[0])) { if (!seen) lsSet('dp600.verRead', APP_VER); newsDot(); return; }
+    newsDot();
     var b = document.createElement('button'); b.type = 'button'; b.className = 'wn-pill';
     b.innerHTML = '<b>Neu in ' + esc(APP_VER) + '</b><span>' + esc(CHANGES[0].items[0]) + '</span>';
     document.body.appendChild(b);
     var close = function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 400); };
-    b.addEventListener('click', function () { close(); openChangelog = true; go('#/settings/info'); });
+    b.addEventListener('click', function () { close(); newsRead(); openChangelog = true; go('#/settings/info'); });
     setTimeout(close, 9000);
   }
   /* ---------------------------------------------------------------------
@@ -13251,12 +13295,16 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<div class="prof-add"><input id="profName" type="text" maxlength="24" placeholder="Name, z. B. Abends" aria-label="Profilname"><button type="button" class="btn sm" data-prof-save="1">Speichern</button></div>' +
         '<div class="prof-add"><button type="button" class="btn sm sec" data-surprise="1">Überrasch mich</button>' + (LOOK_UNDO ? '<button type="button" class="btn sm ghost" data-surprise-undo="1">Rückgängig</button>' : '') + '</div></div>';
     },
-    accent: function () { return sRow('Akzentstärke', '„Kräftig“ färbt Markierungen, gewählte Optionen und Überschriften stärker ein.', sSeg('accent', [['normal', 'Normal'], ['strong', 'Kräftig']], lookVal('accent') === 'soft' ? 'normal' : lookVal('accent'))); },
+    accent: function () { return sRow('Akzentstärke', '„Kräftig“ färbt Markierungen, gewählte Optionen und Überschriften stärker ein.', sSeg('accent', [['normal', 'Normal'], ['strong', 'Kräftig'], ['glow', 'Leuchtend']], lookVal('accent') === 'soft' ? 'normal' : lookVal('accent'))); },
     bg: function () { return sRow('Hintergrund', '', sSeg('bg', [['auto', 'Design'], ['plain', 'Einfarbig'], ['gradient', 'Verlauf'], ['paper', 'Papier'], ['dots', 'Punkte']], lookVal('bg'))); },
     tile: function () { return sRow('Kachelstil', '', sSeg('tile', [['fill', 'Fläche'], ['outline', 'Umrandet'], ['glass', 'Glas']], lookVal('tile'))); },
     surface: function () { return sRow('Oberfläche', 'Flach ohne Schatten, Plastisch mit Tiefe und Lichtkante.', sSeg('surface', [['flat', 'Flach'], ['standard', 'Standard'], ['3d', 'Plastisch']], lookVal('surface'))); },
     hfont: function () { return sRow('Schrift der Überschriften', 'Lesetexte stellen Sie unter „Lesen“ ein.', sSeg('hfont', [['system', 'System'], ['rounded', 'Rund'], ['serif', 'Serif'], ['mono', 'Mono']], lookVal('hfont'))); },
     icons: function () { return sRow('Symbole', '', sSeg('icons', [['line', 'Linie'], ['fill', 'Gefüllt'], ['color', 'Farbig']], lookVal('icons'))); },
+    pagefx: function () { return sRow('Seitenwechsel', '', sSeg('pagefx', [['auto', 'Automatisch'], ['fade', 'Überblenden'], ['slide', 'Schieben'], ['off', 'Aus']], lookVal('pagefx'))); },
+    tap: function () { return sRow('Tipp-Rückmeldung', 'Knöpfe und Kacheln federn beim Antippen kurz nach.', sTgl('tap', !!lookVal('tap') && !lookVal('calm'), !!lookVal('calm'))); },
+    densLearn: function () { return sRow('Abstände im Lernbereich', '', sSeg('densLearn', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densLearn'))); },
+    densList: function () { return sRow('Abstände in Listen', 'Gilt für Einstellungen, Menüs und Übersichten.', sSeg('densList', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densList'))); },
     calm: function () { return sRow('Ruhig', 'Schaltet Glas, Unschärfe, Verläufe und Animationen auf einmal ab.', sTgl('calm', !!lookVal('calm'))); },
     celebrate: function () { return sRow('Feier-Momente', lookVal('calm') ? CALM_NOTE : 'Kurzes Konfetti bei erreichtem Tagesziel und bestandener Prüfung.', sTgl('celebrate', !!lookVal('celebrate') && !lookVal('calm'), !!lookVal('calm'))); },
     rings: function () { return sRow('Lebendige Ringe', lookVal('calm') ? CALM_NOTE : 'Ringe füllen sich mit leichtem Nachschwingen, die Serie-Flamme flackert.', sTgl('rings', !!lookVal('rings') && !lookVal('calm'), !!lookVal('calm'))); },
@@ -13266,7 +13314,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       var calm = !!lookVal('calm'), on = LOOK.glass !== false && !calm, t = LOOK.glassT == null ? 60 : LOOK.glassT;
       return sRow('Liquid Glass', calm ? CALM_NOTE : on ? '' : 'Leisten und Knöpfe sind deckend.', sTgl('glass', on, calm)) + (on ? '<div class="set-row glass-row"><div class="gl-range"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3"/></svg>' +
         '<input type="range" min="0" max="100" step="1" value="' + t + '" data-glassrange="1" aria-label="Transparent bis eingefärbt"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3" fill="currentColor"/></svg></div>' +
-        '<p class="gl-hint">„Transparent“ lässt mehr vom Hintergrund durch, „Eingefärbt“ erhöht die Deckkraft und den Kontrast.</p></div>' : '');
+        '<p class="gl-hint">„Transparent“ lässt mehr vom Hintergrund durch, „Eingefärbt“ erhöht die Deckkraft und den Kontrast.</p></div>' +
+        '<div class="set-row glass-row"><div class="set-l"><b>Unschärfe</b><span>Von klarem Glas bis Milchglas.</span></div><div class="gl-range"><span class="gl-lbl">Klar</span><input type="range" min="0" max="40" step="1" value="' + (lookVal('glassB') | 0) + '" data-glassblur="1" aria-label="Unschärfe des Glases"><span class="gl-lbl">Milchig</span></div></div>' : '');
     },
     round: function () { return sRow('Abrundung', 'Gilt für Karten, Knöpfe, Leisten und Felder.', sSeg('round', [['dezent', 'Dezent'], ['standard', 'Standard'], ['weich', 'Weich'], ['sehr', 'Sehr weich']], lookVal('round'))); },
     play: function () { return sRow('Stil', 'Wirkt auf Formen, Schatten und Bewegung.', sSeg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))); },
@@ -13305,7 +13354,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       return '<div class="set-block"><p class="card-sub">Markierte Bereiche sind auf allen Geräten gleich. ' + how + '</p><div class="lsync">' +
         Object.keys(LOOK_GROUPS).map(function (g) { var on = l.indexOf(g) < 0; return '<button type="button" class="chip' + (on ? ' on' : '') + '" data-lsync="' + g + '" aria-pressed="' + on + '">' + (on ? ico('check') + ' ' : '') + esc(LOOK_GROUP_NAMES[g]) + '</button>'; }).join('') + '</div></div>';
     },
-    version: function () { return sRow('Version ' + esc(APP_VER), CHANGES[0] ? fmtDay(CHANGES[0].d) : '', ''); },
+    version: function () { return sRow('Version ' + esc(APP_VER), CHANGES[0] ? fmtDay(CHANGES[0].d) : '', '<button type="button" class="btn sm sec" data-shownews="1">Neuigkeiten anzeigen</button>'); },
     changelog: function () {
       return '<details class="changelog" id="changelog"' + (openChangelog ? ' open' : '') + '><summary>Versionsverlauf</summary><ol>' + CHANGES.map(function (c) {
         return '<li><div class="cl-h"><b>' + esc(c.v) + '</b><span>' + fmtDay(c.d) + '</span></div><ul>' + c.items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></li>';
@@ -13328,10 +13377,10 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
   };
   var SETS = {
-    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'play', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'tile', 'surface', 'hfont', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['play', 'calm', 'celebrate', 'rings', 'daytint']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
-      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Schrift Überschriften Symbole Ruhig Konfetti Feier Ringe Tageszeit Profil Überrasch Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
-    lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
-      reset: function () { lookSet({ size: null, serif: null, width: null, density: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'play', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'tile', 'surface', 'hfont', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['play', 'pagefx', 'tap', 'calm', 'celebrate', 'rings', 'daytint']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, pagefx: null, glassB: null, tap: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Schrift Überschriften Symbole Ruhig Konfetti Feier Ringe Tageszeit Profil Überrasch Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
+    lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'densLearn', 'densList', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
+      reset: function () { lookSet({ size: null, serif: null, width: null, density: null, densLearn: null, densList: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
     bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
       reset: function () { lookSet({ motion: null, tilt: false }); }, find: 'Animationen Bewegung Neigen Lichteffekt' },
     quiz: { t: 'Quiz', rows: ['shuffle', 'why', 'skip', 'quickn'], quick: ['shuffle', 'why'], tier: 2, val: function () { return quickCount() + ' Fragen im Schnell-Quiz'; },
@@ -13371,7 +13420,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if (!SET_EDIT) { setSearchRun(); var inp = document.getElementById('setSearch'); if (SET_Q && inp) { inp.focus(); inp.setSelectionRange(SET_Q.length, SET_Q.length); } }
   }
   function viewSettingsSub(k) {
-    var s = SETS[k];
+    var s = SETS[k]; if (k === 'info') newsRead();
     app.innerHTML = '<div class="container set-page set-sub"><a class="st-back" href="#/settings">‹ Einstellungen</a><div class="set-top"><h1>' + s.t + '</h1>' +
       '<button type="button" class="st-edit" data-' + (setPins().indexOf(k) >= 0 ? 'unpin' : 'pin') + '="' + k + '">' + (setPins().indexOf(k) >= 0 ? 'Lösen' : 'Anheften') + '</button></div>' +
       (s.groups ? s.groups.map(function (g) { return '<h2 class="set-gh">' + g[0] + '</h2><section class="card set-card">' + g[1].map(function (c) { return CTRL[c](); }).join('') + '</section>'; }).join('')
@@ -13397,6 +13446,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if (curView !== 'settings') return;
     if (e.target.id === 'setSearch') { SET_Q = e.target.value; setSearchRun(); return; }
     if (e.target.dataset.glassrange) { document.documentElement.style.setProperty('--glass-a', (45 + e.target.value * .53).toFixed(1) + '%'); return; }
+    if (e.target.dataset.glassblur) { document.documentElement.style.setProperty('--glass-blur', e.target.value + 'px'); return; }
     var k = e.target.dataset.hlc || e.target.dataset.hln; if (!k) return;
     var hl = S.settings.hl || (S.settings.hl = {}); hl[k] = Object.assign({}, hlCfg()[k], hl[k]);
     if (e.target.dataset.hlc) { hl[k].c = e.target.value; e.target.parentElement.style.background = e.target.value; applyHlVars(); }
@@ -13413,6 +13463,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       tk[i] = v; lookSet({ tabs: tk }); renderTabbar(); route(true); toast('Tabs gespeichert'); return;
     }
     if (t.dataset.glassrange) { lookSet({ glassT: +t.value }); return; }
+    if (t.dataset.glassblur) { lookSet({ glassB: +t.value }); return; }
     if (!k) return;
     if (k === 'shuffle') { S.settings.shuffle = t.checked; save(); }
     else if (k === 'why') { S.settings.whyOpen = t.checked; save(); }
@@ -13420,7 +13471,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     else if (k === 'greet') lookSet({ greet: t.checked });
     else if (k === 'contrast') lookSet({ contrast: t.checked });
     else if (k === 'glass') { lookSet({ glass: t.checked }); route(true); }
-    else if (['calm', 'celebrate', 'rings', 'daytint'].indexOf(k) >= 0) { var pt = {}; pt[k] = t.checked; lookSet(pt); if (k === 'calm') route(true); if (k === 'celebrate' && t.checked) celebrate(); }
+    else if (['calm', 'celebrate', 'rings', 'daytint', 'tap'].indexOf(k) >= 0) { var pt = {}; pt[k] = t.checked; lookSet(pt); if (k === 'calm') route(true); if (k === 'celebrate' && t.checked) celebrate(); }
     else if (k === 'tilt') {
       var on = t.checked; lookSet({ tilt: on });
       setTilt(on, true).then(function (ok) { if (on && !ok && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') toast('Bewegungssensor nicht freigegeben'); });
@@ -13448,6 +13499,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       lookSet(patch); route(true); return;
     }
     if ((b = e.target.closest('[data-hide]'))) { lookSet({ hidden: (LOOK.hidden || []).concat(b.dataset.hide) }); route(true); toast('„' + PRESETS[b.dataset.hide].name + '“ ausgeblendet'); return; }
+    if ((b = e.target.closest('[data-shownews]'))) { whatsNew(true); return; }
     if ((b = e.target.closest('[data-prof-save]'))) {
       var nm = (document.getElementById('profName') || {}).value || ''; nm = nm.trim() || 'Profil ' + ((LOOK.profiles || []).length + 1);
       var snap = {}; PROFILE_KEYS.forEach(function (k) { if (LOOK[k] != null) snap[k] = LOOK[k]; });
@@ -13918,7 +13970,10 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     }, 170);
   }
   function navigate() {
-    var r = document.documentElement, motion = lookVal('motion');
+    var r = document.documentElement, motion = lookVal('motion'), fx = lookVal('pagefx');
+    // Seitenwechsel: Automatisch (je nach Richtung), Überblenden, Schieben oder Aus
+    if (fx === 'off' || lookVal('calm')) { vtDir = null; route(); return; }
+    if (fx === 'fade' && vtDir !== 'tab') vtDir = 'fade'; else if (fx === 'slide' && vtDir !== 'tab') vtDir = vtDir === 'back' ? 'back' : 'forward';
     if (motion !== 'off' && (vtDir === 'tab' || isReduced())) { vtDir = null; tabSwap(); return; }
     if (!document.startViewTransition || motion === 'off' || document.body.classList.contains('ms-open')) { vtDir = null; route(); return; }
     r.dataset.vt = vtDir || 'fade'; vtDir = null;
