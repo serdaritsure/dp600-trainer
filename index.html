@@ -3036,6 +3036,96 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
 }
 /* „Lernpfade & Quiz“ so breit wie die Karte darüber */
 @media (max-width: 734px) { .home-more { margin: 0 8px 14px; border: 1px solid var(--hairline); padding: 18px 20px; } }
+/* „Sehr weich“: alle Kacheln der Übersicht mit derselben Rundung wie Tagesziel und „Als Nächstes“ */
+:root[data-round="sehr"] .home :is(.td-hero, .td-card, .next-item, .card, .td-domcard, .home-more, .backup-bar),
+:root[data-round="sehr"] .home > .today, :root[data-round="sehr"] .home-more { border-radius: calc(21px * var(--rf, 1)) !important; }
+
+/* ===== Modul-Kopf im Lernbereich: ruhiger und klarer ===== */
+.mod-hero .mh-path { display: inline-flex; align-items: center; gap: 8px; text-transform: none !important; letter-spacing: 0 !important; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.mod-hero .mh-path .mh-sep { display: none; }
+:root .mod-hero h1, :root[data-play] .mod-hero h1, :root[data-world] .mod-hero h1 { font-family: var(--font) !important; font-weight: 700 !important;
+  font-size: clamp(26px, 3.4vw, 38px) !important; letter-spacing: -.025em !important; line-height: 1.15 !important; margin: 12px 0 0; }
+.mod-hero .en { display: none; }
+.mod-hero .mh-lead { margin: 12px 0 0; font-size: 16px; line-height: 1.5; color: var(--text-2); }
+.mod-hero .mh-facts { margin-top: 18px; gap: 22px; }
+.mod-hero .mh-facts b, .mod-hero .mh-facts strong { font-size: 20px; }
+.mod-hero .tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* ===== „Sehr weich“: alle Kacheln in der ganzen App mit derselben Rundung; kleine Kacheln bekommen mehr Innenabstand,
+   damit Inhalt nicht in die Ecken ragt ===== */
+:root[data-round="sehr"] :is(.card, .learn-card, .mod-hero, .lp-card, .path-card, .ex-item, .td-hero, .td-card, .next-item, .today, .home-more,
+  .ch-tile, .tile, .stat, .st-group, .set-group, .lab-panel, .case-box, .q-card, .ans, .empty, .lsec .callout, .trap, .deep, .custom-box, .preset, .crs-card, .lph, .lp-hero) {
+  border-radius: calc(21px * var(--rf, 1)) !important; }
+:root[data-round="sehr"] :is(.next-item, .ch-tile, .td-card, .ex-item, .stat, .ans, .trap, .deep, .preset) { padding-left: 22px !important; padding-right: 22px !important; }
+:root[data-round="sehr"] :is(.card, .learn-card, .lab-panel, .case-box, .q-card, .empty, .st-group, .set-group) { padding-left: max(24px, 1.5em); padding-right: max(24px, 1.5em); }
+:root[data-round="sehr"] .learn-card { padding: 0 !important; }
+:root[data-round="sehr"] .learn-card .learn-top { padding-left: 24px; padding-right: 24px; }
+:root[data-round="sehr"] .learn-card summary { padding-left: 24px; padding-right: 24px; }
+
+/* ===== Modul-Kopf, schlanke Fassung (mh2) ===== */
+.mod-hero.mh2 { padding: 22px 24px 20px; margin: 4px 0 16px; border-bottom: 1px solid var(--hairline);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--lpc, var(--accent)) 10%, var(--surface)) 0%, var(--surface) 55%); }
+.mh2-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.mh2-top .mh-path { color: var(--text-2) !important; font-size: 13px; font-weight: 600; }
+.mh2-top .mh-path:hover { color: var(--text) !important; text-decoration: none; }
+.mh2-top .mh-ic { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+.mh2-top .tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+:root .mod-hero.mh2 h1, :root[data-play] .mod-hero.mh2 h1, :root[data-world] .mod-hero.mh2 h1 { font-size: clamp(24px, 3vw, 34px) !important; margin: 14px 0 0 !important; text-wrap: balance; }
+.mod-hero.mh2 .mh-lead { font-size: 15.5px; line-height: 1.5; margin-top: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.mh2-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 14px; font-size: 13.5px; color: var(--text-3); }
+.mh2-meta i { font-style: normal; opacity: .6; }
+.mh2-meta b { font-weight: 600; } .mh2-meta b.ok { color: var(--ok); } .mh2-meta b.warn { color: var(--warn); }
+.mh2-status { margin-top: 16px; }
+.mh2-status .seg { width: 100%; display: flex; }
+.mh2-status .seg button { flex: 1; }
+@media (min-width: 901px) { .mh2-status .seg { width: auto; display: inline-flex; } .mh2-status .seg button { flex: none; } }
+
+/* Prüfung: Auswahl-Kacheln (Fragenanzahl, Timer) gleich groß und kompakt, drei nebeneinander */
+.cfg-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.cfg-opt { min-height: 72px; padding: 12px 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2px;
+  border-radius: calc(var(--r-ctl) * var(--rf, 1)); }
+.cfg-opt b { font-size: 15px; font-weight: 650; line-height: 1.2; }
+.cfg-opt span { font-size: 12px; line-height: 1.3; color: var(--text-3); }
+:root[data-round="sehr"] .cfg-opt { border-radius: calc(21px * var(--rf, 1)) !important; padding: 12px 10px !important; }
+/* „Sehr weich“, zweiter Durchgang: restliche Kästen auf dieselbe Rundung, Umschalter und Suchfelder als Kapsel */
+:root[data-round="sehr"] :is(.dt-opt, .badge, .code-box, .code-tabs, .dt, .fc-face, .g-item, .note, .tbl-wrap, .weights .w, .tr-code, .cfg-opt, .callout, .kp, .keypoints li, .unit-list, .exam-q, .qcard, .review-item, .nt-mod, .lab-tbl, .msheet, .cs-sheet, .cmdk, .toast, .modal, .sheet) {
+  border-radius: calc(21px * var(--rf, 1)) !important; }
+:root[data-round="sehr"] :is(.tabs, .seg, .tabs .tab, .seg button, .set-search, .search-big, .topbar-search input, .set-search input) { border-radius: 999px !important; }
+:root[data-round="sehr"] :is(.dt-opt, .g-item, .note, .weights .w, .dt) { padding-left: max(20px, 1.25em) !important; padding-right: max(20px, 1.25em) !important; }
+:root[data-round="sehr"] .code-box pre { padding-left: 22px; padding-right: 22px; }
+/* Seite „Lernpfade & Quiz“: Bänder als runde Karten mit Abstand zum Rand (wie „Heute“) */
+@media (max-width: 734px) {
+  .discover :is(.lp-carousel, .quick-bar, .exam-row, section) { margin-left: 8px !important; margin-right: 8px !important; border-radius: calc(var(--r-tile, 24px) * var(--rf, 1)); overflow: hidden; }
+}
+:root[data-round="sehr"] .discover :is(.lp-carousel, .quick-bar, .exam-row, section) { border-radius: calc(21px * var(--rf, 1)) !important; }
+/* Handy: Auswahl-Kacheln als gleich hohe Zeilen untereinander (kein Umbruch mitten im Wort) */
+@media (max-width: 600px) {
+  .cfg-opts { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .cfg-opt { min-height: 54px; flex-direction: row; justify-content: space-between; align-items: center; text-align: left; padding: 10px 20px !important; }
+  .cfg-opt b { font-size: 15.5px; white-space: nowrap; }
+  .cfg-opt span { font-size: 13px; text-align: right; }
+}
+/* Umschalter: gewählte Option wie die gewählte Design-Karte – Pille mit feinem Rand in der Designfarbe, Text leicht getönt */
+.seg button.on, .seg button[aria-pressed="true"], .tabs .tab.active {
+  background: var(--surface-2) !important; color: color-mix(in srgb, var(--accent) 70%, var(--text)) !important;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 80%, transparent), 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent) !important; font-weight: 600; }
+/* Umschalter in den Einstellungen: immer einzeilig, Optionen teilen sich die Breite */
+.set-c .seg { flex-wrap: nowrap !important; display: flex; width: 100%; max-width: 440px; }
+.set-c .seg button { flex: 1 1 auto; min-width: 0; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+
+/* ===== Modus „Schwarz“: Flächen echtes Schwarz, Karten nur über feine Ränder abgesetzt;
+   Farbverläufe der Lerninhalte bleiben ===== */
+html[data-oled="1"] { --bg: #000 !important; --surface: #000 !important; --surface-2: #0b0b0b !important; --surface-3: #161616 !important;
+  --sidebar-bg: #000 !important; --tile-light: #000 !important; --hairline: rgba(255, 255, 255, .11) !important; --hairline-strong: rgba(255, 255, 255, .2) !important;
+  --shadow: none !important; --shadow-hover: none !important; --glass-bg: rgba(0, 0, 0, .72) !important; }
+html[data-oled="1"] :is(.card, .learn-card, .td-card, .today, .home-more, .lp-card, .path-card, .ch-tile, .st-group, .set-group, .next-item, .stat, .ex-item, .deep, .tile, .discover section) {
+  background-color: #000 !important; box-shadow: none !important; border: 1px solid var(--hairline) !important; }
+html[data-oled="1"] :is(.tb-bar, .tb-resume, .theme-fab, .topbar::before, .subnav, .lt-bar, .msheet, .cs-sheet, .cmdk, .toast) { background-color: color-mix(in srgb, #000 calc(var(--glass-a, 85%) + 0%), transparent) !important; }
+html[data-oled="1"] .topbar::before { background: rgba(0, 0, 0, .85) !important; }
+/* „Schwarz“: möglichst wenige Linien – Karten ohne Rand, Trennlinien in Listen ausgeblendet */
+html[data-oled="1"] :is(.card, .learn-card, .td-card, .today, .home-more, .lp-card, .path-card, .ch-tile, .st-group, .set-group, .next-item, .stat, .ex-item, .deep, .tile, .discover section, .mod-hero) { border: 0 !important; }
+html[data-oled="1"] :is(.set-row, .mod-row, .st-row, .learn-card details, .keypoints li, .unit-list li, .mod-hero) { border-top-color: transparent !important; border-bottom-color: transparent !important; }
+html[data-oled="1"] .st-row::after, html[data-oled="1"] .st-row::before { display: none !important; }
 
 </style>
 <script>
@@ -3051,7 +3141,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
     if (mode === 'time') { var hr = new Date().getHours(); mode = hr >= 7 && hr < 19 ? 'light' : 'dark'; }
     if (pr === 'custom') { try { var css = localStorage.getItem('dp600.customcss'); if (css) { var st = document.createElement('style'); st.id = 'customPalette'; st.textContent = css; document.head.appendChild(st); } } catch (e) {} }
     r.setAttribute('data-width', L.width || 'wide');
-    r.style.setProperty('--rf', ({ dezent: .7, standard: 1, weich: 1.3, sehr: 1.65 })[L.round || 'weich'] || 1.3);
+    r.style.setProperty('--rf', ({ dezent: .7, standard: 1, weich: 1.3, sehr: 1.65 })[L.round || 'weich'] || 1.3); r.setAttribute('data-round', L.round || 'weich');
     r.setAttribute('data-glass', L.glass === false ? 'off' : 'on'); r.style.setProperty('--glass-a', (45 + (L.glassT == null ? 60 : L.glassT) * .53) + '%');
     if (window.matchMedia('(max-width: 900px)').matches || L.nav === 'tabbar') r.classList.add('tbnav');
     if (mode === 'black') { mode = 'dark'; r.setAttribute('data-oled', '1'); }
@@ -3099,6 +3189,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.24', d: '2026-10-17', items: ['Modul-Kopf im Lernbereich schlanker: Lernpfad und Modul in einer Zeile, Eckdaten als eine Zeile, Status darunter', 'Prüfung: Auswahl für Fragenanzahl und Timer gleich groß und kompakt', '„Sehr weich“: alle Kacheln und Kästen der App mit derselben Rundung', '„Lernpfade & Quiz“: Bereiche als runde Karten', 'Umschalter: gewählte Option mit feinem Rand in der Designfarbe, immer einzeilig', 'Modus „Schwarz“: Flächen echtes Schwarz, kaum noch Trennlinien'] },
   { v: '1.23.8', d: '2026-10-17', items: ['Übersicht auf dem iPhone: Kacheln Tagesziel, Prüfungsreife, Serie und Prüfung stehen mittig, Nachbarn werden unscharf', '„Lernpfade & Quiz“ ist so breit wie die Karte darüber'] },
   { v: '1.23.7', d: '2026-10-17', items: ['Kapitel-Kacheln auf dem iPhone: die aktuelle Kachel steht mittig, die Nachbarn werden zum Rand hin unscharf', 'Microsoft-Learn-Karte neu aufgebaut: Logo und Quelle oben, Titel und Text in voller Breite'] },
   { v: '1.23.6', d: '2026-10-17', items: ['Abschnittsleiste im Modul wackelt beim Scrollen nicht mehr'] },
@@ -9898,7 +9989,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     // Liquid Glass: aus = deckende Flächen; an = Deckkraft der Glasflächen von 45 % (transparent) bis 98 % (eingefärbt)
     r.setAttribute('data-glass', LOOK.glass === false ? 'off' : 'on');
     // Abrundung: ein Faktor für alle Eckenradien
-    r.style.setProperty('--rf', RF[lookVal('round')] || 1.3);
+    r.style.setProperty('--rf', RF[lookVal('round')] || 1.3); r.setAttribute('data-round', lookVal('round'));
     r.style.setProperty('--glass-a', (45 + (LOOK.glassT == null ? 60 : LOOK.glassT) * .53).toFixed(1) + '%');
     if (lookVal('serif')) r.setAttribute('data-serif', '1'); else r.removeAttribute('data-serif');
     if (lookVal('contrast')) r.setAttribute('data-contrast', '1'); else r.removeAttribute('data-contrast');
@@ -11210,13 +11301,13 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     var readMin = m && m.deep && m.deep.length ? m.deep.reduce(function (n, d) { return n + minutesOf(d); }, 0) : (lm0 ? lm0.minutes : null);
     var lead = m && m.summary && m.summary.lead ? (m.summary.lead.match(/^[\s\S]*?[.!?](?=\s|$)/) || [m.summary.lead])[0] : '';
     var fact = function (v, l, cls) { return '<div class="mh-fact' + (cls ? ' ' + cls : '') + '"><b>' + v + '</b><span>' + l + '</span></div>'; };
-    var h = '<div class="container"><header class="mod-head mod-hero' + (st === 'skip' ? ' is-skip' : '') + '" style="--lpc:var(--lp-' + ((c.lp.nr - 1) % 5 + 1) + ')">' +
-      '<a class="mh-path" href="#/path/' + c.lp.id + '"><span class="mh-ic">' + lpIcon(c.lp) + '</span>Lernpfad ' + c.lp.nr + ' · ' + esc(c.lp.title) + '<span class="mh-sep">/</span>Modul ' + c.nr + '</a>' +
-      '<h1>' + esc(m ? m.title : c.title) + '</h1>' + (m ? '<div class="en">' + esc(m.titleEn) + '</div>' : '') +
+    var h = '<div class="container"><header class="mod-head mod-hero mh2' + (st === 'skip' ? ' is-skip' : '') + '" style="--lpc:var(--lp-' + ((c.lp.nr - 1) % 5 + 1) + ')">' +
+      // Schlanker Modul-Kopf: Herkunft und Domäne in einer Zeile, Titel, kurzer Text, Eckdaten als eine Zeile, Status
+      '<div class="mh2-top"><a class="mh-path" href="#/path/' + c.lp.id + '" title="' + esc(c.lp.title) + '"><span class="mh-ic">' + lpIcon(c.lp) + '</span><span class="mh-t">Lernpfad ' + c.lp.nr + ' · Modul ' + c.nr + '</span></a>' + (m ? domainTag(m.domain) : '') + '</div>' +
+      '<h1>' + esc(m ? m.title : c.title) + '</h1>' +
       (lead ? '<p class="mh-lead">' + md(lead) + '</p>' : '') +
-      '<div class="mh-facts">' + (readMin ? fact('≈ ' + readMin + ' Min.', 'Lesezeit') : '') +
-        (m ? fact((m.quiz || []).length, 'Quizfragen') + fact(best != null ? best + ' %' : '–', 'Bestwert', best == null ? '' : best >= 80 ? 'ok' : 'warn') : '') + '</div>' +
-      '<div class="tags">' + statusSeg(mid) + (m ? domainTag(m.domain) : '') + '</div></header>' +
+      '<div class="mh2-meta">' + [readMin ? '≈ ' + readMin + ' Min. Lesezeit' : '', m ? (m.quiz || []).length + ' Quizfragen' : '', m ? 'Bestwert ' + (best != null ? '<b class="' + (best >= 80 ? 'ok' : 'warn') + '">' + best + ' %</b>' : '–') : ''].filter(Boolean).join('<i aria-hidden="true">·</i>') + '</div>' +
+      '<div class="mh2-status">' + statusSeg(mid) + '</div></header>' +
       '<div class="skip-banner' + (st === 'skip' ? '' : ' hidden') + '" id="skipBanner">Als <b>nicht relevant</b> markiert – ' + (S.settings.ignoreSkipped ? 'wird bei Fortschritt und Prüfungssimulation ignoriert.' : 'wird laut Einstellung trotzdem berücksichtigt (siehe Fortschritt & Daten).') + '</div>';
     if (m) h += '<div class="tabs"><a class="tab' + (tab === 'learn' ? ' active' : '') + '" href="#/module/' + mid + '/learn">Wissen & Praxis</a><a class="tab' + (tab === 'quiz' ? ' active' : '') + '" href="#/module/' + mid + '/quiz">Wissenscheck</a></div>';
     h += '<div id="modBody"></div><div class="actions">' + (prev ? '<a class="btn sec" data-vt="back" href="#/module/' + prev + '">‹ M' + CMOD[prev].nr + '</a>' : '') + '<span class="spacer"></span>' +
