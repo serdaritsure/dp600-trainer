@@ -2861,7 +2861,7 @@ html.tbnav .tb-bar { max-width: 100%; box-sizing: border-box; overflow: hidden; 
 html.tbnav body .tb-item { min-width: 0; overflow: hidden; }
 html.tbnav .tb-items { overflow: hidden; }
 /* Seite nie seitlich verschiebbar (schwebende Kreise liegen zeitweise außerhalb) */
-@media (max-width: 900px) { #app { overflow-x: clip; } }
+@media (max-width: 900px) { html, body { overflow-x: clip; } }
 /* Suche am Handy: unter der Statusleiste, Höhe folgt dem sichtbaren Bereich (Tastatur) */
 @media (max-width: 600px) {
   .cmdk-backdrop { padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; }
@@ -3004,6 +3004,8 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
 :root[data-motion="on"] .reveal:not(.in) { filter: blur(var(--flow-b)); opacity: var(--flow-o); }
 :root[data-motion="on"] .reveal { transition: transform .9s var(--ease), opacity .9s var(--ease), filter .9s var(--ease); transition-delay: var(--d, 0s); }
 :root[data-motion="on"] .reveal.in { filter: none; opacity: 1; }
+/* Lernabschnitte: nur Unschärfe und Deckkraft, keine Verschiebung (Abschnittsleiste bleibt ruhig) */
+.learn-main > .lsec.reveal, .learn-main > .lsec.reveal.in { transform: none !important; }
 
 </style>
 <script>
@@ -3067,6 +3069,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.6', d: '2026-10-17', items: ['Abschnittsleiste im Modul wackelt beim Scrollen nicht mehr'] },
   { v: '1.23.5', d: '2026-10-17', items: ['Lernbereich: keine Kapitelnummern mehr, Überschriften größer und fetter in der App-Schrift, ruhigere Abstände', 'Abschnitte blenden beim Scrollen wieder mit Unschärfe ein – jetzt auch in Safari auf iPhone und Mac und in jedem Stil'] },
   { v: '1.23.4', d: '2026-10-17', items: ['Mac und iPad: „Weitermachen“ klappt nur beim Scrollen wieder auf, mit flüssiger Animation in beide Richtungen', 'Play-Knopf links, Fortschrittsring rechts; Karte, Play-Kreis und untere Leiste gleich hoch'] },
   { v: '1.23.3', d: '2026-10-17', items: ['Mac und iPad: nach 5 Sekunden ohne Bedienung wird „Weitermachen“ zum Play-Kreis links neben der unteren Leiste'] },
