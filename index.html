@@ -3007,6 +3007,28 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
 /* Lernabschnitte: nur Unschärfe und Deckkraft, keine Verschiebung (Abschnittsleiste bleibt ruhig) */
 .learn-main > .lsec.reveal, .learn-main > .lsec.reveal.in { transform: none !important; }
 
+/* ===== Kapitel-Kacheln (Handy): eine Kachel mittig, Nachbarn am Rand zunehmend unscharf ===== */
+@media (max-width: 900px) {
+  .ch-grid { margin: 0 -16px; padding: 4px 0 10px; gap: 12px; scroll-snap-type: x mandatory;
+    padding-inline: calc(50% - min(38vw, 160px)); scroll-padding-inline: calc(50% - min(38vw, 160px)); }
+  .ch-grid .ch-tile { flex: 0 0 min(76vw, 320px); scroll-snap-align: center; will-change: filter, opacity, transform;
+    transition: border-color .2s; }
+  .ch-grid.can-swipe:not(.at-end) { -webkit-mask-image: none; mask-image: none; }
+}
+
+/* ===== Microsoft-Learn-Karte: klarer Aufbau ===== */
+.learn-top { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 0; padding: 18px 20px 20px; }
+.learn-top .meta { display: contents; }
+.learn-top .ms-logo { width: 32px; height: 32px; flex: none; padding: 8px; grid-row: 1; }
+.learn-top .src { grid-column: 2; font-size: 12px; font-weight: 600; letter-spacing: .01em; color: var(--text-3); text-transform: none; }
+.learn-top h3 { grid-column: 1 / -1; font-size: 19px; font-weight: 700; letter-spacing: -.015em; line-height: 1.25; margin: 14px 0 6px; }
+.learn-top p { grid-column: 1 / -1; font-size: 14.5px; line-height: 1.5; color: var(--text-2); margin: 0; }
+.learn-top .learn-facts { grid-column: 1 / -1; margin-top: 14px; gap: 6px; }
+.learn-top .learn-facts .tag { font-size: 12.5px; padding: 5px 10px; border-radius: 999px; }
+.learn-top > .btn { grid-column: 1 / -1; justify-self: start; margin-top: 16px; }
+@media (max-width: 600px) { .learn-top > .btn { justify-self: stretch; text-align: center; justify-content: center; } }
+.learn-card summary { padding: 14px 20px; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3069,6 +3091,7 @@ body.tb-anim .tb-bar { -webkit-backdrop-filter: none !important; backdrop-filter
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.23.7', d: '2026-10-17', items: ['Kapitel-Kacheln auf dem iPhone: die aktuelle Kachel steht mittig, die Nachbarn werden zum Rand hin unscharf', 'Microsoft-Learn-Karte neu aufgebaut: Logo und Quelle oben, Titel und Text in voller Breite'] },
   { v: '1.23.6', d: '2026-10-17', items: ['Abschnittsleiste im Modul wackelt beim Scrollen nicht mehr'] },
   { v: '1.23.5', d: '2026-10-17', items: ['Lernbereich: keine Kapitelnummern mehr, Überschriften größer und fetter in der App-Schrift, ruhigere Abstände', 'Abschnitte blenden beim Scrollen wieder mit Unschärfe ein – jetzt auch in Safari auf iPhone und Mac und in jedem Stil'] },
   { v: '1.23.4', d: '2026-10-17', items: ['Mac und iPad: „Weitermachen“ klappt nur beim Scrollen wieder auf, mit flüssiger Animation in beide Richtungen', 'Play-Knopf links, Fortschrittsring rechts; Karte, Play-Kreis und untere Leiste gleich hoch'] },
@@ -10787,6 +10810,23 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     row.addEventListener('scroll', upd, { passive: true }); setTimeout(upd, 60); window.addEventListener('resize', upd);
   }
   new MutationObserver(function () { document.querySelectorAll('#app .td-cards, #app .ch-grid').forEach(swipeDots); }).observe(app, { childList: true, subtree: true });
+  // Kapitel-Kacheln: je weiter eine Kachel von der Mitte entfernt ist, desto unschärfer und blasser
+  function chFocus(row) {
+    if (!row || row._cf) return; row._cf = 1;
+    var raf = 0, upd = function () {
+      raf = 0; if (!isNarrow()) { Array.prototype.forEach.call(row.children, function (c) { c.style.filter = c.style.opacity = c.style.transform = ''; }); return; }
+      var r = row.getBoundingClientRect(), mid = r.left + r.width / 2;
+      Array.prototype.forEach.call(row.children, function (c) {
+        var b = c.getBoundingClientRect(), d = Math.min(1, Math.abs(b.left + b.width / 2 - mid) / b.width);
+        c.style.filter = d > .02 ? 'blur(' + (d * 5).toFixed(1) + 'px)' : '';
+        c.style.opacity = (1 - d * .45).toFixed(2);
+        c.style.transform = 'scale(' + (1 - d * .06).toFixed(3) + ')';
+      });
+    };
+    row.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+    window.addEventListener('resize', upd); setTimeout(upd, 30);
+  }
+  new MutationObserver(function () { document.querySelectorAll('#app .ch-grid').forEach(chFocus); }).observe(app, { childList: true, subtree: true });
   // (7) Große Titel wie in iOS: verlässt die Seitenüberschrift den Bildschirm, steht der Titel klein oben in der Mitte
   var ltBar = document.createElement('div'); ltBar.className = 'lt-bar'; ltBar.setAttribute('aria-hidden', 'true'); ltBar.innerHTML = '<span></span>';
   document.body.appendChild(ltBar);
