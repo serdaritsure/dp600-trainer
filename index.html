@@ -3317,6 +3317,9 @@ html[data-calm="on"] :is(.tb-bar, .tb-resume, .theme-fab, .subnav, .lt-bar, .top
 :root[data-palette="bamboo"] .td-hero { box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .35); }
 .tgl.is-off { opacity: .45; pointer-events: none; }
 html[data-calm="on"] .glass-row { display: none; }
+/* „Dezent“ entfällt: alte Einstellung wirkt wie „Normal“ */
+html[data-accent="soft"] { --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent) !important; }
+html[data-accent="soft"] :is(.btn:not(.sec):not(.ghost), .td-hero, .tbr-play) { filter: none !important; }
 
 </style>
 <script>
@@ -13247,7 +13250,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<div class="prof-add"><input id="profName" type="text" maxlength="24" placeholder="Name, z. B. Abends" aria-label="Profilname"><button type="button" class="btn sm" data-prof-save="1">Speichern</button></div>' +
         '<div class="prof-add"><button type="button" class="btn sm sec" data-surprise="1">Überrasch mich</button>' + (LOOK_UNDO ? '<button type="button" class="btn sm ghost" data-surprise-undo="1">Rückgängig</button>' : '') + '</div></div>';
     },
-    accent: function () { return sRow('Akzentstärke', 'Wie kräftig Knöpfe, Markierungen und Pillen eingefärbt sind.', sSeg('accent', [['soft', 'Dezent'], ['normal', 'Normal'], ['strong', 'Kräftig']], lookVal('accent'))); },
+    accent: function () { return sRow('Akzentstärke', '„Kräftig“ färbt Markierungen, gewählte Optionen und Überschriften stärker ein.', sSeg('accent', [['normal', 'Normal'], ['strong', 'Kräftig']], lookVal('accent') === 'soft' ? 'normal' : lookVal('accent'))); },
     bg: function () { return sRow('Hintergrund', '', sSeg('bg', [['auto', 'Design'], ['plain', 'Einfarbig'], ['gradient', 'Verlauf'], ['paper', 'Papier'], ['dots', 'Punkte']], lookVal('bg'))); },
     tile: function () { return sRow('Kachelstil', '', sSeg('tile', [['fill', 'Fläche'], ['outline', 'Umrandet'], ['glass', 'Glas']], lookVal('tile'))); },
     surface: function () { return sRow('Oberfläche', 'Flach ohne Schatten, Plastisch mit Tiefe und Lichtkante.', sSeg('surface', [['flat', 'Flach'], ['standard', 'Standard'], ['3d', 'Plastisch']], lookVal('surface'))); },
@@ -13454,7 +13457,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       LOOK_UNDO = {}; PROFILE_KEYS.forEach(function (k) { LOOK_UNDO[k] = LOOK[k] != null ? LOOK[k] : null; });
       var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
       var pool = Object.keys(PRESETS).filter(function (k) { return k !== 'custom' && k !== LOOK.preset && (LOOK.removed || []).indexOf(k) < 0 && (LOOK.hidden || []).indexOf(k) < 0; });
-      lookSet({ preset: pick(pool), play: null, round: pick(['standard', 'weich', 'sehr']), tile: pick(['fill', 'fill', 'outline', 'glass']), surface: pick(['flat', 'standard', '3d']), bg: pick(['auto', 'plain', 'gradient', 'paper', 'dots']), hfont: pick(['system', 'system', 'rounded', 'serif']), accent: pick(['soft', 'normal', 'strong']) });
+      lookSet({ preset: pick(pool), play: null, round: pick(['standard', 'weich', 'sehr']), tile: pick(['fill', 'fill', 'outline', 'glass']), surface: pick(['flat', 'standard', '3d']), bg: pick(['auto', 'plain', 'gradient', 'paper', 'dots']), hfont: pick(['system', 'system', 'rounded', 'serif']), accent: pick(['normal', 'strong']) });
       route(true); toast('Neue Kombination – „Rückgängig“ holt die vorige zurück'); return; }
     if ((b = e.target.closest('[data-surprise-undo]'))) { if (LOOK_UNDO) { lookSet(LOOK_UNDO); LOOK_UNDO = null; route(true); toast('Vorige Kombination wiederhergestellt'); } return; }
     if ((b = e.target.closest('[data-design-edit]'))) { DESIGN_EDIT = !DESIGN_EDIT; DEL_ASK = null; route(true); return; }
