@@ -3371,6 +3371,16 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
   .hl-bar .hl-del { color: var(--bad, #e5484d); }
 }
 
+/* 1.26.3: Untere Leiste – Milchglas auf eigener Ebene, damit Safari die Unschärfe zuverlässig zeigt
+   (Glanz, Schieber und overflow der Leiste stören die Unschärfe direkt auf dem Element) */
+html[data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-anim) .tb-bar {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: transparent !important; }
+html[data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-anim) .tb-bar::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: color-mix(in srgb, var(--surface) var(--glass-a, 85%), transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); }
+html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-anim) .tb-bar::before { background: color-mix(in srgb, #000 var(--glass-a, 85%), transparent); }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3378,29 +3388,29 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
   (function () {
     var r = document.documentElement, L = {};
     try { L = JSON.parse(localStorage.getItem('dp600.look.v1')) || {}; } catch (e) {}
-    var P = { fabric: ['fabric', 'balanced'], studio: ['studio', 'calm'], itsure: ['itsure', 'balanced'], learn: ['learn', 'calm'], anthropic: ['anthropic', 'balanced'], google: ['google', 'calm'], ocean: ['ocean', 'balanced'], aubergine: ['aubergine', 'lively'], sunset: ['sunset', 'balanced'], forest: ['forest', 'calm'], excel: ['excel', 'balanced'], powerbi: ['powerbi', 'balanced'], powerpoint: ['powerpoint', 'balanced'], bamboo: ['bamboo', 'calm'], ink: ['ink', 'calm'], aurora: ['aurora', 'lively'], sandstone: ['sandstone', 'balanced'], pastel: ['pastel', 'lively'], contrast: ['contrast', 'calm'], custom: ['custom', 'balanced'] };
+    var P = { fabric: ['fabric', 'balanced'], studio: ['studio', 'calm'], itsure: ['itsure', 'balanced'], learn: ['learn', 'calm'], anthropic: ['anthropic', 'balanced'], google: ['google', 'calm'], ocean: ['ocean', 'balanced'], aubergine: ['aubergine', 'lively'], sunset: ['sunset', 'balanced'], forest: ['forest', 'calm'], excel: ['excel', 'balanced'], powerbi: ['powerbi', 'balanced'], powerpoint: ['powerpoint', 'balanced'], bamboo: ['bamboo', 'calm'], ink: ['ink', 'calm'], aurora: ['aurora', 'lively'], sandstone: ['sandstone', 'balanced'], pastel: ['pastel', 'lively'], custom: ['custom', 'balanced'] };
     var pr = P[L.preset] ? L.preset : 'itsure';
     var legacy = null; try { legacy = localStorage.getItem('dp600.theme'); } catch (e) {}
     var mode = L.mode || legacy || 'system';
     if (mode === 'time') { var hr = new Date().getHours(); mode = hr >= 7 && hr < 19 ? 'light' : 'dark'; }
     if (pr === 'custom') { try { var css = localStorage.getItem('dp600.customcss'); if (css) { var st = document.createElement('style'); st.id = 'customPalette'; st.textContent = css; document.head.appendChild(st); } } catch (e) {} }
     r.setAttribute('data-width', L.width || 'wide');
-    r.style.setProperty('--rf', ({ dezent: .7, standard: 1, weich: 1.3, sehr: 1.65 })[L.round || 'weich'] || 1.3); r.setAttribute('data-round', L.round || 'weich');
+    var rd = !L.round || L.round === 'standard' ? 'weich' : L.round; r.style.setProperty('--rf', ({ dezent: .7, weich: 1.3, sehr: 1.65 })[rd] || 1.3); r.setAttribute('data-round', rd);
     r.setAttribute('data-glass', L.glass === false ? 'off' : 'on'); r.style.setProperty('--glass-a', (45 + (L.glassT == null ? 60 : L.glassT) * .53) + '%');
     if (window.matchMedia('(max-width: 900px)').matches || L.nav === 'tabbar') r.classList.add('tbnav');
     if (mode === 'black') { mode = 'dark'; r.setAttribute('data-oled', '1'); }
     if (mode === 'light' || mode === 'dark') r.setAttribute('data-theme', mode);
     r.setAttribute('data-palette', P[pr][0]);
-    r.setAttribute('data-play', L.play || P[pr][1]);
-    r.setAttribute('data-world', { calm: 'editorial', balanced: 'standard', lively: 'playful' }[L.play || P[pr][1]] || 'standard');
+    r.setAttribute('data-play', 'balanced');
+    r.setAttribute('data-world', 'standard');
     r.setAttribute('data-motion', L.motion || 'on');
     r.setAttribute('data-size', L.size || 'm');
     r.setAttribute('data-density', L.density || 'comfy');
     if (L.serif) r.setAttribute('data-serif', '1');
-    if (L.contrast) r.setAttribute('data-contrast', '1');
-    var D = { surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, tap: true, densLearn: 'normal', densList: 'normal' };
-    r.style.setProperty('--glass-blur', (L.glassB != null ? L.glassB : 22) + 'px');
-    Object.keys(D).forEach(function (k) { var v = L[k] != null ? L[k] : D[k]; r.setAttribute('data-' + k, v === true ? 'on' : v === false ? 'off' : v); });
+    if (L.contrast || L.preset === 'contrast') r.setAttribute('data-contrast', '1');
+    var D = { surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, tap: false, densLearn: 'normal', densList: 'normal' };
+    r.style.setProperty('--glass-blur', '22px');
+    Object.keys(D).forEach(function (k) { var v = L[k] != null && k !== 'tap' && k !== 'daytint' ? L[k] : D[k]; r.setAttribute('data-' + k, v === true ? 'on' : v === false ? 'off' : v); });
     var hh = new Date().getHours(); r.setAttribute('data-daypart', hh < 11 ? 'morning' : hh < 17 ? 'day' : hh < 21 ? 'evening' : 'night');
   })();
 </script>
@@ -3437,6 +3447,7 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.26.3', d: '2026-10-20', items: ['Untere Leiste mit demselben Glas-Effekt wie die runden Knöpfe daneben', 'Abrundung: drei Stufen Dezent, Standard und Weich; die bisherige Stufe „Weich“ ist der neue Standard', 'Oberfläche und Kachelstil zusammengefasst zur Einstellung „Kacheln“', 'Animationen und Lichteffekt beim Neigen jetzt unter Darstellung → Bewegung & Extras; eigene Seite „Bewegung“ entfällt', 'Schrift der Überschriften jetzt unter „Lesen“', 'Seitenwechsel: Automatisch oder Aus', 'Entfernt: Regler für die Unschärfe, Stil-Auswahl, Tipp-Rückmeldung, Farbton nach Tageszeit, allgemeine Abstände, Design „Hoher Kontrast“ (ersetzt durch den Schalter „Mehr Kontrast“)'] },
   { v: '1.26.2', d: '2026-10-20', items: ['Markierungsmenü auf dem iPhone kompakt: drei Farbkreise, Notiz-Symbol und Papierkorb', 'Langes Drücken auf eine Markierung öffnet das Menü zum Ändern oder Entfernen'] },
   { v: '1.26.1', d: '2026-10-20', items: ['Wissenscheck: Nummern der Antworten in exakt runden Kreisen'] },
   { v: '1.26', d: '2026-10-18', items: ['Seitenwechsel wählbar: Automatisch, Überblenden, Schieben oder Aus', 'Liquid Glass: eigener Regler für die Unschärfe, von klar bis milchig', 'Tipp-Rückmeldung: Knöpfe und Kacheln federn beim Antippen kurz nach (abschaltbar)', 'Roter Punkt am Einstellungs-Reiter bei neuen Funktionen; „Neuigkeiten anzeigen“ unter Über die App', 'Abstände getrennt einstellbar für Lernbereich und Listen', 'Akzentstärke: „Kräftig“ färbt mehr ein, neu „Leuchtend“ mit leichtem Schein'] },
@@ -10018,6 +10029,8 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     lp5: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m12 8 1.3 2.7L16 12l-2.7 1.3L12 16l-1.3-2.7L8 12l2.7-1.3z"/>'
   };
   function lpIcon(lp, cls) { return ICONS['lp' + lp.nr] ? ico('lp' + lp.nr, cls) : '<b class="lp-n">' + lp.nr + '</b>'; }
+  // Glas: Deckkraft (t 0–100), Unschärfe fest
+  function glassVars(t) { var r = document.documentElement; r.style.setProperty('--glass-a', (45 + t * .53).toFixed(1) + '%'); r.style.setProperty('--glass-blur', '22px'); }
   function ico(name, cls) { return '<svg class="ico' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[name] || '') + '</svg>'; }
   // Gestalteter leerer Zustand: Symbol, Titel, Text, Aktionen
   function emptyBox(icon, title, text, actions) {
@@ -10116,7 +10129,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     anthropic: { name: 'Anthropic', palette: 'anthropic', play: 'balanced', desc: 'Elfenbein und Graphit, Orange als Akzent' },
     google: { name: 'Google', palette: 'google', play: 'calm', desc: 'Weiß mit Blau, Rot, Gelb und Grün aus dem Logo' },
     ocean: { name: 'Blautöne', palette: 'ocean', play: 'balanced', desc: 'Navy-Leiste, Babyblau, Apricot als Gegenpol' },
-    aubergine: { name: 'Aubergine', palette: 'aubergine', play: 'lively', desc: 'Pflaume und Lavendel mit Gold, lebendiger Stil' },
+    aubergine: { name: 'Aubergine', palette: 'aubergine', play: 'lively', desc: 'Pflaume und Lavendel mit Gold' },
     sunset: { name: 'Sonnenuntergang', palette: 'sunset', play: 'balanced', desc: 'Koralle und Pfirsich, warm' },
     forest: { name: 'Wald', palette: 'forest', play: 'calm', desc: 'Moos, Holz und Schiefer, ruhig' },
     excel: { name: 'Excel', palette: 'excel', play: 'balanced', desc: 'Kräftiges Excel-Grün in vier Abstufungen' },
@@ -10127,15 +10140,20 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     aurora: { name: 'Nordlicht', palette: 'aurora', play: 'lively', desc: 'Nachtblau mit Verlauf von Grün zu Violett' },
     sandstone: { name: 'Sandstein', palette: 'sandstone', play: 'balanced', desc: 'Terrakotta und Sand, warm und erdig' },
     pastel: { name: 'Pastell', palette: 'pastel', play: 'lively', desc: 'Mint, Flieder und Pfirsich, sehr weich' },
-    contrast: { name: 'Hoher Kontrast', palette: 'contrast', play: 'calm', desc: 'Maximale Lesbarkeit, kräftige Ränder' },
     custom: { name: 'Eigene Farbe', palette: 'custom', play: 'balanced', desc: 'Aus einer Akzentfarbe Ihrer Wahl erzeugt' }
   };
   var LOOK = (function () { try { return JSON.parse(lsGet(LOOK_KEY)) || {}; } catch (e) { return {}; } })();
+  if (LOOK.round === 'standard') LOOK.round = 'weich';   // 1.26.3: altes „Standard“ entfällt, „Weich“ heißt jetzt „Standard“
+  if (LOOK.preset === 'contrast') { LOOK.preset = 'itsure'; LOOK.contrast = true; }   // Design „Hoher Kontrast“ → Schalter „Mehr Kontrast“
   if (!PRESETS[LOOK.preset]) LOOK.preset = 'itsure';
   if (!LOOK.custom) LOOK.custom = '#0B6F64';
   if (!LOOK.mode) { LOOK.mode = lsGet('dp600.theme') || 'system'; }
   function lookVal(k) {
     var d = { play: PRESETS[LOOK.preset].play, motion: 'on', size: 'm', density: 'comfy', mode: 'system', serif: false, contrast: false, round: 'weich', surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, pagefx: 'auto', glassB: 22, tap: true, densLearn: 'normal', densList: 'normal' };
+    // 1.26.3: Stil immer „Ausgewogen“, Tipp-Rückmeldung und Tageszeit-Farbton entfallen
+    if (k === 'play') return 'balanced';
+    if (k === 'tap' || k === 'daytint') return false;
+    if (k === 'pagefx') return LOOK.pagefx === 'off' ? 'off' : 'auto';   // nur noch Automatisch oder Aus
     return LOOK[k] != null ? LOOK[k] : d[k];
   }
   /* ---------- Farbrechnung für „Eigene Farbe“ (Kontrast nach WCAG) ---------- */
@@ -10252,8 +10270,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     r.setAttribute('data-glass', LOOK.glass === false ? 'off' : 'on');
     // Abrundung: ein Faktor für alle Eckenradien
     r.style.setProperty('--rf', RF[lookVal('round')] || 1.3); r.setAttribute('data-round', lookVal('round'));
-    r.style.setProperty('--glass-a', (45 + (LOOK.glassT == null ? 60 : LOOK.glassT) * .53).toFixed(1) + '%');
-    r.style.setProperty('--glass-blur', (lookVal('glassB') | 0) + 'px');
+    glassVars(LOOK.glassT == null ? 60 : LOOK.glassT);
     if (lookVal('serif')) r.setAttribute('data-serif', '1'); else r.removeAttribute('data-serif');
     if (lookVal('contrast')) r.setAttribute('data-contrast', '1'); else r.removeAttribute('data-contrast');
     // Weitere Gestaltung: Oberfläche, Hintergrund, Akzentstärke, Überschriften-Schrift, Kachelstil, Symbole, Extras, „Ruhig“-Schalter
@@ -13319,11 +13336,13 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     },
     accent: function () { return sRow('Akzentstärke', '„Kräftig“ färbt Markierungen, gewählte Optionen und Überschriften stärker ein.', sSeg('accent', [['normal', 'Normal'], ['strong', 'Kräftig'], ['glow', 'Leuchtend']], lookVal('accent') === 'soft' ? 'normal' : lookVal('accent'))); },
     bg: function () { return sRow('Hintergrund', '', sSeg('bg', [['auto', 'Design'], ['plain', 'Einfarbig'], ['gradient', 'Verlauf'], ['paper', 'Papier'], ['dots', 'Punkte']], lookVal('bg'))); },
+    kachel: function () { var sf = lookVal('surface'), tl = lookVal('tile'), cur = tl !== 'fill' ? tl : sf;
+      return sRow('Kacheln', 'Form und Tiefe von Karten und Kacheln.', sSeg('kachel', [['flat', 'Flach'], ['standard', 'Standard'], ['3d', 'Plastisch'], ['outline', 'Umrandet'], ['glass', 'Glas']], cur)); },
     tile: function () { return sRow('Kachelstil', '', sSeg('tile', [['fill', 'Fläche'], ['outline', 'Umrandet'], ['glass', 'Glas']], lookVal('tile'))); },
     surface: function () { return sRow('Oberfläche', 'Flach ohne Schatten, Plastisch mit Tiefe und Lichtkante.', sSeg('surface', [['flat', 'Flach'], ['standard', 'Standard'], ['3d', 'Plastisch']], lookVal('surface'))); },
     hfont: function () { return sRow('Schrift der Überschriften', 'Lesetexte stellen Sie unter „Lesen“ ein.', sSeg('hfont', [['system', 'System'], ['rounded', 'Rund'], ['serif', 'Serif'], ['mono', 'Mono']], lookVal('hfont'))); },
     icons: function () { return sRow('Symbole', '', sSeg('icons', [['line', 'Linie'], ['fill', 'Gefüllt'], ['color', 'Farbig']], lookVal('icons'))); },
-    pagefx: function () { return sRow('Seitenwechsel', '', sSeg('pagefx', [['auto', 'Automatisch'], ['fade', 'Überblenden'], ['slide', 'Schieben'], ['off', 'Aus']], lookVal('pagefx'))); },
+    pagefx: function () { return sRow('Seitenwechsel', '', sSeg('pagefx', [['auto', 'Automatisch'], ['off', 'Aus']], lookVal('pagefx'))); },
     tap: function () { return sRow('Tipp-Rückmeldung', 'Knöpfe und Kacheln federn beim Antippen kurz nach.', sTgl('tap', !!lookVal('tap') && !lookVal('calm'), !!lookVal('calm'))); },
     densLearn: function () { return sRow('Abstände im Lernbereich', '', sSeg('densLearn', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densLearn'))); },
     densList: function () { return sRow('Abstände in Listen', 'Gilt für Einstellungen, Menüs und Übersichten.', sSeg('densList', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densList'))); },
@@ -13337,9 +13356,9 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       return sRow('Liquid Glass', calm ? CALM_NOTE : on ? '' : 'Leisten und Knöpfe sind deckend.', sTgl('glass', on, calm)) + (on ? '<div class="set-row glass-row"><div class="gl-range"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3"/></svg>' +
         '<input type="range" min="0" max="100" step="1" value="' + t + '" data-glassrange="1" aria-label="Transparent bis eingefärbt"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="12" height="10" rx="3"/><rect x="8.5" y="9" width="12" height="10" rx="3" fill="currentColor"/></svg></div>' +
         '<p class="gl-hint">„Transparent“ lässt mehr vom Hintergrund durch, „Eingefärbt“ erhöht die Deckkraft und den Kontrast.</p></div>' +
-        '<div class="set-row glass-row"><div class="set-l"><b>Unschärfe</b><span>Von klarem Glas bis Milchglas.</span></div><div class="gl-range"><span class="gl-lbl">Klar</span><input type="range" min="0" max="40" step="1" value="' + (lookVal('glassB') | 0) + '" data-glassblur="1" aria-label="Unschärfe des Glases"><span class="gl-lbl">Milchig</span></div></div>' : '');
+        '' : '');
     },
-    round: function () { return sRow('Abrundung', 'Gilt für Karten, Knöpfe, Leisten und Felder.', sSeg('round', [['dezent', 'Dezent'], ['standard', 'Standard'], ['weich', 'Weich'], ['sehr', 'Sehr weich']], lookVal('round'))); },
+    round: function () { return sRow('Abrundung', 'Gilt für Karten, Knöpfe, Leisten und Felder.', sSeg('round', [['dezent', 'Dezent'], ['weich', 'Standard'], ['sehr', 'Weich']], lookVal('round'))); },
     play: function () { return sRow('Stil', 'Wirkt auf Formen, Schatten und Bewegung.', sSeg('play', [['calm', 'Ruhig'], ['balanced', 'Ausgewogen'], ['lively', 'Lebendig']], lookVal('play'))); },
     size: function () { return sRow('Textgröße', '', sSeg('size', [['s', 'S'], ['m', 'M'], ['l', 'L']], lookVal('size'))); },
     serif: function () { return sRow('Schriftart', 'Gilt für Lesetexte.', sSeg('serif', [['false', 'Standard'], ['true', 'Serif']], lookVal('serif'))); },
@@ -13399,17 +13418,15 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
   };
   var SETS = {
-    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'play', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'tile', 'surface', 'hfont', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['play', 'pagefx', 'tap', 'calm', 'celebrate', 'rings', 'daytint']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
-      reset: function () { lookSet({ preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, pagefx: null, glassB: null, tap: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Schrift Überschriften Symbole Ruhig Konfetti Feier Ringe Tageszeit Profil Überrasch Stil Ruhig Lebendig eigene Farbe Navigation Seitenleiste Leiste unten Tabs Reiter' },
-    lesen: { t: 'Lesen', rows: ['size', 'serif', 'width', 'density', 'densLearn', 'densList', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
-      reset: function () { lookSet({ size: null, serif: null, width: null, density: null, densLearn: null, densList: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Breite Abstände Dichte Kontrast' },
-    bewegung: { t: 'Bewegung', rows: ['motion', 'tilt'], quick: ['motion'], tier: 1, val: function () { return MOTION_L[lookVal('motion')]; },
-      reset: function () { lookSet({ motion: null, tilt: false }); }, find: 'Animationen Bewegung Neigen Lichteffekt' },
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'kachel', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['motion', 'pagefx', 'tilt', 'calm', 'celebrate', 'rings']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+      reset: function () { lookSet({ motion: null, tilt: false, preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, pagefx: null, glassB: null, tap: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Kacheln Symbole Ruhig Konfetti Feier Ringe Profil Überrasch eigene Farbe Animationen Bewegung Seitenwechsel Neigen Lichteffekt Navigation Seitenleiste Leiste unten Tabs Reiter' },
+    lesen: { t: 'Lesen', rows: ['size', 'serif', 'hfont', 'width', 'densLearn', 'densList', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
+      reset: function () { lookSet({ size: null, serif: null, width: null, density: null, densLearn: null, densList: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Überschriften Breite Abstände Dichte Kontrast' },
     quiz: { t: 'Quiz', rows: ['shuffle', 'why', 'skip', 'quickn'], quick: ['shuffle', 'why'], tier: 2, val: function () { return quickCount() + ' Fragen im Schnell-Quiz'; },
       reset: function () { S.settings.shuffle = true; S.settings.whyOpen = false; S.settings.ignoreSkipped = true; lsDel('dp600.quickN'); save(); }, find: 'Antworten mischen Erklärungen Begründungen nicht relevant Schnell-Quiz' },
     ziele: { t: 'Tagesziele', rows: ['goals', 'mix', 'greet'], quick: ['goals'], tier: 2, val: function () { return S.goals.q + ' Fragen · ' + S.goals.min + ' Min. · ' + S.goals.fix + ' Fehler'; },
       reset: function () { S.goals = { q: 20, min: 15, fix: 3 }; save(); lookSet({ mix: null, greet: null }); }, find: 'Tagesziel Ziele Fragen Minuten Fehler Serie Strähne Begrüßung' },
-    kurse: { t: 'Kurse', rows: ['courses', 'mix'], quick: ['courses'], tier: 2, val: function () { return CFG.exam.code + (COURSES.length > 1 ? ' · ' + COURSES.length + ' Kurse' : ''); }, find: 'Kurs wechseln hinzufügen' },
+    kurse: { t: 'Kurse', rows: ['courses'], quick: ['courses'], tier: 2, val: function () { return CFG.exam.code + (COURSES.length > 1 ? ' · ' + COURSES.length + ' Kurse' : ''); }, find: 'Kurs wechseln hinzufügen' },
     markierungen: { t: 'Markierungen', rows: ['hl'], quick: ['hl'], tier: 2, val: function () { var c = hlCfg(); return c.y.n + ' · ' + c.g.n + ' · ' + c.p.n; },
       reset: function () { delete S.settings.hl; save(); applyHlVars(); }, find: 'Markierungen Textmarker Farben' },
     geraete: { t: 'Geräte', rows: ['sync'], quick: ['sync'], tier: 3, val: function () { var n = Object.keys(LOOK_GROUPS).length; return (n - lookLocal().length) + ' von ' + n + ' gleich'; },
@@ -13467,8 +13484,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   app.addEventListener('input', function (e) {
     if (curView !== 'settings') return;
     if (e.target.id === 'setSearch') { SET_Q = e.target.value; setSearchRun(); return; }
-    if (e.target.dataset.glassrange) { document.documentElement.style.setProperty('--glass-a', (45 + e.target.value * .53).toFixed(1) + '%'); return; }
-    if (e.target.dataset.glassblur) { document.documentElement.style.setProperty('--glass-blur', e.target.value + 'px'); return; }
+    if (e.target.dataset.glassrange) { glassVars(+e.target.value); return; }
     var k = e.target.dataset.hlc || e.target.dataset.hln; if (!k) return;
     var hl = S.settings.hl || (S.settings.hl = {}); hl[k] = Object.assign({}, hlCfg()[k], hl[k]);
     if (e.target.dataset.hlc) { hl[k].c = e.target.value; e.target.parentElement.style.background = e.target.value; applyHlVars(); }
@@ -13485,7 +13501,6 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       tk[i] = v; lookSet({ tabs: tk }); renderTabbar(); route(true); toast('Tabs gespeichert'); return;
     }
     if (t.dataset.glassrange) { lookSet({ glassT: +t.value }); return; }
-    if (t.dataset.glassblur) { lookSet({ glassB: +t.value }); return; }
     if (!k) return;
     if (k === 'shuffle') { S.settings.shuffle = t.checked; save(); }
     else if (k === 'why') { S.settings.whyOpen = t.checked; save(); }
@@ -13518,6 +13533,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     if ((b = e.target.closest('[data-preset]'))) { var pk = b.dataset.preset; lookSet({ preset: pk, play: null, hidden: (LOOK.hidden || []).filter(function (k) { return k !== pk; }) }); route(true); toast('Design „' + PRESETS[pk].name + '“'); return; }
     if ((b = e.target.closest('[data-look]'))) {
       var v = b.dataset.v, patch = {}; patch[b.dataset.look] = v === 'true' ? true : v === 'false' ? false : v;
+      if (patch.kachel) { var kv = patch.kachel; patch = /^(outline|glass)$/.test(kv) ? { tile: kv, surface: 'standard' } : { tile: 'fill', surface: kv }; }
       lookSet(patch); route(true); return;
     }
     if ((b = e.target.closest('[data-hide]'))) { lookSet({ hidden: (LOOK.hidden || []).concat(b.dataset.hide) }); route(true); toast('„' + PRESETS[b.dataset.hide].name + '“ ausgeblendet'); return; }
@@ -13532,7 +13548,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       LOOK_UNDO = {}; PROFILE_KEYS.forEach(function (k) { LOOK_UNDO[k] = LOOK[k] != null ? LOOK[k] : null; });
       var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
       var pool = Object.keys(PRESETS).filter(function (k) { return k !== 'custom' && k !== LOOK.preset && (LOOK.removed || []).indexOf(k) < 0 && (LOOK.hidden || []).indexOf(k) < 0; });
-      lookSet({ preset: pick(pool), play: null, round: pick(['standard', 'weich', 'sehr']), tile: pick(['fill', 'fill', 'outline', 'glass']), surface: pick(['flat', 'standard', '3d']), bg: pick(['auto', 'plain', 'gradient', 'paper', 'dots']), hfont: pick(['system', 'system', 'rounded', 'serif']), accent: pick(['normal', 'strong']) });
+      lookSet({ preset: pick(pool), play: null, round: pick(['dezent', 'weich', 'sehr']), tile: pick(['fill', 'fill', 'outline', 'glass']), surface: pick(['flat', 'standard', '3d']), bg: pick(['auto', 'plain', 'gradient', 'paper', 'dots']), hfont: pick(['system', 'system', 'rounded', 'serif']), accent: pick(['normal', 'strong']) });
       route(true); toast('Neue Kombination – „Rückgängig“ holt die vorige zurück'); return; }
     if ((b = e.target.closest('[data-surprise-undo]'))) { if (LOOK_UNDO) { lookSet(LOOK_UNDO); LOOK_UNDO = null; route(true); toast('Vorige Kombination wiederhergestellt'); } return; }
     if ((b = e.target.closest('[data-design-edit]'))) { DESIGN_EDIT = !DESIGN_EDIT; DEL_ASK = null; route(true); return; }
