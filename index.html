@@ -3357,6 +3357,9 @@ html.has-news .nav-item[href="#/settings"] { position: relative; }
 html.has-news .nav-item[href="#/settings"]::after { top: 8px; right: 10px; }
 html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic { position: relative; }
 html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::after { content: ''; position: absolute; top: -1px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); box-shadow: 0 0 0 2px var(--surface); }
+/* Antwort-Nummern: exakt runde Kreise, nie gestaucht; mittig zur ersten Textzeile */
+.ans .mk, .ans.multi .mk { flex: 0 0 26px !important; width: 26px !important; height: 26px !important; min-width: 26px; aspect-ratio: 1; padding: 0 !important; box-sizing: border-box;
+  border-radius: 50% !important; font-size: 12.5px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: -1px; }
 
 </style>
 <script>
@@ -3424,6 +3427,7 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.26.1', d: '2026-10-20', items: ['Wissenscheck: Nummern der Antworten in exakt runden Kreisen'] },
   { v: '1.26', d: '2026-10-18', items: ['Seitenwechsel wählbar: Automatisch, Überblenden, Schieben oder Aus', 'Liquid Glass: eigener Regler für die Unschärfe, von klar bis milchig', 'Tipp-Rückmeldung: Knöpfe und Kacheln federn beim Antippen kurz nach (abschaltbar)', 'Roter Punkt am Einstellungs-Reiter bei neuen Funktionen; „Neuigkeiten anzeigen“ unter Über die App', 'Abstände getrennt einstellbar für Lernbereich und Listen', 'Akzentstärke: „Kräftig“ färbt mehr ein, neu „Leuchtend“ mit leichtem Schein'] },
   { v: '1.25.1', d: '2026-10-18', items: ['Akzentstärke: Option „Dezent“ entfernt (wählbar sind „Normal“ und „Kräftig“)'] },
   { v: '1.25', d: '2026-10-18', items: ['Sechs neue Designs: Bambus (Naturpapier), Tinte, Nordlicht, Sandstein, Pastell, Hoher Kontrast', 'Darstellung neu gegliedert in Vorschau, Farbe, Form, Licht, Bewegung & Extras und Navigation – mit Live-Vorschau', 'Neue Einstellungen: Akzentstärke, Hintergrund, Kachelstil, Oberfläche, Schrift der Überschriften, Symbole', 'Profile speichern und wechseln, „Überrasch mich“ mit Rückgängig', 'Schalter „Ruhig“ für eine schlichte Oberfläche; Feier-Momente, lebendige Ringe und Farbton nach Tageszeit einzeln abschaltbar', 'Designs über „Bearbeiten“ ausblenden und löschen', 'Quiz: Knopfleiste als Kapsel, Antwortkarten mit maßvoller Rundung', 'iPad: Kacheln als Raster, Leiste mittig, angenehme Zeilenlänge', 'Mac: Übersicht mittig begrenzt, runde Seitenleiste, Kacheln nie abgeschnitten', 'Einheitliche Knopfgrößen, Überschriften in der App-Schrift, freundlichere Hinweise bei leerem Stand'] },
