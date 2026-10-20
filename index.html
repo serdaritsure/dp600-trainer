@@ -3361,6 +3361,16 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
 .ans .mk, .ans.multi .mk { flex: 0 0 26px !important; width: 26px !important; height: 26px !important; min-width: 26px; aspect-ratio: 1; padding: 0 !important; box-sizing: border-box;
   border-radius: 50% !important; font-size: 12.5px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: -1px; }
 
+/* Markierungsmenü auf schmalen Bildschirmen: nur Farbkreise und Symbole */
+@media (max-width: 700px) {
+  .hl-bar { gap: 2px; padding: 5px; border-radius: 999px; }
+  .hl-bar .hl-t { display: none; }
+  .hl-bar button { width: 40px; height: 40px; padding: 0; justify-content: center; border-radius: 50%; }
+  .hl-bar .hl-sw { width: 22px; height: 22px; border-radius: 50%; }
+  .hl-bar .ico { width: 19px; height: 19px; }
+  .hl-bar .hl-del { color: var(--bad, #e5484d); }
+}
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3427,6 +3437,7 @@ html.has-news .tb-items:not(:has(.tb-item[href="#/settings"])) .tb-more .tb-ic::
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.26.2', d: '2026-10-20', items: ['Markierungsmenü auf dem iPhone kompakt: drei Farbkreise, Notiz-Symbol und Papierkorb', 'Langes Drücken auf eine Markierung öffnet das Menü zum Ändern oder Entfernen'] },
   { v: '1.26.1', d: '2026-10-20', items: ['Wissenscheck: Nummern der Antworten in exakt runden Kreisen'] },
   { v: '1.26', d: '2026-10-18', items: ['Seitenwechsel wählbar: Automatisch, Überblenden, Schieben oder Aus', 'Liquid Glass: eigener Regler für die Unschärfe, von klar bis milchig', 'Tipp-Rückmeldung: Knöpfe und Kacheln federn beim Antippen kurz nach (abschaltbar)', 'Roter Punkt am Einstellungs-Reiter bei neuen Funktionen; „Neuigkeiten anzeigen“ unter Über die App', 'Abstände getrennt einstellbar für Lernbereich und Listen', 'Akzentstärke: „Kräftig“ färbt mehr ein, neu „Leuchtend“ mit leichtem Schein'] },
   { v: '1.25.1', d: '2026-10-18', items: ['Akzentstärke: Option „Dezent“ entfernt (wählbar sind „Normal“ und „Kräftig“)'] },
@@ -9987,6 +9998,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   // Feine Linien-Icons (gleicher Stil wie die Seitenleiste) statt Emojis
   var ICONS = {
+    trash: '<path d="M4.5 6.5h15M9.5 6.5v-2a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6.5 6.5l1 13a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4l1-13M10.5 10.5v6M13.5 10.5v6"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     layers: '<path d="m12 3.5 8.5 4.5-8.5 4.5L3.5 8z"/><path d="m3.5 12 8.5 4.5 8.5-4.5M3.5 16l8.5 4.5 8.5-4.5"/>',
     tray: '<path d="M3.5 13.5 6 5h12l2.5 8.5v5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M3.5 13.5H8l1.5 2.5h5l1.5-2.5h4.5"/>',
@@ -12377,7 +12389,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   }
   var CTX_IC = {
     bookmark: '<path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4-6.5 4v-16a1 1 0 0 1 1-1z"/>', 'bookmark-off': '<path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4-6.5 4v-16a1 1 0 0 1 1-1z"/><path d="M4 4l16 16"/>',
-    notes: NAV_ICONS.notes, copy: '<rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>',
+    notes: NAV_ICONS.notes, trash: '<path d="M4.5 6.5h15M9.5 6.5v-2a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6.5 6.5l1 13a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4l1-13M10.5 10.5v6M13.5 10.5v6"/>', copy: '<rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>',
     pin: '<path d="M9 3.5h6l-1 5 3 3H7l3-3zM12 11.5v9"/>', learn: NAV_ICONS.learn, exam: NAV_ICONS.exam, check: '<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/>'
   };
   function closeCtx() {
@@ -12959,7 +12971,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     hlBar.addEventListener('mousedown', function (e) { e.preventDefault(); });
     hlBar.addEventListener('click', function (e) { var b = e.target.closest('[data-hl]'); if (b) onClick(b.dataset.hl); });
   }
-  function hlButtons() { var c = hlCfg(); return ['y', 'g', 'p'].map(function (k) { return '<button data-hl="' + k + '" title="Als „' + esc(c[k].n) + '“ markieren"><i class="hl-sw" style="background:var(--hl-' + k + ')"></i>' + esc(c[k].n) + '</button>'; }).join(''); }
+  function hlButtons() { var c = hlCfg(); return ['y', 'g', 'p'].map(function (k) { return '<button data-hl="' + k + '" title="Als „' + esc(c[k].n) + '“ markieren" aria-label="' + esc(c[k].n) + '"><i class="hl-sw" style="background:var(--hl-' + k + ')"></i><span class="hl-t">' + esc(c[k].n) + '</span></button>'; }).join(''); }
   // Neue Markierung: Text im Lernbereich auswählen → Farbe wählen
   function onSelect() {
     setTimeout(function () {
@@ -12967,8 +12979,11 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       var r = sel.getRangeAt(0), host = r.commonAncestorContainer.nodeType === 1 ? r.commonAncestorContainer : r.commonAncestorContainer.parentElement;
       var body = host && host.closest('.deep-body'); if (!body || host.closest('textarea')) return;
       var txt = sel.toString().replace(/\s+/g, ' ').trim(); if (txt.length < 3) return;
+      // Auswahl liegt auf einer vorhandenen Markierung (iPhone: langes Drücken) → Menü mit Papierkorb
+      var hit = Array.prototype.filter.call(body.querySelectorAll('mark.hl'), function (m) { return r.intersectsNode(m); })[0];
+      if (hit) { sel.removeAllRanges(); markMenu(hit); return; }
       var det = body.closest('details.deep'), mid = (RES.loc && RES.loc.hash.split('/')[2]) || curSub, secI = +det.id.replace('deep-', '');
-      showHlBar(r.getBoundingClientRect(), hlButtons() + '<button data-hl="note">' + ico('notes') + ' Notiz</button>', function (c) {
+      showHlBar(r.getBoundingClientRect(), hlButtons() + '<button data-hl="note" title="Notiz" aria-label="Notiz">' + ico('notes') + '<span class="hl-t">Notiz</span></button>', function (c) {
         var raw = sel.toString(), mk = { id: 'm' + Date.now().toString(36), sec: secI, text: raw.trim(), color: c === 'note' ? 'y' : c, at: Date.now() };
         (S.marks[mid] || (S.marks[mid] = [])).push(mk); save(); sel.removeAllRanges(); closeHlBar();
         wrapText(body, mk.text, mk);
@@ -12983,14 +12998,17 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // Bestehende Markierung anklicken → Farbe ändern, Notiz, entfernen
   document.addEventListener('click', function (e) {
     var el = e.target.closest && e.target.closest('mark.hl'); if (!el || !window.getSelection().isCollapsed) return;
+    markMenu(el);
+  });
+  function markMenu(el) {
     var mid = curSub, mk = (S.marks[mid] || []).filter(function (x) { return x.id === el.dataset.mark; })[0]; if (!mk) return;
-    showHlBar(el.getBoundingClientRect(), hlButtons() + '<button data-hl="note">' + ico('notes') + ' Notiz</button><button data-hl="del">Entfernen</button>', function (c) {
+    showHlBar(el.getBoundingClientRect(), hlButtons() + '<button data-hl="note" title="Notiz" aria-label="Notiz">' + ico('notes') + '<span class="hl-t">Notiz</span></button><button data-hl="del" class="hl-del" title="Markierung entfernen" aria-label="Entfernen">' + ico('trash') + '<span class="hl-t">Entfernen</span></button>', function (c) {
       closeHlBar();
       if (c === 'del') { mk.del = true; save(); document.querySelectorAll('mark[data-mark="' + mk.id + '"]').forEach(function (x) { x.replaceWith.apply(x, Array.prototype.slice.call(x.childNodes)); }); return; }
       if (c === 'note') { editMarkNote(mid, mk.id); return; }
       mk.color = c; save(); document.querySelectorAll('mark[data-mark="' + mk.id + '"]').forEach(function (x) { x.className = 'hl hl-' + c; });
     });
-  });
+  }
   function editMarkNote(mid, id) {
     var mk = (S.marks[mid] || []).filter(function (x) { return x.id === id; })[0]; if (!mk) return;
     var d = document.createElement('div'); d.className = 'ask-backdrop';
