@@ -3381,6 +3381,16 @@ html[data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-anim) .tb-bar::be
   -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); backdrop-filter: saturate(180%) blur(var(--glass-blur, 22px)); }
 html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-anim) .tb-bar::before { background: color-mix(in srgb, #000 var(--glass-a, 85%), transparent); }
 
+/* Darstellung: Vorschau verkleinert (alles im gleichen Verhältnis) */
+.look-prev { zoom: .72; max-width: 520px; margin: 0 auto; padding: 4px 0 10px; }
+.prof-row .set-l { flex: none !important; }
+/* Vorschau noch flacher: ohne Knopfzeile, knappere Kacheln */
+.look-prev { zoom: .64; gap: 8px; padding: 0 0 6px; }
+.look-prev .lp-row2 { display: none; }
+.look-prev .td-hero { padding: 10px 14px; }
+.look-prev .td-card { padding: 8px 14px; }
+.look-prev .tc-big { font-size: 22px; line-height: 1.1; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3447,6 +3457,7 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '1.26.4', d: '2026-10-20', items: ['Darstellung: Vorschau kleiner und flacher', 'Profile: Lücke zwischen Beschreibung und Eingabefeld entfernt'] },
   { v: '1.26.3', d: '2026-10-20', items: ['Untere Leiste mit demselben Glas-Effekt wie die runden Knöpfe daneben', 'Abrundung: drei Stufen Dezent, Standard und Weich; die bisherige Stufe „Weich“ ist der neue Standard', 'Oberfläche und Kachelstil zusammengefasst zur Einstellung „Kacheln“', 'Animationen und Lichteffekt beim Neigen jetzt unter Darstellung → Bewegung & Extras; eigene Seite „Bewegung“ entfällt', 'Schrift der Überschriften jetzt unter „Lesen“', 'Seitenwechsel: Automatisch oder Aus', 'Entfernt: Regler für die Unschärfe, Stil-Auswahl, Tipp-Rückmeldung, Farbton nach Tageszeit, allgemeine Abstände, Design „Hoher Kontrast“ (ersetzt durch den Schalter „Mehr Kontrast“)'] },
   { v: '1.26.2', d: '2026-10-20', items: ['Markierungsmenü auf dem iPhone kompakt: drei Farbkreise, Notiz-Symbol und Papierkorb', 'Langes Drücken auf eine Markierung öffnet das Menü zum Ändern oder Entfernen'] },
   { v: '1.26.1', d: '2026-10-20', items: ['Wissenscheck: Nummern der Antworten in exakt runden Kreisen'] },
