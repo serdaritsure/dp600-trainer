@@ -3400,6 +3400,52 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
 .deep-body ol { padding-left: 1.4em; }
 .deep-body pre.deep-code code { display: block; background: none !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important; color: inherit; font-size: inherit; white-space: pre; }
 
+/* ===== 2.0: Kurs hinzufügen ===== */
+.imp-wrap { max-width: 720px; }
+.imp-search { display: flex; align-items: center; gap: 10px; padding: 0 16px; min-height: 50px; border-radius: 999px; background: var(--surface); border: 1px solid var(--hairline-strong); margin-bottom: 14px; }
+.imp-search .ico { width: 20px; height: 20px; color: var(--text-3); }
+.imp-search input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: 400 16px var(--font); outline: none; padding: 12px 0; }
+.imp-res { display: grid; gap: 8px; margin-bottom: 26px; }
+.imp-hit { display: grid; gap: 3px; text-align: left; width: 100%; padding: 13px 16px; border-radius: calc(16px * var(--rf, 1)); border: 1px solid var(--hairline); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.imp-hit b { font-size: 15px; font-weight: 600; }
+.imp-hit small { color: var(--text-3); font-size: 12.5px; }
+.imp-hit:hover:not(:disabled) { border-color: var(--accent); }
+.imp-hit.has { opacity: .55; cursor: default; }
+.imp-pick { display: grid; gap: 3px; margin-bottom: 12px; }
+.imp-pick small { color: var(--text-3); }
+.imp-form { display: grid; gap: 16px; }
+.imp-f { display: grid; gap: 8px; }
+.imp-f > b { font-size: 13.5px; font-weight: 600; }
+.imp-f textarea { width: 100%; box-sizing: border-box; border-radius: calc(12px * var(--rf, 1)); border: 1px solid var(--hairline-strong); background: var(--surface-2); color: var(--text); font: 400 15px var(--font); padding: 10px 12px; resize: vertical; }
+.imp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.imp-chip { border: 1px solid var(--hairline-strong); background: var(--surface-2); color: var(--text); font: 500 13.5px var(--font); padding: 7px 13px; border-radius: 999px; cursor: pointer; min-height: 36px; }
+.imp-chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-text, var(--accent)); }
+.imp-actions { display: flex; gap: 8px; align-items: center; margin: 16px 0 30px; }
+.imp-actions > span { flex: 1; }
+.imp-run { display: grid; gap: 12px; }
+.imp-run-t { font-size: 17px; }
+.imp-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; font-size: 14.5px; }
+.imp-steps li { display: flex; align-items: center; gap: 10px; color: var(--text-3); }
+.imp-steps li i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--hairline-strong); flex: none; box-sizing: border-box; }
+.imp-steps li.ok { color: var(--text); } .imp-steps li.ok i { border-color: var(--ok); background: var(--ok); box-shadow: inset 0 0 0 3px var(--surface); }
+.imp-steps li.run { color: var(--text); } .imp-steps li.run i { border-color: var(--accent); border-top-color: transparent; animation: imp-spin .9s linear infinite; }
+@keyframes imp-spin { to { transform: rotate(360deg); } }
+.imp-bar { height: 6px; border-radius: 3px; background: var(--surface-3, var(--hairline)); overflow: hidden; }
+.imp-bar i { display: block; height: 100%; border-radius: 3px; background: var(--accent); transition: width .4s ease; }
+.imp-err { color: var(--bad); margin: 0; }
+.imp-own { display: grid; gap: 4px; }
+.imp-own-row { display: flex; align-items: center; gap: 10px; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--hairline); flex-wrap: wrap; }
+.imp-own-row span:first-child { display: grid; gap: 2px; min-width: 0; }
+.imp-own-row small { color: var(--text-3); font-size: 12.5px; }
+.imp-own-btns { display: flex; gap: 6px; }
+.btn.danger { background: var(--bad) !important; color: #fff !important; }
+.kc-note { margin-bottom: 14px; }
+.kc-q { display: grid; gap: 10px; }
+.kc-t { font-weight: 600; margin: 0; }
+.kc-opts { display: grid; gap: 8px; }
+.kc-opt { text-align: left; cursor: pointer; font: inherit; color: var(--text); }
+.kc-opt.sel { border-color: var(--accent) !important; background: var(--accent-soft) !important; }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3466,6 +3512,7 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.0', d: '2026-10-20', items: ['Neu: Kurse direkt in der App hinzufügen – Kurs von Microsoft Learn suchen, auswählen, fertig', 'Lernpfade, Module, vollständige Lerntexte, Begriffskarten und Prüfungsdomänen werden direkt von Microsoft Learn geladen', 'Wissenscheck-Fragen von Learn zum Durchdenken; Lösungen folgen in einem späteren Update', 'Optionaler Fragebogen (Ziel, Vorwissen, Wünsche) für die künftige erweiterte Stufe', 'Selbst hinzugefügte Kurse lassen sich ausblenden oder entfernen', 'Unfertig geladene Kurse laden beim nächsten Öffnen automatisch weiter'] },
   { v: '1.27', d: '2026-10-20', items: ['PL-300: Lerntexte vollständig von Microsoft Learn, in Originalreihenfolge mit Zwischenüberschriften', 'Code-Beispiele, Tabellen und Hinweise aus Learn werden jetzt mit angezeigt', 'Inhalte werden über die offizielle Schnittstelle von Microsoft Learn geholt und lassen sich gezielt aktualisieren'] },
   { v: '1.26.4', d: '2026-10-20', items: ['Darstellung: Vorschau kleiner und flacher', 'Profile: Lücke zwischen Beschreibung und Eingabefeld entfernt'] },
   { v: '1.26.3', d: '2026-10-20', items: ['Untere Leiste mit demselben Glas-Effekt wie die runden Knöpfe daneben', 'Abrundung: drei Stufen Dezent, Standard und Weich; die bisherige Stufe „Weich“ ist der neue Standard', 'Oberfläche und Kachelstil zusammengefasst zur Einstellung „Kacheln“', 'Animationen und Lichteffekt beim Neigen jetzt unter Darstellung → Bewegung & Extras; eigene Seite „Bewegung“ entfällt', 'Schrift der Überschriften jetzt unter „Lesen“', 'Seitenwechsel: Automatisch oder Aus', 'Entfernt: Regler für die Unschärfe, Stil-Auswahl, Tipp-Rückmeldung, Farbton nach Tageszeit, allgemeine Abstände, Design „Hoher Kontrast“ (ersetzt durch den Schalter „Mehr Kontrast“)'] },
@@ -9968,6 +10015,384 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
 </script>
 <script>
 /* ==========================================================================
+   Lernwerk · Kurse direkt in der App anlegen (ohne Rechner, ohne KI)
+   - Struktur aus der Learn-Katalog-API, Texte über den Learn MCP Server
+     (beide erlauben Aufrufe aus dem Browser)
+   - Gespeichert in IndexedDB („lernwerk“ → „courses“); beim Start werden die
+     Kurse registriert, bevor app.js startet (window.LW_WAIT)
+   - Offene Module werden beim nächsten Start weitergeladen (LWImport.resume)
+   ========================================================================== */
+(function () {
+  'use strict';
+  var D = window.DP600 = window.DP600 || {};
+  var CAT = 'https://learn.microsoft.com/api/catalog/';
+  var MCP = 'https://learn.microsoft.com/api/mcp';
+
+  /* ---------------- IndexedDB ---------------- */
+  function db() {
+    return new Promise(function (ok, bad) {
+      if (!window.indexedDB) return bad(new Error('kein IndexedDB'));
+      var r = indexedDB.open('lernwerk', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('courses', { keyPath: 'id' }); };
+      r.onsuccess = function () { ok(r.result); };
+      r.onerror = function () { bad(r.error); };
+    });
+  }
+  function tx(mode, fn) {
+    return db().then(function (d) {
+      return new Promise(function (ok, bad) {
+        var t = d.transaction('courses', mode), st = t.objectStore('courses'), res = fn(st);
+        t.oncomplete = function () { ok(res && res.result !== undefined ? res.result : res); };
+        t.onerror = function () { bad(t.error); };
+      });
+    });
+  }
+  var store = {
+    all: function () { return tx('readonly', function (s) { return s.getAll(); }); },
+    get: function (id) { return tx('readonly', function (s) { return s.get(id); }); },
+    put: function (rec) { return tx('readwrite', function (s) { s.put(rec); }); },
+    del: function (id) { return tx('readwrite', function (s) { s.delete(id); }); }
+  };
+
+  /* ---------------- Start: gespeicherte Kurse registrieren ---------------- */
+  function register(rec) {
+    D.courses = D.courses || [];
+    D.learn = D.learn || { paths: [], modules: {} };
+    if (D.courses.some(function (c) { return c.id === rec.id; })) return;
+    var c = JSON.parse(JSON.stringify(rec.course));
+    c.userAdded = true; c.hidden = !!rec.hidden; c.pending = (rec.pending || []).length;
+    D.courses.push(c);
+    Object.keys(rec.learn || {}).forEach(function (k) { D.learn.modules[k] = rec.learn[k]; });
+    (rec.modules || []).forEach(function (m) { if (D.addModule) D.addModule(m); });
+  }
+  window.LW_WAIT = function (start) {
+    var done = false, go = function () { if (!done) { done = true; start(); } };
+    setTimeout(go, 2500);   // Sicherheitsnetz: App startet auch, wenn IndexedDB hängt
+    store.all().then(function (list) { (list || []).forEach(register); go(); }, go);
+  };
+
+  /* ---------------- Netz ---------------- */
+  function getJSON(url) {
+    return fetch(url).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  }
+  function catalog(type, uids) {
+    var out = [], chunks = [];
+    for (var i = 0; i < uids.length; i += 40) chunks.push(uids.slice(i, i + 40));
+    return chunks.reduce(function (p, ch) {
+      return p.then(function () {
+        return getJSON(CAT + '?locale=de-de&type=' + type + '&uid=' + ch.map(encodeURIComponent).join(',')).then(function (d) { out = out.concat(d[type] || []); });
+      });
+    }, Promise.resolve()).then(function () { return out; });
+  }
+  var mcpTool = null;
+  function mcpPost(body) {
+    return fetch(MCP, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream' }, body: JSON.stringify(body) })
+      .then(function (r) { if (!r.ok) throw new Error('MCP HTTP ' + r.status); return r.text(); })
+      .then(function (t) {
+        if (/^\s*event:|^\s*data:/m.test(t)) { var d = t.split('\n').filter(function (l) { return l.indexOf('data:') === 0; }); t = d.length ? d[d.length - 1].slice(5) : '{}'; }
+        return JSON.parse(t || '{}');
+      });
+  }
+  function fetchMarkdown(url, tries) {
+    tries = tries == null ? 3 : tries;
+    var p = mcpTool ? Promise.resolve(mcpTool) : mcpPost({ jsonrpc: '2.0', id: 1, method: 'tools/list' }).then(function (r) {
+      var t = ((r.result || {}).tools || []).map(function (x) { return x.name; }).filter(function (n) { return /fetch/.test(n); })[0];
+      if (!t) throw new Error('MCP ohne Abruf-Werkzeug'); mcpTool = t; return t;
+    });
+    return p.then(function (tool) { return mcpPost({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: tool, arguments: { url: url } } }); })
+      .then(function (r) {
+        if (r.error || (r.result || {}).isError) throw new Error('MCP-Fehler');
+        var text = ((r.result || {}).content || []).filter(function (c) { return c.type === 'text'; }).map(function (c) { return c.text; }).join('\n').trim();
+        if (text.length < 60) throw new Error('leer');
+        return text;
+      })
+      .catch(function (e) {
+        mcpTool = null;
+        if (tries <= 1) throw e;
+        return new Promise(function (ok) { setTimeout(ok, 1500 * (4 - tries)); }).then(function () { return fetchMarkdown(url, tries - 1); });
+      });
+  }
+
+  /* ---------------- Markdown → Blöcke (wie tools/learn_mcp.py) ---------------- */
+  var NOTE = { note: 'Hinweis', tip: 'Tipp', important: 'Wichtig', warning: 'Warnung', caution: 'Achtung', hinweis: 'Hinweis', tipp: 'Tipp', wichtig: 'Wichtig', warnung: 'Warnung', achtung: 'Achtung' };
+  var ta = document.createElement('textarea');
+  function unesc(s) { ta.innerHTML = s; return ta.value; }
+  function inline(s) {
+    s = unesc(s).replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[\s*\]\([^)]*\)/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/\*\*\s*\*\*/g, '').replace(/(^|[^*\w])\*(?!\*)([^*\n]+?)\*(?![*\w])/g, '$1$2');
+    return s.replace(/\s+/g, ' ').trim();
+  }
+  function stripZones(md) {
+    var out = [], skip = false;
+    md.split('\n').forEach(function (l) {
+      var m = l.match(/^\s*:::\s*zone\s+pivot="?([\w-]+)"?/);
+      if (m) { skip = m[1] !== 'text'; return; }
+      if (/^\s*:::\s*zone-end/.test(l)) { skip = false; return; }
+      if (!skip) out.push(l);
+    });
+    return out.join('\n');
+  }
+  function toBlocks(md) {
+    var L = stripZones(md.replace(/\r/g, '')).split('\n'), B = [], i = 0, para = [], firstH1 = true, m;
+    function flush() { if (para.length) { var t = inline(para.join(' ')); if (t.length > 2) B.push(['p', t]); para = []; } }
+    var LI = /^(\s*)([-*+]|\d+[.)])\s+(.*)/;
+    while (i < L.length) {
+      var ln = L[i].replace(/\s+$/, ''), s = ln.trim();
+      if (!s) { flush(); i++; continue; }
+      if (s.indexOf('```') === 0) {
+        flush(); var lang = s.slice(3).trim(), code = []; i++;
+        while (i < L.length && L[i].trim().indexOf('```') !== 0) code.push(L[i++]);
+        i++; if (code.join('').trim()) B.push(['code', { lang: lang, text: unesc(code.join('\n').replace(/^\n+|\n+$/g, '')) }]);
+        continue;
+      }
+      if ((m = s.match(/^(#{1,4})\s+(.*)/))) { flush(); if (m[1] === '#' && firstH1) firstH1 = false; else B.push(['h', inline(m[2])]); i++; continue; }
+      if (/^(Abgeschlossen|Completed)$/.test(s) || /^-\s*\d+\s*(Minuten|minutes)$/.test(s)) { i++; continue; }
+      var nk = NOTE[s.toLowerCase().replace(/:$/, '')];
+      if (nk && i + 1 < L.length) {
+        flush(); i++; var body = [];
+        while (i < L.length && !L[i].trim()) i++;
+        while (i < L.length && L[i].trim()) body.push(L[i++].trim());
+        var nt = inline(body.join(' '));
+        if (nt && !/Registerkarte|Text und Bilder|Text and images/.test(nt)) B.push(['note', { kind: nk, text: nt }]);
+        continue;
+      }
+      if (s[0] === '|' && i + 1 < L.length && /^\s*\|?\s*:?-{2,}/.test(L[i + 1])) {
+        flush(); var row = function (l) { return l.trim().replace(/^\||\|$/g, '').split('|').map(inline); };
+        var head = row(s), rows = []; i += 2;
+        while (i < L.length && L[i].trim()[0] === '|') rows.push(row(L[i++]));
+        B.push(['table', { headers: head, rows: rows }]); continue;
+      }
+      if ((m = ln.match(LI))) {
+        flush(); var ordered = /\d/.test(m[2][0]), items = [];
+        while (i < L.length) {
+          m = L[i].match(LI);
+          if (m) { var t = inline(m[3]); if (m[1].length >= 2 && items.length) items[items.length - 1] += ' – ' + t; else if (t) items.push(t); i++; }
+          else if (L[i].trim() && /^ {2}/.test(L[i]) && items.length) { items[items.length - 1] += ' ' + inline(L[i]); i++; }
+          else break;
+        }
+        if (items.length) B.push([ordered ? 'ol' : 'ul', items]);
+        continue;
+      }
+      if (s.indexOf('![') === 0) { i++; continue; }
+      para.push(s); i++;
+    }
+    flush();
+    return B;
+  }
+
+  // Wissenscheck-Seite: „1.“ → Frage → Antwortmöglichkeiten (die Lösung liefert Learn erst nach dem Abschicken)
+  function parseCheck(md) {
+    var L = stripZones(md.replace(/\r/g, '')).split('\n').map(function (l) { return l.trim(); }), out = [], cur = null;
+    L.forEach(function (l) {
+      if (!l || /^#|^Abgeschlossen$|^Completed$|^-\s*\d+\s*(Minuten|minutes)$/.test(l)) return;
+      if (/^\d+\.$/.test(l)) { cur = { q: '', opts: [] }; out.push(cur); return; }
+      if (!cur) return;
+      var t = inline(l); if (!t) return;
+      if (!cur.q) cur.q = t; else cur.opts.push(t);
+    });
+    return out.filter(function (x) { return x.q && x.opts.length >= 2 && x.opts.length <= 8; });
+  }
+
+  /* ---------------- Kurs-Bausteine ---------------- */
+  var coursesCache = null;
+  function listCourses() {
+    if (coursesCache) return Promise.resolve(coursesCache);
+    return getJSON(CAT + '?locale=de-de&type=courses').then(function (d) {
+      coursesCache = (d.courses || []).filter(function (c) { return (c.study_guide || []).some(function (x) { return x.type === 'learningPath'; }); })
+        .map(function (c) {
+          var code = (c.course_number || c.uid.split('.').pop()).replace(/T\d\d.*$/i, '').toUpperCase();
+          return { uid: c.uid, code: code, id: code.toLowerCase().replace(/[^a-z0-9]/g, ''), title: c.title, hours: c.duration_in_hours, de: (c.locales || []).indexOf('de') >= 0,
+            paths: c.study_guide.filter(function (x) { return x.type === 'learningPath'; }).map(function (x) { return x.uid; }), modified: c.last_modified };
+        });
+      return coursesCache;
+    });
+  }
+  function search(q) {
+    q = (q || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    return listCourses().then(function (all) {
+      if (!q) return all.slice(0, 0);
+      var qq = q.replace(/[-\s]/g, '');
+      return all.filter(function (c) { return (c.code.toLowerCase().replace(/-/g, '') + ' ' + c.title.toLowerCase()).indexOf(q) >= 0 || c.code.toLowerCase().replace(/-/g, '').indexOf(qq) >= 0; })
+        .sort(function (a, b) { return (b.code.toLowerCase().replace(/-/g, '').indexOf(qq) === 0) - (a.code.toLowerCase().replace(/-/g, '').indexOf(qq) === 0); }).slice(0, 12);
+    });
+  }
+
+  var STEMS = { vorbereit: ['vorbereit', 'abruf', 'bereinig', 'transform', 'laden', 'aufnahme', 'erfass', 'prepare', 'ingest'], model: ['model', 'dax', 'semantisch'],
+    visual: ['visual', 'bericht', 'dashboard', 'report', 'analysier'], verwalt: ['verwalt', 'sicher', 'arbeitsbereich', 'bereitstell', 'govern', 'manage', 'secure'],
+    implement: ['implement', 'lakehouse', 'warehouse', 'einricht'], ueberwach: ['überwach', 'optimier', 'monitor', 'leistung'] };
+  var COLORS = ['var(--dom-prep)', 'var(--dom-model)', 'var(--dom-maintain)', 'var(--dom-4)', 'var(--dom-4)'];
+  function studyGuideDomains(code) {
+    return fetchMarkdown('https://learn.microsoft.com/de-de/credentials/certifications/resources/study-guides/' + code.toLowerCase(), 2).then(function (md) {
+      var i = md.search(/auf einen Blick|at a glance/i), part = i >= 0 ? md.slice(i, i + 1500) : md, doms = {};
+      (part.match(/^\s*-\s+.+\(\d+\s*[–-]\s*\d+\s*%\)\s*$/gm) || []).forEach(function (l) {
+        var m = l.replace(/^\s*-\s+/, '').match(/(.+?)\s*\((\d+)\s*[–-]\s*(\d+)\s*%\)/); if (!m) return;
+        var key = m[1].toLowerCase().replace(/[^a-z]/g, '').slice(0, 10) || 'd' + (Object.keys(doms).length + 1);
+        if (!doms[key]) doms[key] = { label: m[1].trim(), range: m[2] + '–' + m[3] + ' %', share: (+m[2] + +m[3]) / 200, color: COLORS[Object.keys(doms).length % COLORS.length] };
+      });
+      var tot = Object.keys(doms).reduce(function (a, k) { return a + doms[k].share; }, 0) || 1;
+      Object.keys(doms).forEach(function (k) { doms[k].share = Math.round(doms[k].share / tot * 1000) / 1000; });
+      return doms;
+    }).catch(function () { return {}; });
+  }
+  function pathDomain(title, doms) {
+    var keys = Object.keys(doms); if (!keys.length) return 'all';
+    var score = function (k) {
+      var lab = doms[k].label.toLowerCase(), words = [];
+      Object.keys(STEMS).forEach(function (st) { if (lab.indexOf(st) >= 0) words = words.concat(STEMS[st]); });
+      words = words.concat(lab.match(/[a-zäöü]{5,}/g) || []);
+      return words.filter(function (w, i, a) { return a.indexOf(w) === i && title.toLowerCase().indexOf(w.slice(0, 6)) >= 0; }).length;
+    };
+    var best = keys.slice().sort(function (a, b) { return score(b) - score(a); })[0];
+    return score(best) ? best : keys[0];
+  }
+
+  // Struktur: Lernpfade → Module → Units (Adressen aus der Modulseite)
+  function buildStructure(c, onStep) {
+    var loc = c.de ? 'de-de' : 'en-us';
+    onStep && onStep('struct');
+    return catalog('learningPaths', c.paths).then(function (lps) {
+      var byUid = {}; lps.forEach(function (p) { byUid[p.uid] = p; });
+      var paths = c.paths.map(function (u) { return byUid[u]; }).filter(Boolean);
+      var modUids = []; paths.forEach(function (p) { (p.modules || []).forEach(function (m) { if (modUids.indexOf(m) < 0) modUids.push(m); }); });
+      return catalog('modules', modUids).then(function (mods) {
+        var mBy = {}; mods.forEach(function (m) { mBy[m.uid] = m; });
+        var nr = 0, seen = {}, course = { id: c.id, title: c.title.replace(/^(Implementieren|Entwerfen|Verwalten|Erstellen)\s+von\s+/i, '').slice(0, 60), learnCourse: c.uid, locale: loc,
+          exam: { code: c.code, passScore: 700, domains: {} }, paths: [] }, learn = {};
+        paths.forEach(function (p, pi) {
+          var entry = { nr: pi + 1, title: p.title.replace(/\s*-\s*Training$/, ''), learnPath: p.uid, modules: [] };
+          (p.modules || []).forEach(function (mu) {
+            var m = mBy[mu]; if (!m || seen[mu]) return; seen[mu] = 1; nr++;
+            var title = m.title.replace(/\s*-\s*Training$/, '');
+            entry.modules.push([nr, title, [mu]]);
+            learn[mu] = { title: title, url: m.url.split('?')[0].replace('/de-de/', '/' + loc + '/').replace('/en-us/', '/' + loc + '/'), summary: (m.summary || '').trim(), minutes: m.duration_in_minutes,
+              units: [], modified: m.last_modified, unitUids: m.units || [] };
+          });
+          if (entry.modules.length) course.paths.push(entry);
+        });
+        return { course: course, learn: learn };
+      });
+    });
+  }
+
+  function unitsFor(lm) {
+    // Unit-Adressen stehen als relative Links auf der Modulseite; Titel aus dem Katalog
+    return Promise.all([fetchMarkdown(lm.url, 2).catch(function () { return ''; }), catalog('units', lm.unitUids).catch(function () { return []; })]).then(function (r) {
+      var slugs = []; (r[0].match(/\]\(([a-z0-9][a-z0-9-]*)\/?\)/g) || []).forEach(function (x) { var s = x.slice(2, -1).replace(/\/$/, ''); if (slugs.indexOf(s) < 0) slugs.push(s); });
+      var titles = {}; r[1].forEach(function (u) { titles[u.uid] = u; });
+      var cat = lm.unitUids.map(function (u) { return titles[u] || {}; });
+      lm.units = slugs.map(function (s, i) { var u = cat.length === slugs.length ? cat[i] : {}; return { t: u.title || s.replace(/^\d+[a-z]?-/, '').replace(/-/g, ' '), u: lm.url.replace(/\/?$/, '/') + s, min: u.duration_in_minutes }; });
+      return lm.units;
+    });
+  }
+
+  function legacy(b) {
+    return { p: b.filter(function (x) { return x[0] === 'p' || x[0] === 'h'; }).map(function (x) { return x[0] === 'h' ? '**' + x[1] + '**' : x[1]; }),
+      list: [].concat.apply([], b.filter(function (x) { return x[0] === 'ul' || x[0] === 'ol'; }).map(function (x) { return x[1]; })) };
+  }
+  function buildModule(rec, entry, dom) {
+    var nr = entry[0], title = entry[1], uid = entry[2][0], lm = rec.learn[uid], mid = rec.id + '-m' + nr;
+    return unitsFor(lm).then(function (units) {
+      var deep = [], terms = {}, objectives = [], hasCheck = false, kc = [];
+      return units.reduce(function (p, u, i) {
+        return p.then(function () {
+          var slug = u.u.replace(/\/$/, '').split('/').pop();
+          if (/(knowledge-)?check$/.test(slug)) {
+            hasCheck = u.u;
+            return fetchMarkdown(u.u).then(function (md) { kc = parseCheck(md); }).catch(function () {});
+          }
+          if (/(summary|exercise|lab)/.test(slug)) return;
+          return fetchMarkdown(u.u).then(function (md) {
+            var b = toBlocks(md); if (!b.length) return;
+            var lg = legacy(b);
+            if (/introduction|einf/.test(slug) && !objectives.length) objectives = lg.list.slice(0, 6);
+            deep.push({ t: u.t, unit: i + 1, b: b, p: lg.p, list: lg.list.length ? lg.list : undefined, src: u.u });
+            b.filter(function (x) { return x[0] === 'p'; }).forEach(function (x) {
+              var plain = x[1].replace(/\*\*/g, '');
+              (x[1].match(/\*\*([^*]{3,40})\*\*/g) || []).forEach(function (tm) {
+                var term = tm.slice(2, -2).replace(/^[\s:.,]+|[\s:.,]+$/g, ''), pos = plain.indexOf(term);
+                var re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*(?:\\([^)]*\\)\\s*)?(:|ist |sind |bezeichnet|beschreibt|ermöglicht|steht für|wird |is |are |provides )');
+                if (pos >= 0 && pos < 60 && re.test(plain) && !Object.keys(terms).some(function (k) { return k.toLowerCase() === term.toLowerCase(); }) && Object.keys(terms).length < 8 && plain.length < 420) terms[term] = plain;
+              });
+            });
+          }).catch(function () {});
+        });
+      }, Promise.resolve()).then(function () {
+        var cards = Object.keys(terms).slice(0, 6).map(function (k) { return { front: k, back: terms[k] }; }), have = cards.map(function (c) { return c.front.toLowerCase(); });
+        deep.forEach(function (d) {
+          if (cards.length >= 5) return;
+          var text = (d.p || []).filter(function (p) { return p.indexOf('**') !== 0 && p.length > 60; })[0];
+          if (!text || have.indexOf(d.t.toLowerCase()) >= 0 || /einführung|introduction|zusammenfassung|summary/i.test(d.t)) return;
+          var s = text.replace(/\*\*/g, '').split(/(?<=[.!?])\s+/);
+          cards.push({ front: d.t, back: (s[0].length > 90 || s.length < 2 ? s[0] : s[0] + ' ' + s[1]).slice(0, 300) });
+        });
+        return {
+          id: mid, nr: nr, path: rec.id + '-lp' + rec.course.paths.filter(function (p) { return p.modules.some(function (x) { return x[0] === nr; }); })[0].nr, domain: dom, source: 'learn',
+          title: title, short: title.length < 46 ? title : title.slice(0, 44).replace(/\s+\S*$/, '') + ' …', url: lm.url, learnModified: lm.modified,
+          summary: { lead: lm.summary || title, points: objectives.length ? objectives : deep.map(function (d) { return d.t; }).slice(0, 5) },
+          deep: deep, flashcards: cards, glossary: Object.keys(terms).slice(0, 8).map(function (k) { return { term: k, def: terms[k] }; }), quiz: [], kc: kc.length ? kc : undefined, kcUrl: hasCheck || undefined
+        };
+      });
+    });
+  }
+
+  /* ---------------- Ablauf ---------------- */
+  var running = {};
+  // Lädt offene Module eines Kurses nach und nach (3 gleichzeitig), speichert nach jedem Modul
+  function work(rec, onProgress) {
+    if (running[rec.id]) return running[rec.id];
+    var total = rec.course.paths.reduce(function (a, p) { return a + p.modules.length; }, 0);
+    var pathDom = {}; rec.course.paths.forEach(function (p) { pathDom[p.nr] = pathDomain(p.title, rec.course.exam.domains || {}); });
+    var queue = (rec.pending || []).slice(), active = 0;
+    var report = function () { onProgress && onProgress({ done: total - rec.pending.length, total: total, id: rec.id }); };
+    report();
+    running[rec.id] = new Promise(function (ok) {
+      var next = function () {
+        if (!queue.length && !active) { delete running[rec.id]; ok(rec); return; }
+        while (active < 3 && queue.length) {
+          (function (nr) {
+            active++;
+            var p = rec.course.paths.filter(function (x) { return x.modules.some(function (e) { return e[0] === nr; }); })[0], entry = p.modules.filter(function (e) { return e[0] === nr; })[0];
+            buildModule(rec, entry, pathDom[p.nr]).then(function (m) {
+              rec.modules = (rec.modules || []).filter(function (x) { return x.id !== m.id; }).concat([m]);
+              rec.pending = rec.pending.filter(function (x) { return x !== nr; });
+              return store.put(rec);
+            }).catch(function () {}).then(function () { active--; report(); next(); });
+          })(queue.shift());
+        }
+      };
+      next();
+    });
+    return running[rec.id];
+  }
+
+  function add(c, wishes, onProgress) {
+    var rec = { id: c.id, added: Date.now(), wishes: wishes || null, hidden: false, modules: [], pending: [] };
+    return buildStructure(c).then(function (s) {
+      rec.course = s.course; rec.learn = s.learn;
+      onProgress && onProgress({ step: 'domains', id: rec.id });
+      return studyGuideDomains(c.code);
+    }).then(function (doms) {
+      if (Object.keys(doms).length) rec.course.exam.domains = doms;
+      rec.pending = [].concat.apply([], rec.course.paths.map(function (p) { return p.modules.map(function (e) { return e[0]; }); }));
+      return store.put(rec);
+    }).then(function () { work(rec, onProgress); return rec; });
+  }
+
+  // Beim Start: unfertige Kurse weiterladen
+  function resume(onProgress) {
+    return store.all().then(function (list) {
+      (list || []).filter(function (r) { return r.pending && r.pending.length && !r.hidden; }).forEach(function (r) { work(r, onProgress); });
+    }).catch(function () {});
+  }
+  function setHidden(id, hidden) { return store.get(id).then(function (r) { if (r) { r.hidden = hidden; return store.put(r); } }); }
+  function remove(id) { return store.del(id); }
+
+  window.LWImport = { search: search, add: add, resume: resume, setHidden: setHidden, remove: remove, isRunning: function (id) { return !!running[id]; }, toBlocks: toBlocks };
+})();
+
+</script>
+<script>
+/* ==========================================================================
    DP-600 Lern- & Quiz-Trainer · Render-Engine
    Eine einzige Engine rendert alle Lernpfade/Module aus den Datendateien:
    - Hash-Router (läuft per file:// ohne Webserver)
@@ -9978,7 +10403,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
    - Prüfungssimulator (Study-Guide-Gewichtung, Fallstudien, Timer, Markieren, 0–1000)
    - Fortschritt in localStorage inkl. Export/Import/Reset
    ========================================================================== */
-(function () {
+window.LW_START = function () {
   'use strict';
 
   var D = window.DP600;
@@ -9992,7 +10417,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // Mehrere Kurse: DP-600 aus data/course.js, weitere aus data/courses.js (angelegt von tools/import_path.py).
   // Es ist immer genau ein Kurs aktiv; ein Wechsel lädt die App im neuen Kurs neu (eigener Fortschritt je Kurs).
   var COURSES = [Object.assign({ id: 'dp600', title: 'Fabric Analytics Engineer', prefix: '' }, D.course || { exam: {}, paths: [] })]
-    .concat((D.courses || []).map(function (c) { return Object.assign({ prefix: c.id + '-' }, c); }));
+    .concat((D.courses || []).filter(function (c) { return !c.hidden || c.id === lsGet('lw.course'); }).map(function (c) { return Object.assign({ prefix: c.id + '-' }, c); }));
   COURSES.forEach(function (c) {
     c.exam = c.exam || {};
     if (!c.exam.code) c.exam.code = c.id.toUpperCase();
@@ -11195,7 +11620,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function viewCourses() {
     app.innerHTML = '<div class="container"><div class="page-head"><h1>Meine Kurse</h1><div class="sub">Wählen Sie einen Kurs – Übersicht, Lernen, Prüfung und Fehler beziehen sich dann auf ihn.</div></div>' +
       '<div class="crs-list">' + COURSES.map(function (c) { return courseCard(c, true); }).join('') + '</div>' +
-      '<a class="home-more" href="#/import"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.import + '</svg><span><b>Kurs hinzufügen</b><small>Jeden Kurs oder Lernpfad von Microsoft Learn per Link übernehmen</small></span><span class="ni-go" aria-hidden="true">›</span></a></div>';
+      '<a class="home-more" href="#/import"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.import + '</svg><span><b>Kurs hinzufügen</b><small>Kurs von Microsoft Learn suchen und übernehmen</small></span><span class="ni-go" aria-hidden="true">›</span></a></div>';
   }
   var csSheet = document.createElement('div'); csSheet.className = 'cs-sheet'; csSheet.setAttribute('role', 'dialog'); csSheet.setAttribute('aria-label', 'Kurs wechseln');
   var csScrim = document.createElement('div'); csScrim.className = 'cs-scrim';
@@ -11639,6 +12064,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
     else if (tab === 'quiz') {
       var rq = quizResumable(function (x) { return x.kind === 'module' && x.moduleId === mid; });
       if (rq) restoreQuiz(body, rq);
+      else if (!(m.quiz || []).length && m.kc) renderKcPreview(body, m);
       else startQuiz(body, (m.quiz || []).map(function (q) { return q.id; }), { kind: 'module', moduleId: mid, title: 'Wissenscheck M' + m.nr });
     }
     else renderLearn(body, m, c);
@@ -11715,7 +12141,7 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
         '<p class="card-sub">Erst selbst beantworten, dann zum Umdrehen klicken.</p><div class="flashcards" id="fcGrid"></div></section>';
     }
     if (LAB_FOR[m.id]) h += '<div class="lab-hint"><div class="eyebrow">Interaktives Labor</div>' + labCard(LAB_FOR[m.id]) + '</div>';
-    h += '<div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:220px"><b>Bereit für den Wissenscheck?</b><div class="muted small">' + (m.quiz || []).length + ' szenariobasierte Fragen mit Begründung je Antwortoption.</div></div>' +
+    h += '<div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:220px"><b>Bereit für den Wissenscheck?</b><div class="muted small">' + ((m.quiz || []).length ? (m.quiz || []).length + ' szenariobasierte Fragen mit Begründung je Antwortoption.' : m.kc ? m.kc.length + ' Fragen aus Microsoft Learn – die Lösung prüfen Sie dort.' : 'Für dieses Modul gibt es noch keine Fragen.') + '</div></div>' +
       '<a class="btn" href="#/module/' + m.id + '/quiz">Wissenscheck starten ›</a></div>';
     var rdl = S.read[m.id] || [];
     var toc = '<aside class="mod-toc" aria-label="Inhalt dieses Moduls"><div class="toc-h">Inhalt</div><ol>' + sec.map(function (x) {
@@ -12744,65 +13170,120 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
       ta.remove();
     }
   }
-  function viewImport() {
-    // Bei Aufruf per file:// kennt der Browser den Projektordner → fertiger cd-Befehl
-    var folder = location.protocol === 'file:' ? decodeURIComponent(location.pathname.replace(/\/[^/]*$/, '')) : '';
-    var withContent = ALL_MIDS.filter(function (m) { return MODS[m]; }).length;
-    var h = '<div class="container"><div class="page-head"><div class="eyebrow">Erweitern ohne Programmierkenntnisse</div><h1>Kurs hinzufügen</h1>' +
-      '<div class="sub">Jeder Kurs von Microsoft Learn lässt sich mit einem einzigen Befehl übernehmen: Lernpfade, Module und Links, dazu die Lesetexte jeder Unit, Fachbegriffe als Karteikarten, die offiziellen Wissenscheck-Fragen mit Lösung und die Prüfungsdomänen aus dem Study Guide. Ganz ohne KI – das verbraucht keine Claude-Tokens.</div></div>' +
-      '<div class="grid c3" style="margin-bottom:20px">' + stat(COURSE.length, 'Lernpfade in der App', true) + stat(ALL_MIDS.length, 'Module (Struktur)') + stat(withContent, 'Module mit eigenen Lerninhalten') + '</div>' +
-
-      '<section class="card"><h2><span class="tag info">Schritt 1</span> Link auf Microsoft Learn kopieren</h2>' +
-      '<p class="card-sub">Öffnen Sie den gewünschten <b>Lernpfad</b> (Adresse enthält <code>/training/paths/</code>) oder <b>Kurs</b> (<code>/training/courses/</code> – importiert alle Lernpfade des Kurses) und kopieren Sie die Adresse aus dem Browser.</p>' +
-      '<input class="search-big" id="impUrl" type="url" placeholder="https://learn.microsoft.com/de-de/training/paths/…">' +
-      '<p class="muted small" id="impHint" style="margin-top:10px"></p><label class="switch" style="margin-top:12px"><input type="checkbox" id="impDry"> Erst Probelauf (zeigt nur an, was hinzukäme – speichert nichts)</label></section>' +
-
-      '<section class="card"><h2><span class="tag info">Schritt 2</span> Befehl im Terminal ausführen</h2>' +
-      '<p class="card-sub">Mac: <b>Terminal</b> öffnen (Spotlight ⌘ + Leertaste → „Terminal"), den Befehl einfügen und mit Enter bestätigen. Windows: <b>Eingabeaufforderung</b> und <code>python</code> statt <code>python3</code>.</p>' +
-      '<div class="code-box"><div class="code-bar"><span><span class="dots"><i></i><i></i><i></i></span>Terminal</span><button class="copy" id="impCopy">Kopieren</button></div><pre class="code" id="impCmd"></pre></div>' +
-      (folder ? '' : '<p class="muted small" style="margin-top:10px">Hinweis: Ersetzen Sie <code>&lt;Ordner&gt;</code> durch den Pfad zum Ordner <code>Dp600_Lernapp</code> (im Finder: Ordner mit gedrückter ⌥-Taste rechts anklicken → „… als Pfadname kopieren").</p>') +
-      '<ul class="code-notes"><li>Das Skript zeigt jeden gefundenen Lernpfad und jedes neue Modul an.</li><li>Module, die bereits in der App sind, werden automatisch übersprungen.</li><li>Bei einem Kurs-Link folgen Lesetexte, Karteikarten und Wissenscheck-Fragen automatisch – das dauert je nach Kurs 5–15 Minuten.</li><li>Voraussetzung: Python 3 (auf dem Mac vorinstalliert bzw. über die Entwicklertools) und Internetzugang.</li></ul></section>' +
-
-      '<section class="card"><h2><span class="tag info">Schritt 3</span> Seite neu laden</h2>' +
-      '<p class="card-sub">Nach dem Import diese Seite neu laden (⌘ R). Ein neuer Kurs erscheint unter „Meine Kurse“ und im Kurs-Schalter oben – mit Lesetexten, Karteikarten, Wissenschecks, eigener Prüfungssimulation und eigenem Fortschritt.</p>' +
-      '<div class="actions" style="margin-top:0"><button class="btn sec" data-imp="reload">Jetzt neu laden</button></div></section>' +
-
-      '<section class="card"><h2><span class="tag">Optional</span> Mit KI vertiefen</h2>' +
-      '<p class="card-sub">Was der Import nicht leisten kann – eigene Szenario-Fragen im Prüfungsstil, Prüfungsfallen, Code-Beispiele und Entscheidungsbäume – schreibt Claude auf Wunsch für einzelne Module. Kopieren Sie dafür einen dieser Aufträge in Claude Code (Modulnummern anpassen):</p>' +
-      '<div class="grid c2">' +
-      impPrompt('Kompakt', '≈ 25–40k Tokens pro Modul', 'Ergänze Lerninhalte für M17 im Kompakt-Format: 3 Vertiefungsabschnitte, 4 Karteikarten, 3 Prüfungsfallen, 2 Code-Beispiele und 8 Quizfragen. Recherche bitte mit dem günstigeren Modell aus den offiziellen Units, gleiche Struktur wie data/lp2.js.') +
-      impPrompt('Vollständig', '≈ 50–80k Tokens pro Modul', 'Ergänze Lerninhalte für M17 im selben Umfang wie die bestehenden Module: Vertiefung je Unit, Entscheidungsbaum/Tabelle, Code-Explorer, Prüfungsfallen, 6 Karteikarten und 10 Quizfragen, basierend auf den offiziellen Units.') +
-      '</div></section>' +
-
-      '<section class="card"><h2>Gut zu wissen</h2><ul class="keypoints">' +
-      '<li>Titel und Zuordnung stehen in <code>data/course.js</code> und lassen sich dort von Hand anpassen (z. B. mehrere offizielle Module zu einem App-Modul zusammenfassen).</li>' +
-      '<li>Die Vorschaudaten (Units, Links, Dauer) stehen in <code>data/learn-sources.js</code>.</li>' +
-      '<li>Für eine andere Zertifizierung passen Sie in <code>data/course.js</code> den Bereich <code>exam</code> an (Prüfungsdomänen, Gewichtung, Bestehensgrenze).</li>' +
-      '<li>Ein erneuter Import desselben Links fügt nichts doppelt hinzu.</li>' +
-      '</ul></section></div>';
-    app.innerHTML = h;
-    var url = document.getElementById('impUrl'), dry = document.getElementById('impDry'), cmd = document.getElementById('impCmd');
-    function build() {
-      var u = url.value.trim() || 'https://learn.microsoft.com/de-de/training/paths/…';
-      var q = function (s) { return '"' + s.replace(/"/g, '\\"') + '"'; };
-      cmd.textContent = 'cd ' + q(folder || '<Ordner>/Dp600_Lernapp') + '\npython3 tools/import_path.py ' + q(u) + (dry.checked ? ' --dry-run' : '');
-      var hint = document.getElementById('impHint');
-      if (hint) hint.innerHTML = /\/credentials\//.test(u) ? '⚠ Das ist eine Zertifizierungsseite. Bitte den Link zum <b>Kurs</b> nehmen (Adresse mit <code>/training/courses/</code>), zu finden auf der Zertifizierungsseite unter „Kurse“.' :
-        /\/training\/courses\//.test(u) ? '✓ Kurs-Link: Es entsteht ein <b>eigener Kurs</b> unter „Meine Kurse“ – mit eigenem Fortschritt und eigener Prüfung.' :
-        /\/training\/paths\//.test(u) ? 'Lernpfad-Link: Er wird dem Kurs DP-600 hinzugefügt (oder mit <code>--kurs=&lt;id&gt;</code> einem anderen Kurs).' : '';
-    }
-    url.addEventListener('input', build); dry.addEventListener('change', build); build();
-    var onClick = function (e) {
-      var b = e.target.closest('#impCopy, [data-imp], [data-prompt]'); if (!b) return;
-      if (b.id === 'impCopy') {
-        if (!url.value.trim()) { toast('Bitte zuerst einen Microsoft-Learn-Link einfügen'); url.focus(); return; }
-        copyText(cmd.textContent);
-      } else if (b.dataset.imp === 'reload') location.reload();
-      else copyText(b.dataset.prompt);
-    };
-    app.addEventListener('click', onClick);
-    cleanup = function () { app.removeEventListener('click', onClick); };
+  // Kurs hinzufügen (2.0): Kurs suchen → Wünsche (optional) → wird angelegt. Läuft ganz im Browser (kursimport.js).
+  var IMP = { step: 1, q: '', res: [], pick: null, w: { goal: '', level: '', extras: [], weeks: '', text: '' }, prog: {}, err: '' };
+  var IMP_EXTRAS = [['scen', 'Szenario-Fragen'], ['traps', 'Prüfungsfallen'], ['code', 'Code-Beispiele'], ['cases', 'Fallstudien'], ['cmp', 'Vergleichstabellen']];
+  function impChips(key, opts) {
+    return '<div class="imp-chips">' + opts.map(function (o) { var on = IMP.w[key] === o[0]; return '<button type="button" class="imp-chip' + (on ? ' on' : '') + '" data-impw="' + key + '" data-v="' + o[0] + '" aria-pressed="' + on + '">' + o[1] + '</button>'; }).join('') + '</div>';
   }
+  function impProgress(id) {
+    if (IMP.prog[id]) return IMP.prog[id];
+    var c = (D.courses || []).filter(function (x) { return x.id === id; })[0]; return c && c.pending ? { done: 0, total: 0 } : null;
+  }
+  function viewImport() {
+    var h = '<div class="container imp-wrap"><div class="page-head"><div class="eyebrow">Schritt ' + IMP.step + ' von 3</div><h1>Kurs hinzufügen</h1>' +
+      '<div class="sub">' + ['Suchen Sie einen Kurs von Microsoft Learn. Inhalte kommen direkt von Microsoft – ohne Programmierung, ohne Kosten.', 'Optional: Sagen Sie, wie Sie lernen möchten. Ohne Angaben wird der Kurs 1:1 von Microsoft Learn übernommen.', ''][IMP.step - 1] + '</div></div>';
+    if (IMP.step === 1) {
+      h += '<div class="imp-search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.search + '</svg><input id="impQ" type="search" autocomplete="off" placeholder="z. B. DP-700, AZ-104 oder Power BI" value="' + esc(IMP.q) + '" aria-label="Kurs suchen"></div>' +
+        '<div class="imp-res" id="impRes">' + impResults() + '</div>';
+      var own = (D.courses || []).filter(function (c) { return c.userAdded; });
+      if (own.length) h += '<h2 class="set-gh">Selbst hinzugefügt</h2><div class="card imp-own">' + own.map(function (c) {
+        var ask = IMP.del === c.id;
+        return '<div class="imp-own-row"><span><b>' + esc(c.exam.code) + ' · ' + esc(c.title) + '</b><small>' + (c.hidden ? 'Ausgeblendet' : c.pending ? 'Wird noch geladen' : 'Bereit') + '</small></span>' +
+          (ask ? '<span class="imp-own-btns"><button class="btn sm sec" data-impo="nodel">Abbrechen</button><button class="btn sm danger" data-impo="del" data-id="' + esc(c.id) + '">Endgültig entfernen</button></span>' :
+          '<span class="imp-own-btns"><button class="btn sm sec" data-impo="' + (c.hidden ? 'show' : 'hide') + '" data-id="' + esc(c.id) + '">' + (c.hidden ? 'Einblenden' : 'Ausblenden') + '</button><button class="btn sm sec" data-impo="ask" data-id="' + esc(c.id) + '">Entfernen</button></span>') + '</div>';
+      }).join('') + '<p class="muted small">„Ausblenden“ behält Ihren Lernstand. „Entfernen“ löscht Inhalte und Lernstand dieses Kurses.</p></div>';
+    } else if (IMP.step === 2) {
+      var c = IMP.pick;
+      h += '<div class="card imp-pick"><b>' + esc(c.code) + ' · ' + esc(c.title) + '</b><small>' + c.paths.length + ' Lernpfade' + (c.de ? '' : ' · nur auf Englisch verfügbar') + '</small></div>' +
+        '<div class="card imp-form">' +
+        '<div class="imp-f"><b>Ziel</b>' + impChips('goal', [['exam', 'Prüfung bestehen'], ['basics', 'Grundlagen verstehen'], ['practice', 'Praxis']]) + '</div>' +
+        '<div class="imp-f"><b>Vorwissen</b>' + impChips('level', [['new', 'Einsteiger'], ['some', 'Grundkenntnisse'], ['pro', 'Erfahren']]) + '</div>' +
+        '<div class="imp-f"><b>Zusätzlich gewünscht</b><div class="imp-chips">' + IMP_EXTRAS.map(function (x) { var on = IMP.w.extras.indexOf(x[0]) >= 0; return '<button type="button" class="imp-chip' + (on ? ' on' : '') + '" data-impx="' + x[0] + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + x[1] + '</button>'; }).join('') + '</div></div>' +
+        '<div class="imp-f"><b>Prüfung in</b>' + impChips('weeks', [['2', '2 Wochen'], ['4', '4 Wochen'], ['8', '8 Wochen'], ['open', 'Offen']]) + '</div>' +
+        '<div class="imp-f"><b>Eigene Wünsche</b><textarea id="impT" rows="3" placeholder="z. B. Fokus auf Spark, SQL kenne ich schon">' + esc(IMP.w.text) + '</textarea></div>' +
+        '<div class="note">' + ico('bulb') + '<span><b>Erweiterte Stufe bald verfügbar.</b> Mit Ihren Angaben ergänzt ein KI-Assistent später Szenario-Fragen, Prüfungsfallen und mehr. Ihre Angaben werden schon jetzt gespeichert.</span></div>' +
+        '</div><div class="imp-actions"><button class="btn sec" data-imps="back">Zurück</button><span></span><button class="btn sec" data-imps="skip">Überspringen</button><button class="btn" data-imps="add">Hinzufügen</button></div>';
+    } else {
+      var id = IMP.pick.id, pr = impProgress(id) || { done: 0, total: 0 }, pct = pr.total ? Math.round(pr.done / pr.total * 100) : 0, ready = pr.done > 0;
+      var st = function (ok, t) { return '<li class="' + (ok === true ? 'ok' : ok === 'run' ? 'run' : '') + '"><i></i>' + t + '</li>'; };
+      h += '<div class="card imp-run"><b class="imp-run-t">' + esc(IMP.pick.code) + (pr.total && pr.done >= pr.total ? ' ist bereit' : ' wird angelegt') + '</b>' + (IMP.err ? '<p class="imp-err">' + esc(IMP.err) + '</p>' : '') +
+        '<ul class="imp-steps">' + st(pr.total ? true : 'run', 'Lernpfade und Module') + st(pr.total ? true : null, 'Prüfungsdomänen aus dem Study Guide') +
+        st(pr.total && pr.done >= pr.total ? true : pr.total ? 'run' : null, 'Lerntexte ' + (pr.total ? pr.done + ' von ' + pr.total + ' Modulen' : '')) + st(null, 'Wissenscheck-Fragen folgen in einem späteren Schritt') + '</ul>' +
+        '<div class="imp-bar"><i style="width:' + pct + '%"></i></div>' +
+        '<p class="muted small">' + (pr.total && pr.done >= pr.total ? 'Fertig. Alle Module sind geladen.' : 'Sie können schon loslegen, sobald das erste Modul geladen ist. Der Rest lädt weiter, solange die App geöffnet ist – auch beim nächsten Öffnen.') + '</p>' +
+        (hasWishes() ? '<div class="note">' + ico('bulb') + '<span>Ihre Wünsche sind gespeichert. Die erweiterte Stufe ergänzt den Kurs, sobald sie verfügbar ist.</span></div>' : '') +
+        '</div><div class="imp-actions"><span></span><button class="btn" data-imps="go"' + (ready ? '' : ' disabled') + '>Loslegen</button></div>';
+    }
+    app.innerHTML = h + '</div>';
+    var q = document.getElementById('impQ'), t;
+    if (q) {
+      if (IMP.step === 1 && !IMP.q) setTimeout(function () { try { q.focus({ preventScroll: true }); } catch (e) {} }, 50);
+      q.addEventListener('input', function () {
+        IMP.q = q.value; clearTimeout(t);
+        t = setTimeout(function () { window.LWImport.search(IMP.q).then(function (r) { IMP.res = r; var el = document.getElementById('impRes'); if (el) el.innerHTML = impResults(); }, function () { IMP.res = null; var el = document.getElementById('impRes'); if (el) el.innerHTML = impResults(); }); }, 220);
+      });
+    }
+    var ta = document.getElementById('impT'); if (ta) ta.addEventListener('input', function () { IMP.w.text = ta.value; });
+  }
+  // Wissenscheck ohne Lösung (selbst angelegte Kurse): Fragen von Learn zum Durchdenken, Prüfen auf Learn
+  function renderKcPreview(body, m) {
+    body.innerHTML = '<div class="note kc-note">' + ico('bulb') + '<span>Diese Fragen stammen aus dem Wissenscheck von Microsoft Learn. Die Lösungen folgen in einem späteren Update – bis dahin wählen Sie Ihre Antworten hier und prüfen sie auf Microsoft Learn.</span></div>' +
+      m.kc.map(function (q, i) {
+        return '<section class="card kc-q"><div class="eyebrow">Frage ' + (i + 1) + ' von ' + m.kc.length + '</div><p class="kc-t">' + md(q.q) + '</p><div class="kc-opts">' +
+          q.opts.map(function (o, j) { return '<button type="button" class="ans kc-opt" data-kc="' + i + ':' + j + '"><span class="mk">' + (j + 1) + '</span><span>' + md(o) + '</span></button>'; }).join('') + '</div></section>';
+      }).join('') +
+      '<div class="imp-actions"><span></span><a class="btn" href="' + esc(m.kcUrl) + '" target="_blank" rel="noopener">Auf Microsoft Learn prüfen ↗</a></div>';
+    body.onclick = function (e) {
+      var b = e.target.closest('[data-kc]'); if (!b) return;
+      b.parentElement.querySelectorAll('.kc-opt').forEach(function (x) { x.classList.toggle('sel', x === b); x.setAttribute('aria-pressed', x === b); });
+    };
+  }
+  function hasWishes() { var w = IMP.w; return !!(w.goal || w.level || w.extras.length || w.weeks || w.text.trim()); }
+  function impResults() {
+    if (IMP.res === null) return '<p class="muted small">Microsoft Learn ist gerade nicht erreichbar. Bitte prüfen Sie die Internetverbindung.</p>';
+    if (!IMP.q.trim()) return '<p class="muted small">Tippen Sie einen Prüfungscode oder ein Thema ein.</p>';
+    if (!IMP.res.length) return '<p class="muted small">Kein Kurs gefunden. Versuchen Sie den Prüfungscode, z. B. „AZ-900“.</p>';
+    var have = COURSES.map(function (c) { return c.id; }).concat((D.courses || []).map(function (c) { return c.id; }));
+    return IMP.res.map(function (c) {
+      var exists = have.indexOf(c.id) >= 0 || (c.id === 'dp600');
+      return '<button type="button" class="imp-hit' + (exists ? ' has' : '') + '" data-imppick="' + esc(c.uid) + '"' + (exists ? ' disabled' : '') + '><b>' + esc(c.code) + ' · ' + esc(c.title) + '</b><small>' +
+        c.paths.length + (c.paths.length === 1 ? ' Lernpfad' : ' Lernpfade') + (c.hours ? ' · ca. ' + c.hours + ' Std.' : '') + (c.de ? '' : ' · Englisch') + (exists ? ' · bereits in Lernwerk' : '') + '</small></button>';
+    }).join('');
+  }
+  function impStart() {
+    IMP.step = 3; IMP.err = ''; IMP.prog[IMP.pick.id] = { done: 0, total: 0 }; route(true);
+    window.LWImport.add(IMP.pick, hasWishes() ? JSON.parse(JSON.stringify(IMP.w)) : null, impOnProgress).catch(function () {
+      IMP.err = 'Der Kurs konnte nicht geladen werden. Bitte prüfen Sie die Internetverbindung und versuchen Sie es erneut.'; if (curView === 'import') route(true);
+    });
+  }
+  function impOnProgress(p) {
+    if (p.total) IMP.prog[p.id] = { done: p.done, total: p.total };
+    if (p.total && p.done >= p.total && !(IMP.pick && IMP.pick.id === p.id && curView === 'import')) toast('Kurs ' + p.id.toUpperCase() + ' ist vollständig geladen');
+    if (curView === 'import' && IMP.step === 3) route(true);
+  }
+  app.addEventListener('click', function (e) {
+    if (curView !== 'import') return;
+    var b = e.target.closest('[data-imppick], [data-impw], [data-impx], [data-imps], [data-impo]'); if (!b) return;
+    if (b.dataset.imppick) { IMP.pick = (IMP.res || []).filter(function (c) { return c.uid === b.dataset.imppick; })[0]; if (IMP.pick) { IMP.step = 2; IMP.w = { goal: '', level: '', extras: [], weeks: '', text: '' }; route(true); scrollTo(0, 0); } return; }
+    if (b.dataset.impw) { var k = b.dataset.impw; IMP.w[k] = IMP.w[k] === b.dataset.v ? '' : b.dataset.v; route(true); return; }
+    if (b.dataset.impx) { var x = IMP.w.extras, i = x.indexOf(b.dataset.impx); if (i >= 0) x.splice(i, 1); else x.push(b.dataset.impx); route(true); return; }
+    var a = b.dataset.imps;
+    if (a === 'back') { IMP.step = 1; route(true); return; }
+    if (a === 'skip') { IMP.w = { goal: '', level: '', extras: [], weeks: '', text: '' }; impStart(); return; }
+    if (a === 'add') { impStart(); return; }
+    if (a === 'go') { var id = IMP.pick.id; IMP.step = 1; IMP.q = ''; IMP.res = []; lsSet('lw.course', id); location.hash = '#/home'; location.reload(); return; }
+    var o = b.dataset.impo, cid = b.dataset.id;
+    if (o === 'ask') { IMP.del = cid; route(true); return; }
+    if (o === 'nodel') { IMP.del = null; route(true); return; }
+    if (o === 'hide' || o === 'show') { window.LWImport.setHidden(cid, o === 'hide').then(function () { if (o === 'hide' && CUR.id === cid) lsSet('lw.course', 'dp600'); location.reload(); }); return; }
+    if (o === 'del') {
+      window.LWImport.remove(cid).then(function () {
+        try { Object.keys(localStorage).filter(function (k) { return k.indexOf('lw.' + cid + '.') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (err) {}
+        if (CUR.id === cid) lsSet('lw.course', 'dp600'); location.reload();
+      });
+    }
+  });
   function impPrompt(title, cost, text) {
     return '<div class="g-item" style="margin:0"><div class="g-top"><b>' + esc(title) + '</b><span class="tag">' + esc(cost) + '</span></div><p>' + esc(text) + '</p>' +
       '<div class="actions" style="margin-top:12px"><button class="btn sm sec" data-prompt="' + esc(text) + '">Auftrag kopieren</button></div></div>';
@@ -14065,7 +14546,10 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   setTimeout(appIcon, 400);
   setTimeout(function () { try { whatsNew(); } catch (e) {} }, 1500);
   cloudInit();
-})();
+  if (window.LWImport) setTimeout(function () { window.LWImport.resume(impOnProgress); }, 2500);   // unfertige Kurse weiterladen
+};
+// Selbst angelegte Kurse (IndexedDB) werden vor dem Start registriert – siehe kursimport.js
+(window.LW_WAIT || function (f) { f(); })(window.LW_START);
 
 </script>
 </body>
