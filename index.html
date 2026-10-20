@@ -3445,6 +3445,27 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
 .kc-opts { display: grid; gap: 8px; }
 .kc-opt { text-align: left; cursor: pointer; font: inherit; color: var(--text); }
 .kc-opt.sel { border-color: var(--accent) !important; background: var(--accent-soft) !important; }
+.imp-own-btns { flex-wrap: wrap; }
+
+/* ===== 2.2: Vorlesen und Audio-Quiz ===== */
+.au-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 16px; }
+.au-row .btn { display: inline-flex; align-items: center; gap: 7px; }
+.au-bar { position: fixed; z-index: 95; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); width: min(560px, calc(100% - 24px)); box-sizing: border-box;
+  display: flex; align-items: center; gap: 4px; padding: 6px 8px 6px 16px; border-radius: 999px; background: color-mix(in srgb, var(--surface) var(--glass-a, 85%), transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px); border: 1px solid var(--hairline-strong); box-shadow: 0 10px 30px rgba(0, 0, 0, .18); }
+.au-t { flex: 1; min-width: 0; display: grid; line-height: 1.25; }
+.au-t b { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.au-t small { font-size: 12px; color: var(--text-3); }
+.au-bar button { flex: none; width: 38px; height: 38px; border: 0; border-radius: 50%; background: none; color: var(--text); display: grid; place-items: center; cursor: pointer; font: 600 12.5px var(--font); }
+.au-bar button:hover { background: var(--surface-2); }
+.au-bar svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.au-bar .au-play { background: var(--btn-bg); color: var(--on-btn); width: 42px; height: 42px; }
+.au-bar .au-play svg path[d^="M8 5.5v13l"] { fill: currentColor; }
+.au-bar .au-rate { width: auto; padding: 0 9px; border-radius: 999px; }
+@media (min-width: 901px) { html:not(.tbnav) .au-bar { bottom: 24px; } }
+details.deep.au-cur { box-shadow: 0 0 0 2px var(--accent) !important; }
+.set-select { max-width: 240px; min-height: 36px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: var(--surface-2); color: var(--text); font: 500 14px var(--font); padding: 0 12px; }
+body.au-on .tb-resume { visibility: hidden !important; }
 
 </style>
 <script>
@@ -3512,6 +3533,7 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.2', d: '2026-10-20', items: ['Neu: Vorlesen – die Vertiefung eines Moduls Kapitel für Kapitel anhören, mit Pause, Springen und Tempo', 'Neu: Audio-Quiz – Frage, Antworten, Denkpause, dann Lösung mit Begründung, ganz ohne Antippen', 'Neue Einstellungsseite „Vorlesen“: Stimme, Tempo, Denkpause und Probe', 'Eigene Kurse per Link teilen – öffnet man ihn auf einem anderen Gerät, wird der Kurs dort angelegt', 'Eigene Kurse aktualisieren: geänderte Module auf Microsoft Learn werden neu geladen, automatisch einmal pro Woche', 'In der Claude-Version werden eigene Kurse automatisch auf allen Geräten übernommen'] },
   { v: '2.1', d: '2026-10-20', items: ['Neuer Kurs DP-700 „Fabric Data Engineer“ fest in Lernwerk: 21 Module mit vollständigen Lerntexten und 65 Wissenscheck-Fragen mit Lösung', 'Wissenschecks ohne abrufbare Lösung werden als Fragen zum Prüfen auf Microsoft Learn angezeigt'] },
   { v: '2.0.1', d: '2026-10-20', items: ['Neu hinzugefügte Kurse erscheinen sofort in der Kurs-Auswahl und unter „Meine Kurse“'] },
   { v: '2.0', d: '2026-10-20', items: ['Neu: Kurse direkt in der App hinzufügen – Kurs von Microsoft Learn suchen, auswählen, fertig', 'Lernpfade, Module, vollständige Lerntexte, Begriffskarten und Prüfungsdomänen werden direkt von Microsoft Learn geladen', 'Wissenscheck-Fragen von Learn zum Durchdenken; Lösungen folgen in einem späteren Update', 'Optionaler Fragebogen (Ziel, Vorwissen, Wünsche) für die künftige erweiterte Stufe', 'Selbst hinzugefügte Kurse lassen sich ausblenden oder entfernen', 'Unfertig geladene Kurse laden beim nächsten Öffnen automatisch weiter'] },
@@ -11206,13 +11228,35 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   // Beim Start: unfertige Kurse weiterladen
   function resume(onProgress) {
     return store.all().then(function (list) {
-      (list || []).filter(function (r) { return r.pending && r.pending.length && !r.hidden; }).forEach(function (r) { work(r, onProgress); });
+      (list || []).filter(function (r) { return !r.hidden; }).forEach(function (r) {
+        if (r.pending && r.pending.length) work(r, onProgress);
+        else if (!r.checked || Date.now() - r.checked > 7 * 864e5) checkUpdates(r.id, onProgress).catch(function () {});   // einmal pro Woche
+      });
     }).catch(function () {});
+  }
+  // Änderungen auf Learn: Module mit neuerem Änderungsdatum im Katalog werden neu geladen (Lernstand bleibt)
+  function checkUpdates(id, onProgress) {
+    return store.get(id).then(function (rec) {
+      if (!rec) return 0;
+      var uids = Object.keys(rec.learn || {});
+      return catalog('modules', uids).then(function (mods) {
+        var changed = [];
+        mods.forEach(function (m) {
+          var lm = rec.learn[m.uid]; if (!lm || !m.last_modified || lm.modified === m.last_modified) return;
+          lm.modified = m.last_modified; lm.unitUids = m.units || lm.unitUids;
+          rec.course.paths.forEach(function (p) { p.modules.forEach(function (e) { if (e[2][0] === m.uid && changed.indexOf(e[0]) < 0) changed.push(e[0]); }); });
+        });
+        rec.checked = Date.now();
+        rec.pending = (rec.pending || []).concat(changed.filter(function (n) { return (rec.pending || []).indexOf(n) < 0; }));
+        return store.put(rec).then(function () { if (changed.length) work(rec, onProgress); return changed.length; });
+      });
+    });
   }
   function setHidden(id, hidden) { return store.get(id).then(function (r) { if (r) { r.hidden = hidden; return store.put(r); } }); }
   function remove(id) { return store.del(id); }
 
-  window.LWImport = { search: search, add: add, resume: resume, setHidden: setHidden, remove: remove, isRunning: function (id) { return !!running[id]; }, toBlocks: toBlocks };
+  function list() { return store.all().then(function (l) { return (l || []).map(function (r) { return { id: r.id, code: r.course && r.course.exam.code, hidden: !!r.hidden, pending: (r.pending || []).length }; }); }); }
+  window.LWImport = { checkUpdates: checkUpdates, list: list, search: search, add: add, resume: resume, setHidden: setHidden, remove: remove, isRunning: function (id) { return !!running[id]; }, toBlocks: toBlocks };
 })();
 
 </script>
@@ -11463,7 +11507,7 @@ window.LW_START = function () {
   if (!LOOK.custom) LOOK.custom = '#0B6F64';
   if (!LOOK.mode) { LOOK.mode = lsGet('dp600.theme') || 'system'; }
   function lookVal(k) {
-    var d = { play: PRESETS[LOOK.preset].play, motion: 'on', size: 'm', density: 'comfy', mode: 'system', serif: false, contrast: false, round: 'weich', surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, pagefx: 'auto', glassB: 22, tap: true, densLearn: 'normal', densList: 'normal' };
+    var d = { play: PRESETS[LOOK.preset].play, motion: 'on', size: 'm', density: 'comfy', mode: 'system', serif: false, contrast: false, round: 'weich', surface: 'standard', bg: 'auto', accent: 'normal', hfont: 'system', tile: 'fill', icons: 'line', celebrate: true, rings: true, daytint: false, calm: false, pagefx: 'auto', glassB: 22, tap: true, densLearn: 'normal', densList: 'normal', ttsRate: '1', ttsThink: '7', ttsVoice: '' };
     // 1.26.3: Stil immer „Ausgewogen“, Tipp-Rückmeldung und Tageszeit-Farbton entfallen
     if (k === 'play') return 'balanced';
     if (k === 'tap' || k === 'daytint') return false;
@@ -11832,6 +11876,7 @@ window.LW_START = function () {
     else if (view === 'glossary') viewGlossary(r.params.q || '');
     else if (view === 'progress') viewProgress();
     else if (view === 'import') viewImport();
+    else if (view === 'add') { viewAddLink(p[1] || ''); return; }
     else if (view === 'settings') viewSettings(p[1]);
     else if (view === 'plan') viewPlan();
     else if (view === 'notes') viewNotes();
@@ -12938,6 +12983,7 @@ window.LW_START = function () {
     // Kapitel-Übersicht: jeder Vertiefungsabschnitt als Kachel mit Lesezeit und Häkchen (wie ein Inhaltsverzeichnis)
     if (deep.length) {
       var rd0 = S.read[m.id] || [];
+      h += audioRow(m);
       h += '<section class="ch-wrap"><div class="ch-head"><b>Kapitel</b><span>' + rd0.length + ' von ' + deep.length + ' gelesen</span></div><div class="ch-grid">' + deep.map(function (d, i) {
         var done = rd0.indexOf(i) >= 0;
         return '<button type="button" class="ch-tile' + (done ? ' done' : '') + '" data-deep="' + i + '"><span class="ch-n">' + (done ? '✓' : i + 1) + '</span><b>' + esc(d.t) + '</b><small>≈ ' + minutesOf(d) + ' Min.</small></button>';
@@ -14045,7 +14091,7 @@ window.LW_START = function () {
         var ask = IMP.del === c.id;
         return '<div class="imp-own-row"><span><b>' + esc(c.exam.code) + ' · ' + esc(c.title) + '</b><small>' + (c.hidden ? 'Ausgeblendet' : c.pending ? 'Wird noch geladen' : 'Bereit') + '</small></span>' +
           (ask ? '<span class="imp-own-btns"><button class="btn sm sec" data-impo="nodel">Abbrechen</button><button class="btn sm danger" data-impo="del" data-id="' + esc(c.id) + '">Endgültig entfernen</button></span>' :
-          '<span class="imp-own-btns"><button class="btn sm sec" data-impo="' + (c.hidden ? 'show' : 'hide') + '" data-id="' + esc(c.id) + '">' + (c.hidden ? 'Einblenden' : 'Ausblenden') + '</button><button class="btn sm sec" data-impo="ask" data-id="' + esc(c.id) + '">Entfernen</button></span>') + '</div>';
+          '<span class="imp-own-btns"><button class="btn sm sec" data-impo="upd" data-id="' + esc(c.id) + '">Aktualisieren</button><button class="btn sm sec" data-impo="share" data-id="' + esc(c.id) + '" data-code="' + esc(c.exam.code) + '">Teilen</button><button class="btn sm sec" data-impo="' + (c.hidden ? 'show' : 'hide') + '" data-id="' + esc(c.id) + '">' + (c.hidden ? 'Einblenden' : 'Ausblenden') + '</button><button class="btn sm sec" data-impo="ask" data-id="' + esc(c.id) + '">Entfernen</button></span>') + '</div>';
       }).join('') + '<p class="muted small">„Ausblenden“ behält Ihren Lernstand. „Entfernen“ löscht Inhalte und Lernstand dieses Kurses.</p></div>';
     } else if (IMP.step === 2) {
       var c = IMP.pick;
@@ -14093,6 +14139,158 @@ window.LW_START = function () {
       b.parentElement.querySelectorAll('.kc-opt').forEach(function (x) { x.classList.toggle('sel', x === b); x.setAttribute('aria-pressed', x === b); });
     };
   }
+  /* ---------------------------------------------------------------------
+     Audio (Stufe A): Vorlesen über die Sprachausgabe des Geräts
+     - Vertiefung eines Moduls vorlesen, Kapitel für Kapitel
+     - Audio-Quiz: Frage, Antworten, Denkpause, Lösung mit Begründung – ohne Antippen
+     --------------------------------------------------------------------- */
+  var TTS = window.speechSynthesis || null;
+  var AU = window.LW_AU = { on: false, paused: false, items: [], i: 0, title: '', mode: '', bar: null, timer: null, gen: 0 };
+  function ttsVoices() { return TTS ? TTS.getVoices().filter(function (v) { return /^de/i.test(v.lang); }) : []; }
+  function ttsVoice() {
+    var vs = ttsVoices(), want = lookVal('ttsVoice');
+    return vs.filter(function (v) { return v.voiceURI === want; })[0] || vs.filter(function (v) { return /premium|enhanced|anna|petra|markus|helena/i.test(v.name); })[0] || vs[0] || null;
+  }
+  function plain(s) { return String(s || '').replace(/\*\*|`/g, '').replace(/[✅❌⚠]️?/g, '').replace(/\s+/g, ' ').trim(); }
+  function chunks(t) {   // iOS bricht lange Äußerungen ab → in Sätze bis ~220 Zeichen teilen
+    var out = [], cur = '';
+    plain(t).split(/(?<=[.!?:;])\s+/).forEach(function (s) { if ((cur + ' ' + s).length > 220 && cur) { out.push(cur); cur = s; } else cur = cur ? cur + ' ' + s : s; });
+    if (cur) out.push(cur);
+    return out;
+  }
+  // Ein Eintrag: {sec: Kapitelindex, say: Text} oder {sec, pause: ms}
+  function deepScript(m) {
+    var it = [{ sec: -1, say: 'Modul ' + m.nr + ': ' + m.title + '.' }];
+    (m.deep || []).forEach(function (d, i) {
+      it.push({ sec: i, say: 'Kapitel ' + (i + 1) + ': ' + d.t + '.' }, { sec: i, pause: 500 });
+      var bl = d.b || (d.p || []).map(function (p) { return /^\*\*.*\*\*$/.test(p) ? ['h', p] : ['p', p]; }).concat(d.list ? [['ul', d.list]] : []);
+      bl.forEach(function (b) {
+        if (b[0] === 'p' || b[0] === 'h') chunks(b[1]).forEach(function (c) { it.push({ sec: i, say: c }); });
+        else if (b[0] === 'ul' || b[0] === 'ol') b[1].forEach(function (x) { chunks(x).forEach(function (c) { it.push({ sec: i, say: c }); }); });
+        else if (b[0] === 'note') chunks(b[1].kind + ': ' + b[1].text).forEach(function (c) { it.push({ sec: i, say: c }); });
+        else if (b[0] === 'table') it.push({ sec: i, say: 'Hier folgt eine Tabelle – sie ist im Text zu sehen.' });
+        else if (b[0] === 'code') it.push({ sec: i, say: 'Hier folgt ein Code-Beispiel – es ist im Text zu sehen.' });
+      });
+      if (d.note) chunks('Hinweis: ' + d.note).forEach(function (c) { it.push({ sec: i, say: c }); });
+      it.push({ sec: i, pause: 900 });
+    });
+    it.push({ sec: -1, say: 'Ende des Moduls.' });
+    return it;
+  }
+  function quizScript(m) {
+    var it = [], qs = (m.quiz || []).filter(function (q) { return q.correct && q.correct.length; });
+    it.push({ sec: -1, say: 'Audio-Quiz zu Modul ' + m.nr + '. ' + qs.length + ' Fragen. Nach jeder Frage haben Sie eine kurze Denkpause.' });
+    qs.forEach(function (q, n) {
+      it.push({ sec: n, say: 'Frage ' + (n + 1) + '.' });
+      chunks(q.q).forEach(function (c) { it.push({ sec: n, say: c }); });
+      if (q.correct.length > 1) it.push({ sec: n, say: 'Es sind ' + q.correct.length + ' Antworten richtig.' });
+      q.opts.forEach(function (o, j) { chunks('Antwort ' + (j + 1) + ': ' + o).forEach(function (c) { it.push({ sec: n, say: c }); }); });
+      it.push({ sec: n, pause: Math.max(4000, +lookVal('ttsThink') * 1000 || 7000), think: true });
+      it.push({ sec: n, say: (q.correct.length > 1 ? 'Richtig sind die Antworten ' : 'Richtig ist Antwort ') + q.correct.map(function (k) { return k + 1; }).join(' und ') + '.' });
+      q.correct.forEach(function (k) { chunks(q.opts[k]).forEach(function (c) { it.push({ sec: n, say: c }); }); });
+      if (q.explain) chunks(q.explain).forEach(function (c) { it.push({ sec: n, say: c }); });
+      it.push({ sec: n, pause: 1200 });
+    });
+    it.push({ sec: -1, say: 'Das war das Audio-Quiz. Gut gemacht.' });
+    return it;
+  }
+  function auBar() {
+    if (!AU.bar) { AU.bar = document.createElement('div'); AU.bar.className = 'au-bar'; AU.bar.setAttribute('role', 'region'); AU.bar.setAttribute('aria-label', 'Vorlesen'); document.body.appendChild(AU.bar); AU.bar.addEventListener('click', auClick); }
+    var cur = AU.items[AU.i] || {}, secs = AU.items.reduce(function (a, x) { return Math.max(a, x.sec); }, 0) + 1;
+    var lbl = cur.think ? 'Denkpause …' : AU.mode === 'quiz' ? (cur.sec >= 0 ? 'Frage ' + (cur.sec + 1) + ' von ' + secs : 'Audio-Quiz') : (cur.sec >= 0 ? 'Kapitel ' + (cur.sec + 1) + ' von ' + secs : 'Einleitung');
+    AU.bar.innerHTML = '<span class="au-t"><b>' + esc(AU.title) + '</b><small>' + lbl + '</small></span>' +
+      '<button type="button" data-au="prev" aria-label="Zurück"><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6.5v11L9.5 12z"/></svg></button>' +
+      '<button type="button" data-au="toggle" class="au-play" aria-label="' + (AU.paused ? 'Weiter' : 'Pause') + '">' + (AU.paused ? '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M8 5.5v13M16 5.5v13"/></svg>') + '</button>' +
+      '<button type="button" data-au="next" aria-label="Weiter"><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6.5v11l8.5-5.5z"/></svg></button>' +
+      '<button type="button" data-au="rate" class="au-rate" aria-label="Tempo">' + String(lookVal('ttsRate')).replace('.', ',') + '×</button>' +
+      '<button type="button" data-au="stop" aria-label="Beenden"><svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button>';
+    document.body.classList.add('au-on');
+    document.querySelectorAll('details.deep.au-cur').forEach(function (x) { x.classList.remove('au-cur'); });
+    if (AU.mode === 'deep' && cur.sec >= 0) { var d = document.getElementById('deep-' + cur.sec); if (d) d.classList.add('au-cur'); }
+  }
+  function auSpeak() {
+    if (!AU.on || AU.paused) return;
+    clearTimeout(AU.timer);
+    var it = AU.items[AU.i], gen = AU.gen;
+    if (!it) { auStop(); return; }
+    auBar();
+    var next = function () { if (gen !== AU.gen || !AU.on || AU.paused) return; AU.i++; auSpeak(); };
+    if (it.pause) { AU.timer = setTimeout(next, it.pause / (+lookVal('ttsRate') || 1)); return; }
+    var u = new SpeechSynthesisUtterance(it.say), v = ttsVoice();
+    if (v) u.voice = v; u.lang = v ? v.lang : 'de-DE'; u.rate = +lookVal('ttsRate') || 1;
+    u.onend = next; u.onerror = function (e) { AU.err = e.error; next(); };   // abgebrochene Äußerungen alter Durchläufe filtert gen
+    AU.u = u;   // Referenz halten – sonst räumt Chrome die Äußerung weg und „onend“ kommt nie
+    TTS.speak(u);
+  }
+  function auStart(mode, m) {
+    if (!TTS) { toast('Vorlesen wird von diesem Browser nicht unterstützt'); return; }
+    auStop(true);
+    AU.mode = mode; AU.items = mode === 'quiz' ? quizScript(m) : deepScript(m); AU.i = 0; AU.on = true; AU.paused = false; AU.gen++;
+    AU.title = (mode === 'quiz' ? 'Audio-Quiz · ' : '') + 'M' + m.nr + ' · ' + (m.short || m.title);
+    TTS.cancel(); setTimeout(auSpeak, 120);   // direkt nach cancel() verschluckt Chrome/Safari sonst die nächste Äußerung
+  }
+  function auStop(silent) {
+    AU.on = false; AU.gen++; clearTimeout(AU.timer); if (TTS) TTS.cancel();
+    if (AU.bar) { AU.bar.remove(); AU.bar = null; }
+    document.body.classList.remove('au-on');
+    document.querySelectorAll('details.deep.au-cur').forEach(function (x) { x.classList.remove('au-cur'); });
+  }
+  function auJump(dir) {   // zum Anfang des vorherigen/nächsten Kapitels bzw. der Frage
+    var sec = (AU.items[AU.i] || {}).sec, i = AU.i;
+    if (dir > 0) { while (i < AU.items.length && AU.items[i].sec === sec) i++; }
+    else {
+      while (i > 0 && AU.items[i - 1].sec === sec) i--;
+      if (AU.i - i < 3 && i > 0) { var p = AU.items[i - 1].sec; i--; while (i > 0 && AU.items[i - 1].sec === p) i--; }
+    }
+    AU.i = Math.max(0, i); AU.gen++; TTS.cancel(); AU.paused = false; setTimeout(auSpeak, 120);
+  }
+  function auClick(e) {
+    var b = e.target.closest('[data-au]'); if (!b) return;
+    var a = b.dataset.au;
+    if (a === 'stop') auStop();
+    else if (a === 'toggle') { AU.paused = !AU.paused; AU.gen++; if (AU.paused) { TTS.cancel(); clearTimeout(AU.timer); auBar(); } else setTimeout(auSpeak, 120); }
+    else if (a === 'next') auJump(1);
+    else if (a === 'prev') auJump(-1);
+    else if (a === 'rate') { var R = ['0.8', '1', '1.2', '1.5'], r = R[(R.indexOf(String(lookVal('ttsRate'))) + 1) % R.length]; lookSet({ ttsRate: r }); if (!AU.paused) { AU.gen++; TTS.cancel(); setTimeout(auSpeak, 120); } else auBar(); }
+  }
+  if (TTS) { TTS.getVoices(); try { TTS.addEventListener('voiceschanged', function () {}); } catch (e) {} }
+  // Hat das Gerät die Sprachausgabe im Hintergrund unterbrochen, beim Zurückkehren an derselben Stelle weiterlesen
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && AU.on && !AU.paused && TTS && !TTS.speaking && !TTS.pending) { AU.gen++; setTimeout(auSpeak, 200); } });
+  function audioRow(m) {
+    if (!TTS) return '';
+    var nq = (m.quiz || []).filter(function (q) { return q.correct && q.correct.length; }).length;
+    return '<div class="au-row"><button type="button" class="btn sec" data-austart="deep" data-mid="' + m.id + '"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg> Vorlesen</button>' +
+      (nq ? '<button type="button" class="btn sec" data-austart="quiz" data-mid="' + m.id + '"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-1v-6h3M4 13v4a2 2 0 0 0 2 2h1v-6H4"/></svg> Audio-Quiz</button>' : '') + '</div>';
+  }
+  document.addEventListener('change', function (e) { if (e.target && e.target.id === 'ttsVoice') lookSet({ ttsVoice: e.target.value }); });
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-tts-test]'); if (!t || !TTS) return;
+    TTS.cancel(); var u = new SpeechSynthesisUtterance('So klingt Lernwerk beim Vorlesen. Viel Erfolg bei der Prüfung!'), v = ttsVoice();
+    if (v) u.voice = v; u.lang = v ? v.lang : 'de-DE'; u.rate = +lookVal('ttsRate') || 1; TTS.speak(u);
+  });
+  app.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-austart]'); if (!b) return;
+    var m = MODS[b.dataset.mid]; if (m) auStart(b.dataset.austart, m);
+  });
+  // Kurs per Link weitergeben: …/#/add/dp-700 legt den Kurs auf dem anderen Gerät an
+  function courseLink(code) { return location.origin + location.pathname + '#/add/' + String(code).toLowerCase(); }
+  function shareCourse(code) {
+    var url = courseLink(code), text = 'Lernwerk: Kurs ' + code + ' hinzufügen';
+    if (navigator.share) navigator.share({ title: text, url: url }).catch(function () {});
+    else { copyText(url); toast('Link kopiert – auf dem anderen Gerät öffnen'); }
+  }
+  function viewAddLink(code) {
+    var id = code.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (COURSES.some(function (c) { return c.id === id; })) { toast(code.toUpperCase() + ' ist schon in Lernwerk'); lsSet('lw.course', id); location.hash = '#/home'; location.reload(); return; }
+    app.innerHTML = '<div class="container imp-wrap"><div class="page-head"><h1>Kurs wird gesucht …</h1></div></div>';
+    if (!window.LWImport) return;
+    window.LWImport.search(code).then(function (res) {
+      var hit = (res || []).filter(function (c) { return c.id === id; })[0];
+      if (!hit) { app.innerHTML = '<div class="container imp-wrap">' + emptyBox('search', 'Kurs nicht gefunden', 'Den Kurs „' + esc(code.toUpperCase()) + '“ gibt es auf Microsoft Learn nicht (mehr).', '<a class="btn" href="#/import">Kurs suchen</a>') + '</div>'; return; }
+      IMP.pick = hit; IMP.res = [hit]; IMP.step = 2; IMP.w = { goal: '', level: '', extras: [], weeks: '', text: '' };
+      history.replaceState(null, '', '#/import'); route();
+    }, function () { app.innerHTML = '<div class="container imp-wrap">' + emptyBox('search', 'Microsoft Learn nicht erreichbar', 'Bitte prüfen Sie die Internetverbindung und öffnen Sie den Link erneut.', '') + '</div>'; });
+  }
   function hasWishes() { var w = IMP.w; return !!(w.goal || w.level || w.extras.length || w.weeks || w.text.trim()); }
   function impResults() {
     if (IMP.res === null) return '<p class="muted small">Microsoft Learn ist gerade nicht erreichbar. Bitte prüfen Sie die Internetverbindung.</p>';
@@ -14113,6 +14311,7 @@ window.LW_START = function () {
       var c = Object.assign({ prefix: rec.id + '-', userAdded: true, pending: 1 }, JSON.parse(JSON.stringify(rec.course)));
       if (!c.exam.domains || !Object.keys(c.exam.domains).length) c.exam.domains = { all: { label: 'Alle Inhalte', range: '100 %', share: 1, color: 'var(--dom-prep)' } };
       COURSES.push(c); (D.courses = D.courses || []).push(c);
+      cloudCoursesPush();
     }).catch(function () {
       IMP.err = 'Der Kurs konnte nicht geladen werden. Bitte prüfen Sie die Internetverbindung und versuchen Sie es erneut.'; if (curView === 'import') route(true);
     });
@@ -14134,11 +14333,19 @@ window.LW_START = function () {
     if (a === 'add') { impStart(); return; }
     if (a === 'go') { var id = IMP.pick.id; IMP.step = 1; IMP.q = ''; IMP.res = []; lsSet('lw.course', id); location.hash = '#/home'; location.reload(); return; }
     var o = b.dataset.impo, cid = b.dataset.id;
+    if (o === 'share') { shareCourse(b.dataset.code); return; }
+    if (o === 'upd') {
+      b.disabled = true; b.textContent = 'Prüfe …';
+      window.LWImport.checkUpdates(cid, impOnProgress).then(function (n) { toast(n ? n + (n === 1 ? ' Modul wurde' : ' Module wurden') + ' auf Learn geändert – wird neu geladen' : 'Alles aktuell'); route(true); },
+        function () { toast('Microsoft Learn nicht erreichbar'); route(true); });
+      return;
+    }
     if (o === 'ask') { IMP.del = cid; route(true); return; }
     if (o === 'nodel') { IMP.del = null; route(true); return; }
     if (o === 'hide' || o === 'show') { window.LWImport.setHidden(cid, o === 'hide').then(function () { if (o === 'hide' && CUR.id === cid) lsSet('lw.course', 'dp600'); location.reload(); }); return; }
     if (o === 'del') {
-      window.LWImport.remove(cid).then(function () {
+      var rcode = ((D.courses || []).filter(function (c) { return c.id === cid; })[0] || { exam: {} }).exam.code;
+      window.LWImport.remove(cid).then(function () { return cloudCoursesPush(rcode); }).then(function () {
         try { Object.keys(localStorage).filter(function (k) { return k.indexOf('lw.' + cid + '.') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (err) {}
         if (CUR.id === cid) lsSet('lw.course', 'dp600'); location.reload();
       });
@@ -14742,6 +14949,15 @@ window.LW_START = function () {
     density: function () { return sRow('Abstände', '', sSeg('density', [['compact', 'Kompakt'], ['comfy', 'Normal']], lookVal('density'))); },
     contrast: function () { return sRow('Mehr Kontrast', '', sTgl('contrast', !!lookVal('contrast'))); },
     motion: function () { return sRow('Animationen', '', sSeg('motion', [['on', 'An'], ['reduced', 'Reduziert'], ['off', 'Aus']], lookVal('motion'))); },
+    ttsVoice: function () {
+      var vs = ttsVoices(), cur = ttsVoice();
+      if (!TTS) return sRow('Stimme', 'Dieser Browser unterstützt kein Vorlesen.', '');
+      return sRow('Stimme', vs.length ? 'Weitere Stimmen: iPhone-Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch.' : 'Keine deutsche Stimme gefunden.',
+        '<select id="ttsVoice" class="set-select" aria-label="Stimme">' + vs.map(function (v) { return '<option value="' + esc(v.voiceURI) + '"' + (cur && v.voiceURI === cur.voiceURI ? ' selected' : '') + '>' + esc(v.name) + '</option>'; }).join('') + '</select>');
+    },
+    ttsRate: function () { return sRow('Tempo', '', sSeg('ttsRate', [['0.8', '0,8×'], ['1', '1×'], ['1.2', '1,2×'], ['1.5', '1,5×']], String(lookVal('ttsRate')))); },
+    ttsThink: function () { return sRow('Denkpause im Audio-Quiz', 'Zeit zwischen Frage und Lösung.', sSeg('ttsThink', [['4', '4 s'], ['7', '7 s'], ['12', '12 s']], String(lookVal('ttsThink')))); },
+    ttsTest: function () { return TTS ? sRow('Probe', '', '<button type="button" class="btn sm sec" data-tts-test="1">Stimme anhören</button>') : ''; },
     tilt: function () { return sRow('Lichteffekt beim Neigen', 'Nur auf dem iPhone. Am Mac folgt er der Maus.', sTgl('tilt', !!LOOK.tilt)); },
     nav: function () { return sRow('Navigation am Mac', '', sSeg('nav', [['sidebar', 'Seitenleiste'], ['tabbar', 'Leiste unten']], LOOK.nav || 'sidebar')); },
     tabs: function () {
@@ -14785,6 +15001,7 @@ window.LW_START = function () {
     }
   };
   var SET_IC = {
+    vorlesen: '<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>',
     darstellung: '<circle cx="12" cy="12" r="8.5"/><circle cx="8.6" cy="10" r="1.1"/><circle cx="12" cy="7.6" r="1.1"/><circle cx="15.4" cy="10" r="1.1"/><path d="M12 20.5c-1.6 0-2.1-1.3-1.4-2.4.7-1.2-.1-2.6-1.6-2.6H7.2"/>',
     lesen: '<path d="M3.5 18 8 6l4.5 12M5.2 14h5.6"/><path d="M14.5 12.8a2.8 2.8 0 1 1 0 4.9M17.6 11v7"/>',
     bewegung: '<path d="M3.5 12h3.5l2-5 4 10 2-5h5.5"/>',
@@ -14796,6 +15013,8 @@ window.LW_START = function () {
   var SETS = {
     darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'kachel', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['motion', 'pagefx', 'tilt', 'calm', 'celebrate', 'rings']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
       reset: function () { lookSet({ motion: null, tilt: false, preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, pagefx: null, glassB: null, tap: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Kacheln Symbole Ruhig Konfetti Feier Ringe Profil Überrasch eigene Farbe Animationen Bewegung Seitenwechsel Neigen Lichteffekt Navigation Seitenleiste Leiste unten Tabs Reiter' },
+    vorlesen: { t: 'Vorlesen', rows: ['ttsVoice', 'ttsRate', 'ttsThink', 'ttsTest'], quick: ['ttsRate'], tier: 1, val: function () { var v = ttsVoice(); return (v ? v.name : 'Stimme des Geräts') + ' · ' + String(lookVal('ttsRate')).replace('.', ',') + '×'; },
+      reset: function () { lookSet({ ttsVoice: null, ttsRate: null, ttsThink: null }); }, find: 'Vorlesen Audio Stimme Tempo Sprachausgabe Hören Auto unterwegs Audio-Quiz' },
     lesen: { t: 'Lesen', rows: ['size', 'serif', 'hfont', 'width', 'densLearn', 'densList', 'contrast'], quick: ['size', 'serif'], tier: 1, val: function () { return 'Text ' + String(lookVal('size')).toUpperCase() + (lookVal('serif') ? ' · Serif' : ''); },
       reset: function () { lookSet({ size: null, serif: null, width: null, density: null, densLearn: null, densList: null, contrast: null }); }, find: 'Textgröße Schriftart Serif Überschriften Breite Abstände Dichte Kontrast' },
     quiz: { t: 'Quiz', rows: ['shuffle', 'why', 'skip', 'quickn'], quick: ['shuffle', 'why'], tier: 2, val: function () { return quickCount() + ' Fragen im Schnell-Quiz'; },
@@ -15313,6 +15532,7 @@ window.LW_START = function () {
       var db = await window.claude.use('db'); if (!db) return;
       var user = await window.claude.use('user'); var uid = user && await user.id(); if (!uid) return;
       CLOUD.ref = db.doc('data/users/' + uid + '/' + (CUR.id === 'dp600' ? 'progress' : 'progress-' + CUR.id));
+      cloudCoursesInit(db.doc('data/users/' + uid + '/courses'));
       CLOUD.state = 'on';
       CLOUD.ref.onSnapshot(function (snap) {
         if (snap.metadata && snap.metadata.hasPendingWrites) return;
@@ -15328,6 +15548,38 @@ window.LW_START = function () {
         if (JSON.stringify(S) !== d.json) CLOUD.dirty = true;
       }, function () { CLOUD.state = 'error'; });
     } catch (err) { CLOUD.state = 'off'; }
+  }
+  // Selbst hinzugefügte Kurse (nur die Prüfungscodes) zwischen Geräten abgleichen; Inhalte lädt jedes Gerät selbst von Learn
+  function cloudCoursesInit(ref) {
+    if (!window.LWImport) return;
+    CLOUD.cref = ref;
+    ref.onSnapshot(function (snap) {
+      var want = (snap.exists && snap.data() && snap.data().codes) || [], gone = (snap.exists && snap.data() && snap.data().removed) || [];
+      window.LWImport.list().then(function (have) {
+        var ids = have.map(function (h) { return h.id; }), builtin = COURSES.filter(function (c) { return !c.userAdded; }).map(function (c) { return c.id; });
+        want.forEach(function (code) {
+          var id = code.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (ids.indexOf(id) >= 0 || builtin.indexOf(id) >= 0) return;
+          window.LWImport.search(code).then(function (r) {
+            var hit = (r || []).filter(function (c) { return c.id === id; })[0];
+            if (hit) window.LWImport.add(hit, null, impOnProgress).then(function () { toast('Kurs ' + hit.code + ' von einem anderen Gerät übernommen'); });
+          });
+        });
+        if (!snap.exists) cloudCoursesPush();
+        gone.forEach(function (code) { var id = code.toLowerCase().replace(/[^a-z0-9]/g, ''); if (ids.indexOf(id) >= 0 && id !== CUR.id) window.LWImport.remove(id); });
+      });
+    }, function () {});
+  }
+  function cloudCoursesPush(removedCode) {
+    if (!CLOUD.cref || !window.LWImport) return;
+    window.LWImport.list().then(function (have) {
+      var codes = have.map(function (h) { return h.code; }).filter(Boolean);
+      return CLOUD.cref.get().then(function (snap) {
+        var removed = ((snap.exists && snap.data() && snap.data().removed) || []).filter(function (c) { return codes.indexOf(c) < 0; });
+        if (removedCode && removed.indexOf(removedCode) < 0) removed.push(removedCode);
+        return CLOUD.cref.set({ codes: codes, removed: removed, updated: Date.now() });
+      });
+    }).catch(function () {});
   }
   function cloudSchedule() {
     if (!CLOUD.ref) return;
