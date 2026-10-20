@@ -3512,6 +3512,7 @@ html[data-oled="1"][data-glass="on"]:not([data-calm="on"]).tbnav body:not(.tb-an
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.0.1', d: '2026-10-20', items: ['Neu hinzugefügte Kurse erscheinen sofort in der Kurs-Auswahl und unter „Meine Kurse“'] },
   { v: '2.0', d: '2026-10-20', items: ['Neu: Kurse direkt in der App hinzufügen – Kurs von Microsoft Learn suchen, auswählen, fertig', 'Lernpfade, Module, vollständige Lerntexte, Begriffskarten und Prüfungsdomänen werden direkt von Microsoft Learn geladen', 'Wissenscheck-Fragen von Learn zum Durchdenken; Lösungen folgen in einem späteren Update', 'Optionaler Fragebogen (Ziel, Vorwissen, Wünsche) für die künftige erweiterte Stufe', 'Selbst hinzugefügte Kurse lassen sich ausblenden oder entfernen', 'Unfertig geladene Kurse laden beim nächsten Öffnen automatisch weiter'] },
   { v: '1.27', d: '2026-10-20', items: ['PL-300: Lerntexte vollständig von Microsoft Learn, in Originalreihenfolge mit Zwischenüberschriften', 'Code-Beispiele, Tabellen und Hinweise aus Learn werden jetzt mit angezeigt', 'Inhalte werden über die offizielle Schnittstelle von Microsoft Learn geholt und lassen sich gezielt aktualisieren'] },
   { v: '1.26.4', d: '2026-10-20', items: ['Darstellung: Vorschau kleiner und flacher', 'Profile: Lücke zwischen Beschreibung und Eingabefeld entfernt'] },
@@ -13253,7 +13254,13 @@ window.LW_START = function () {
   }
   function impStart() {
     IMP.step = 3; IMP.err = ''; IMP.prog[IMP.pick.id] = { done: 0, total: 0 }; route(true);
-    window.LWImport.add(IMP.pick, hasWishes() ? JSON.parse(JSON.stringify(IMP.w)) : null, impOnProgress).catch(function () {
+    window.LWImport.add(IMP.pick, hasWishes() ? JSON.parse(JSON.stringify(IMP.w)) : null, impOnProgress).then(function (rec) {
+      // sofort in Kurs-Auswahl und „Meine Kurse“ zeigen, nicht erst nach dem nächsten Start
+      if (COURSES.some(function (c) { return c.id === rec.id; })) return;
+      var c = Object.assign({ prefix: rec.id + '-', userAdded: true, pending: 1 }, JSON.parse(JSON.stringify(rec.course)));
+      if (!c.exam.domains || !Object.keys(c.exam.domains).length) c.exam.domains = { all: { label: 'Alle Inhalte', range: '100 %', share: 1, color: 'var(--dom-prep)' } };
+      COURSES.push(c); (D.courses = D.courses || []).push(c);
+    }).catch(function () {
       IMP.err = 'Der Kurs konnte nicht geladen werden. Bitte prüfen Sie die Internetverbindung und versuchen Sie es erneut.'; if (curView === 'import') route(true);
     });
   }
