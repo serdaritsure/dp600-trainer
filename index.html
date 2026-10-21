@@ -2997,6 +2997,11 @@ body.au-on .tb-resume { visibility: hidden !important; }
   .g-search { flex-direction: column; align-items: stretch; }
   .g-scope { max-width: none; min-height: 40px; }
 }
+.g-item[data-gi] { cursor: pointer; transition: border-color .15s, transform .15s; }
+.g-item[data-gi]:hover { border-color: var(--accent); }
+.g-item[data-gi]:active { transform: scale(.99); }
+mark.jump-hl { background: color-mix(in srgb, var(--accent) 45%, transparent); font-weight: 600; color: inherit; border-radius: 4px; padding: 0 2px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); transition: background .8s, box-shadow .8s; }
+mark.jump-hl.fade { background: transparent; box-shadow: none; }
 
 </style>
 <script>
@@ -3064,6 +3069,7 @@ body.au-on .tb-resume { visibility: hidden !important; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.3.2', d: '2026-10-21', items: ['Glossar: Tipp auf die Kachel öffnet den Eintrag direkt – die Fundstelle wird angesprungen und kurz markiert, auch in anderen Kursen'] },
   { v: '2.3.1', d: '2026-10-21', items: ['Glossar: jeder Kurs einzeln wählbar oder alle zusammen', 'PL-300: leere Begriffseinträge entfernt'] },
   { v: '2.3', d: '2026-10-21', items: ['Glossar: Auswahl „Nur dieser Kurs“ oder „Alle Kurse“ – Treffer aus anderen Kursen öffnen den passenden Kurs', 'Stylesheet bereinigt: überholte und doppelte Regeln entfernt, Darstellung unverändert'] },
   { v: '2.2', d: '2026-10-20', items: ['Neu: Vorlesen – die Vertiefung eines Moduls Kapitel für Kapitel anhören, mit Pause, Springen und Tempo', 'Neu: Audio-Quiz – Frage, Antworten, Denkpause, dann Lösung mit Begründung, ganz ohne Antippen', 'Neue Einstellungsseite „Vorlesen“: Stimme, Tempo, Denkpause und Probe', 'Eigene Kurse per Link teilen – öffnet man ihn auf einem anderen Gerät, wird der Kurs dort angelegt', 'Eigene Kurse aktualisieren: geänderte Module auf Microsoft Learn werden neu geladen, automatisch einmal pro Woche', 'In der Claude-Version werden eigene Kurse automatisch auf allen Geräten übernommen'] },
@@ -11441,8 +11447,36 @@ window.LW_START = function () {
     if (keepScroll !== true && !isReduced() && !document.documentElement.dataset.vt) { app.classList.remove('page-in'); void app.offsetWidth; app.classList.add('page-in'); }
     animateView(keepScroll === true);
     if (pendingSec) { var ps = pendingSec; pendingSec = null; setTimeout(function () { var el = document.getElementById(ps); if (el) { if (el.tagName === 'DETAILS') el.open = true; scrollToEl(el); } }, 350); }
+    if (pendingJump) { var pj = pendingJump; pendingJump = null; setTimeout(function () { jumpTo(pj); }, 380); }
   }
-  var pendingSec = null;
+  var pendingSec = null, pendingJump = null;
+  try { pendingJump = JSON.parse(sessionStorage.getItem('lw.jump') || 'null'); sessionStorage.removeItem('lw.jump'); } catch (e) {}
+  // Aus dem Glossar: Abschnitt öffnen, Fundstelle im Text markieren und dorthin scrollen
+  function jumpTo(j) {
+    var box = j.sec && document.getElementById(j.sec);
+    if (box && box.tagName === 'DETAILS') box.open = true;
+    var root = box || app, words = (j.find || []).filter(Boolean), hit = null;
+    for (var w = 0; w < words.length && !hit; w++) {
+      var needle = words[w].toLowerCase(), walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+      while ((n = walker.nextNode())) {
+        if (n.parentElement.closest('script, style, .toc-sub, .mod-toc')) continue;
+        var i = n.nodeValue.toLowerCase().indexOf(needle);
+        if (i < 0) continue;
+        var r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + needle.length);
+        var mk = document.createElement('mark'); mk.className = 'jump-hl';
+        try { r.surroundContents(mk); hit = mk; } catch (e) {}
+        break;
+      }
+    }
+    if (!hit && (j.tries || 0) < 4) { j.tries = (j.tries || 0) + 1; if (box) scrollToEl(box); setTimeout(function () { jumpTo(j); }, 350); return; }   // Inhalte wie Karteikarten erscheinen leicht verzögert
+    var target = hit || box;
+    if (!target) return;
+    var det = target.closest && target.closest('details'); if (det) det.open = true;
+    var card = target.closest && target.closest('.fc'); if (card && j.back && hit.closest('.fc-back')) card.classList.add('flip');
+    if (hit) window.scrollTo({ top: Math.max(0, hit.getBoundingClientRect().top + scrollY - innerHeight * .35), behavior: isReduced() ? 'auto' : 'smooth' });
+    else scrollToEl(target);
+    if (hit) setTimeout(function () { hit.classList.add('fade'); setTimeout(function () { if (hit.parentNode) hit.replaceWith.apply(hit, Array.prototype.slice.call(hit.childNodes)); }, 1200); }, 6000);
+  }
 
   // Weitermachen: angefangenes Quiz oder letzte Lernstelle
   function resumeInfo() {
@@ -13168,7 +13202,7 @@ window.LW_START = function () {
   function viewGlossary(initial) {
     var sv = lsGet('lw.glossScope'), scope = sv === 'all' || COURSES.some(function (c) { return c.id === sv; }) ? sv : CUR.id;
     if (COURSES.length < 2) scope = CUR.id;
-    var items = buildGlossary(scope), kind = 'all';
+    var items = buildGlossary(scope), kind = 'all', lastRes = [];
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow" id="geb">' + (scope === 'all' ? 'Alle Kurse durchsuchen' : 'Alle Module durchsuchen') + '</div><h1>Glossar & Cheat-Sheet</h1>' +
       '<div class="sub">Begriffe, Vertiefungen, Code, Prüfungsfallen und Karteikarten – live gefiltert.</div></div>' +
       '<div class="g-search"><input class="search-big" id="gq" type="search" placeholder="z. B. Shortcut, SCD Typ 2, Query Folding, MERGE …" value="' + esc(initial) + '">' +
@@ -13188,9 +13222,9 @@ window.LW_START = function () {
         return !ql || (x.title + ' ' + x.text + ' ' + (x.code || '') + ' ' + (x.lang || '')).toLowerCase().indexOf(ql) >= 0;
       });
       var by = {}; if (scope === 'all') res.forEach(function (x) { by[x.c.id] = (by[x.c.id] || 0) + 1; });
-      document.getElementById('gl').innerHTML = res.length ? '<p class="muted small">' + res.length + ' Treffer' + (scope === 'all' ? ' · ' + COURSES.filter(function (c) { return by[c.id]; }).map(function (c) { return c.exam.code + ' ' + by[c.id]; }).join(' · ') : '') + '</p>' + res.slice(0, 200).map(function (x) {
+      document.getElementById('gl').innerHTML = res.length ? '<p class="muted small">' + res.length + ' Treffer' + (scope === 'all' ? ' · ' + COURSES.filter(function (c) { return by[c.id]; }).map(function (c) { return c.exam.code + ' ' + by[c.id]; }).join(' · ') : '') + '</p>' + (lastRes = res.slice(0, 200)).map(function (x, idx) {
         var other = x.c.id !== CUR.id, link = other ? '<a href="javascript:void 0" data-xgo="' + esc(x.c.id) + '|' + esc(x.m.id) + '">' + esc(x.c.exam.code) + ' · M' + x.m.nr + ' ›</a>' : '<a href="#/module/' + x.m.id + '">' + (scope === 'all' ? esc(x.c.exam.code) + ' · ' : '') + 'M' + x.m.nr + ' ›</a>';
-        return '<div class="g-item"><div class="g-top"><span class="tag' + (x.kind === 'trap' ? ' warn' : x.kind === 'code' ? ' model' : x.kind === 'term' ? ' prep' : x.kind === 'deep' ? ' info' : '') + '">' + KIND[x.kind] + (x.lang ? ' · ' + esc(x.lang) : '') + '</span><b>' + hl(x.title, q) + '</b><span class="spacer"></span>' + link + '</div>' +
+        return '<div class="g-item" data-gi="' + idx + '" role="link" tabindex="0"><div class="g-top"><span class="tag' + (x.kind === 'trap' ? ' warn' : x.kind === 'code' ? ' model' : x.kind === 'term' ? ' prep' : x.kind === 'deep' ? ' info' : '') + '">' + KIND[x.kind] + (x.lang ? ' · ' + esc(x.lang) : '') + '</span><b>' + hl(x.title, q) + '</b><span class="spacer"></span>' + link + '</div>' +
           (x.text.trim() ? '<p>' + hl(x.text, q, x.kind === 'deep' ? 320 : 0) + '</p>' : '') +
           (x.code ? '<pre class="code">' + highlight(x.code, x.lang) + '</pre>' : '') + '</div>';
       }).join('') : emptyBox('search', 'Keine Treffer für „' + esc(q) + '“', scope !== 'all' && COURSES.length > 1 ? 'Versuchen Sie „Alle Kurse“ oder einen englischen Begriff, z. B. „Shortcut“ oder „RLS“.' : 'Versuchen Sie einen kürzeren oder englischen Begriff, z. B. „Shortcut“ oder „RLS“.');
@@ -13202,8 +13236,14 @@ window.LW_START = function () {
       kind = b.dataset.k; chips(); draw();
     });
     document.getElementById('gl').addEventListener('click', function (e) {
-      var b = e.target.closest('[data-xgo]'); if (!b) return;
-      var p = b.dataset.xgo.split('|'); lsSet('lw.course', p[0]); location.hash = '#/module/' + p[1] + '/learn'; location.reload();
+      var it = e.target.closest('.g-item[data-gi]'); if (!it || e.target.closest('pre') && window.getSelection().toString()) return;
+      e.preventDefault();
+      var x = lastRes[+it.dataset.gi]; if (!x) return;
+      var q = input.value.trim(), plainTxt = String(x.text || '').replace(/\*\*|`/g, '').trim();
+      var sec = x.kind === 'deep' ? 'deep-' + (x.m.deep || []).map(function (d) { return d.t; }).indexOf(x.title) : x.kind === 'trap' ? 'sec-traps' : x.kind === 'code' ? 'sec-code' : x.kind === 'card' ? 'sec-fc' : 'sec-learn';
+      var j = { sec: sec, find: [q, x.kind === 'deep' ? plainTxt.slice(0, 40) : x.title, plainTxt.slice(0, 40)], back: x.kind === 'card' && q && plainTxt.toLowerCase().indexOf(q.toLowerCase()) >= 0 };
+      if (x.c.id !== CUR.id) { try { sessionStorage.setItem('lw.jump', JSON.stringify(j)); } catch (err) {} lsSet('lw.course', x.c.id); location.hash = '#/module/' + x.m.id + '/learn'; location.reload(); return; }
+      pendingJump = j; go('#/module/' + x.m.id + '/learn');
     });
     chips(); draw(); input.focus();
   }
