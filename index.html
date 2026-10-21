@@ -3003,6 +3003,78 @@ body.au-on .tb-resume { visibility: hidden !important; }
 mark.jump-hl { background: color-mix(in srgb, var(--accent) 45%, transparent); font-weight: 600; color: inherit; border-radius: 4px; padding: 0 2px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); transition: background .8s, box-shadow .8s; }
 mark.jump-hl.fade { background: transparent; box-shadow: none; }
 
+/* ===== 2.4: gemeinsame Module, 5 Minuten, Woche, Prüfungstag, Urkunde, Landkarte ===== */
+.shared-banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; padding: 12px 16px; border-radius: calc(16px * var(--rf, 1)); background: var(--accent-soft); color: var(--text); }
+.shared-banner .ico { width: 20px; height: 20px; color: var(--accent); }
+.shared-banner span { flex: 1; min-width: 180px; font-size: 14.5px; }
+.week-card .wk-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.week-card h2 { margin: 2px 0 12px; font-size: 19px; }
+.wk-x { width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--text-2); font-size: 20px; line-height: 1; cursor: pointer; flex: none; }
+.wk-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.wk-stats span { display: grid; gap: 2px; padding: 10px; border-radius: calc(12px * var(--rf, 1)); background: var(--surface-2); text-align: center; }
+.wk-stats b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.wk-stats small { font-size: 11.5px; color: var(--text-3); }
+.wk-dom, .wk-trend { margin: 10px 0 0; font-size: 14px; color: var(--text-2); }
+@media (max-width: 420px) { .wk-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.exam-day h2 { margin: 2px 0 12px; font-size: 19px; }
+.exam-day > .btn { margin-bottom: 12px; }
+.ed-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ed-list li { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--hairline); font-size: 15px; }
+.ed-list li:last-child { border-bottom: 0; }
+.ed-list li.on a, .ed-list li.on span { color: var(--text-3); text-decoration: line-through; }
+.ed-list a { color: var(--text); text-decoration: none; }
+.ed-tick { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--hairline-strong); background: none; cursor: pointer; padding: 0; }
+.ed-list li.on .ed-tick { border-color: var(--ok); background: var(--ok); box-shadow: inset 0 0 0 4px var(--surface); }
+.five-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 0 0 16px; }
+.five-bar i { height: 5px; border-radius: 3px; background: var(--hairline-strong); }
+.five-bar i.done { background: var(--ok); } .five-bar i.cur { background: var(--accent); }
+.five-cards { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.five-q { display: grid; gap: 12px; }
+.five .kc-opt.ok { border-color: var(--ok) !important; background: var(--ok-bg) !important; }
+.five .kc-opt.bad { border-color: var(--bad) !important; background: var(--bad-bg) !important; }
+.five-read h2 { margin-top: 0; }
+.five-more { display: inline-block; margin-top: 8px; font-weight: 600; }
+.five-done p { margin: 0 0 14px; }
+.cert-ov { position: fixed; inset: 0; z-index: 300; overflow: auto; background: color-mix(in srgb, var(--bg) 92%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: max(16px, env(safe-area-inset-top)) 16px 40px; }
+.cert-tools { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 0 auto 16px; max-width: 900px; }
+.cert-tools input { flex: 1; min-width: 180px; min-height: 40px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: var(--surface); color: var(--text); font: 500 15px var(--font); padding: 0 16px; }
+.cert { max-width: 900px; margin: 0 auto; aspect-ratio: 1.414; background: #fff; color: #393534; border-radius: 6px; box-shadow: 0 20px 60px rgba(0, 0, 0, .25); padding: 3.2%; box-sizing: border-box; }
+.cert-in { height: 100%; box-sizing: border-box; border: 2px solid #80be6a; border-radius: 4px; padding: 5% 7%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.4vmin; position: relative; font-family: "Source Sans 3", "Source Sans Pro", -apple-system, sans-serif; }
+.cert-brand { position: absolute; top: 5%; left: 6%; font-size: clamp(11px, 1.6vw, 16px); color: #636260; }
+.cb-it { color: #80be6a; font-weight: 700; } .cb-sure { color: #393534; font-weight: 400; }
+.cert-k { font-size: clamp(14px, 2vw, 20px); letter-spacing: .3em; text-transform: uppercase; color: #649554; }
+.cert-name { font-size: clamp(26px, 5.2vw, 52px); font-weight: 600; color: #393534; border-bottom: 2px solid #80be6a; padding: 0 4% 1%; }
+.cert-what { font-size: clamp(14px, 2vw, 20px); }
+.cert-course { font-size: clamp(16px, 2.6vw, 26px); font-weight: 600; color: #649554; }
+.cert-extra { font-size: clamp(12px, 1.6vw, 16px); color: #636260; }
+.cert-foot { position: absolute; bottom: 9%; left: 7%; right: 7%; display: flex; justify-content: space-between; font-size: clamp(10px, 1.3vw, 13px); color: #636260; }
+.cert-note { position: absolute; bottom: 4%; left: 7%; right: 7%; font-size: clamp(9px, 1.1vw, 11px); color: #9a9896; }
+@media print {
+  body.cert-open > *:not(.cert-ov) { display: none !important; }
+  body.cert-open .cert-ov { position: static; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; overflow: visible; }
+  body.cert-open .cert-tools { display: none; }
+  body.cert-open .cert { box-shadow: none; max-width: none; width: 100%; border-radius: 0; }
+  @page { size: A4 landscape; margin: 10mm; }
+}
+.cmap-card { padding: 8px; overflow: hidden; }
+.cmap { width: 100%; height: auto; display: block; touch-action: manipulation; }
+.cmap line { stroke: var(--hairline-strong); transition: stroke .2s, opacity .2s; }
+.cmap .cm-n { cursor: pointer; }
+.cmap .cm-n circle { fill: var(--accent); fill-opacity: .82; stroke: var(--surface); stroke-width: 2; transition: opacity .2s; }
+.cmap .cm-n text { fill: var(--text); font: 600 15px var(--font); text-anchor: middle; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; transition: opacity .2s; }
+.cmap.focus line, .cmap.focus .cm-n { opacity: .18; }
+.cmap.focus line.on { opacity: 1; stroke: var(--accent); }
+.cmap.focus .cm-n.on { opacity: 1; }
+.cmap.narrow .cm-n text { font-size: 21px; stroke-width: 5px; }
+/* Urkunde: Kopf und Fuß im Fluss, damit auf schmalen Bildschirmen nichts überlappt */
+.cert-in { justify-content: space-between; gap: 0; }
+.cert-in .cert-mid { display: flex; flex-direction: column; align-items: center; gap: clamp(6px, 1.4vw, 14px); margin: auto 0; padding: 3% 0; }
+.cert-brand, .cert-foot, .cert-note { position: static; }
+.cert-brand { align-self: flex-start; }
+.cert-foot { width: 100%; gap: 12px; flex-wrap: wrap; }
+.cert-note { width: 100%; margin-top: 6px; }
+@media (max-width: 600px) { .cert { aspect-ratio: auto; } .cert-in { min-height: 420px; } }
+
 </style>
 <script>
   // Theme vor dem ersten Rendern setzen (kein Aufblitzen)
@@ -3069,6 +3141,7 @@ mark.jump-hl.fade { background: transparent; box-shadow: none; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.4', d: '2026-10-21', items: ['Gemeinsame Module: In einem anderen Kurs erledigte Module lassen sich mit einem Tipp übernehmen', 'Neu: 5-Minuten-Session – 3 Karteikarten, 2 Fragen und ein Abschnitt für zwischendurch', 'Wochenrückblick am Wochenanfang: Lerntage, Minuten, Fragen und Domänen der letzten Woche', 'Erfolge werden beim Erreichen kurz gemeldet (abschaltbar unter Darstellung → Bewegung & Extras)', 'Prüfungstag: in den letzten 7 Tagen Countdown mit Checkliste, am Vortag nur noch die Prüfungsfallen', 'Urkunde zum Drucken oder als PDF, sobald ein Kurs abgeschlossen oder eine Simulation bestanden ist', 'Neu: Begriffs-Landkarte – die wichtigsten Begriffe eines Kurses und ihre Zusammenhänge'] },
   { v: '2.3.2', d: '2026-10-21', items: ['Glossar: Tipp auf die Kachel öffnet den Eintrag direkt – die Fundstelle wird angesprungen und kurz markiert, auch in anderen Kursen'] },
   { v: '2.3.1', d: '2026-10-21', items: ['Glossar: jeder Kurs einzeln wählbar oder alle zusammen', 'PL-300: leere Begriffseinträge entfernt'] },
   { v: '2.3', d: '2026-10-21', items: ['Glossar: Auswahl „Nur dieser Kurs“ oder „Alle Kurse“ – Treffer aus anderen Kursen öffnen den passenden Kurs', 'Stylesheet bereinigt: überholte und doppelte Regeln entfernt, Darstellung unverändert'] },
@@ -11412,10 +11485,13 @@ window.LW_START = function () {
     else if (view === 'exam' && p[1] === 'result') viewExamResult(p[2]);
     else if (view === 'exam') viewExamConfig();
     else if (view === 'errors') viewErrors();
-    else if (view === 'glossary') viewGlossary(r.params.q || '');
+    else if (view === 'glossary') viewGlossary(r.params.q || '', r.params.k);
     else if (view === 'progress') viewProgress();
     else if (view === 'import') viewImport();
     else if (view === 'add') { viewAddLink(p[1] || ''); return; }
+    else if (view === 'five') { if (p[1] === 'new') { FIVE = null; history.replaceState(null, '', '#/five'); } viewFive(); }
+    else if (view === 'map') viewMap();
+    else if (view === 'adopt') { adoptShared(sharedOpen()); location.hash = '#/home'; return; }
     else if (view === 'settings') viewSettings(p[1]);
     else if (view === 'plan') viewPlan();
     else if (view === 'notes') viewNotes();
@@ -11447,6 +11523,7 @@ window.LW_START = function () {
     if (keepScroll !== true && !isReduced() && !document.documentElement.dataset.vt) { app.classList.remove('page-in'); void app.offsetWidth; app.classList.add('page-in'); }
     animateView(keepScroll === true);
     if (pendingSec) { var ps = pendingSec; pendingSec = null; setTimeout(function () { var el = document.getElementById(ps); if (el) { if (el.tagName === 'DETAILS') el.open = true; scrollToEl(el); } }, 350); }
+    try { checkBadges(); } catch (e) {}
     if (pendingJump) { var pj = pendingJump; pendingJump = null; setTimeout(function () { jumpTo(pj); }, 380); }
   }
   var pendingSec = null, pendingJump = null;
@@ -12354,6 +12431,8 @@ window.LW_START = function () {
     if (ptH) steps.push(['learn', 'Heute laut Plan', ptH.label, ptH.href]);
     if (ri0) steps.push(['play', 'Weitermachen', ri0.label, '#/resume']);
     var hasQ = Object.keys(QIDX).length > 0;
+    var shN = sharedOpen().length;
+    if (shN) steps.push(['learn', shN + (shN === 1 ? ' Modul kennen' : ' Module kennen') + ' Sie schon', 'Aus einem anderen Kurs erledigt – hier antippen, um sie zu übernehmen', '#/adopt']);
     if (hasQ) steps.push(['focus', 'Fokus-Session · 15 Min.', (wn || dueN ? 'Erst Fälliges und Fehler, dann neue Fragen und ein Abschnitt' : '10 Fragen und ein passender Abschnitt zum Lesen'), '#/focus']);
     if (wn) steps.push(['errors', wn + (wn === 1 ? ' offener Fehler' : ' offene Fehler'), 'Gezielt wiederholen, bis es sitzt', '#/errors']);
     if (MODS[next]) steps.push(['learn', 'M' + CMOD[next].nr + ' · ' + CMOD[next].title, 'Nächstes offenes Modul im ' + CMOD[next].lp.title, '#/module/' + next]);
@@ -12411,7 +12490,9 @@ window.LW_START = function () {
     // (3) Startseite nur noch „Heute“; Lernpfade, Schnell-Quiz und Prüfung liegen unter „Entdecken“
     var more = '<a class="home-more" href="#/discover"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + NAV_ICONS.discover + '</svg><span><b>Lernpfade & Quiz</b><small>Alle Lernpfade, Schnell-Quiz und Prüfungssimulation</small></span><span class="ni-go" aria-hidden="true">›</span></a>';
     app.innerHTML = discover ? '<div class="home discover">' + carousel + quick + examRow :
-      '<div class="home">' + today + backupBar() + more +
+      '<div class="home">' + today + examDayCard() + weekCard() +
+      (hasQ ? '<a class="home-more five-link" href="#/five/new"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.5 1.5M10 3.5h4"/></svg><span><b>5-Minuten-Session</b><small>3 Karteikarten, 2 Fragen, ein Abschnitt – für zwischendurch</small></span><span class="ni-go" aria-hidden="true">›</span></a>' : '') +
+      backupBar() + more +
       '<footer class="home-foot">Inhalte basieren ausschließlich auf Microsoft Learn und dem offiziellen ' + esc(CFG.exam.code) + ' Study Guide. Keine offiziellen Prüfungsfragen. Microsoft und Microsoft Fabric sind Marken der Microsoft Corporation. © IT sure GmbH</footer></div>';
     if (app.querySelector('.lp-carousel')) initCarousel(app.querySelector('.lp-carousel'));
     if (app.querySelector('.stepper')) app.querySelector('.stepper').addEventListener('click', function (e) {
@@ -12519,7 +12600,7 @@ window.LW_START = function () {
       '<h1>' + esc(m ? m.title : c.title) + '</h1>' +
       (lead ? '<p class="mh-lead">' + md(lead) + '</p>' : '') +
       '<div class="mh2-meta">' + [readMin ? '≈ ' + readMin + ' Min. Lesezeit' : '', m ? (m.quiz || []).length + ' Quizfragen' : '', m ? 'Bestwert ' + (best != null ? '<b class="' + (best >= 80 ? 'ok' : 'warn') + '">' + best + ' %</b>' : '–') : ''].filter(Boolean).join('<i aria-hidden="true">·</i>') + '</div>' +
-      '<div class="mh2-status">' + statusSeg(mid) + '</div></header>' +
+      '<div class="mh2-status">' + statusSeg(mid) + '</div></header>' + sharedBanner(mid) +
       '<div class="skip-banner' + (st === 'skip' ? '' : ' hidden') + '" id="skipBanner">Als <b>nicht relevant</b> markiert – ' + (S.settings.ignoreSkipped ? 'wird bei Fortschritt und Prüfungssimulation ignoriert.' : 'wird laut Einstellung trotzdem berücksichtigt (siehe Fortschritt & Daten).') + '</div>';
     if (m) h += '<div class="tabs"><a class="tab' + (tab === 'learn' ? ' active' : '') + '" href="#/module/' + mid + '/learn">Wissen & Praxis</a><a class="tab' + (tab === 'quiz' ? ' active' : '') + '" href="#/module/' + mid + '/quiz">Wissenscheck</a></div>';
     h += '<div id="modBody"></div><div class="actions">' + (prev ? '<a class="btn sec" data-vt="back" href="#/module/' + prev + '">‹ M' + CMOD[prev].nr + '</a>' : '') + '<span class="spacer"></span>' +
@@ -13199,12 +13280,12 @@ window.LW_START = function () {
     var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
     return h.replace(/(^|>)([^<]+)/g, function (_, a, b) { return a + b.replace(re, '<mark>$1</mark>'); });
   }
-  function viewGlossary(initial) {
+  function viewGlossary(initial, kind0) {
     var sv = lsGet('lw.glossScope'), scope = sv === 'all' || COURSES.some(function (c) { return c.id === sv; }) ? sv : CUR.id;
     if (COURSES.length < 2) scope = CUR.id;
-    var items = buildGlossary(scope), kind = 'all', lastRes = [];
+    var items = buildGlossary(scope), kind = KIND[kind0] ? kind0 : 'all', lastRes = [];
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow" id="geb">' + (scope === 'all' ? 'Alle Kurse durchsuchen' : 'Alle Module durchsuchen') + '</div><h1>Glossar & Cheat-Sheet</h1>' +
-      '<div class="sub">Begriffe, Vertiefungen, Code, Prüfungsfallen und Karteikarten – live gefiltert.</div></div>' +
+      '<div class="sub">Begriffe, Vertiefungen, Code, Prüfungsfallen und Karteikarten – live gefiltert. <a href="#/map">Begriffs-Landkarte ansehen ›</a></div></div>' +
       '<div class="g-search"><input class="search-big" id="gq" type="search" placeholder="z. B. Shortcut, SCD Typ 2, Query Folding, MERGE …" value="' + esc(initial) + '">' +
       (COURSES.length > 1 ? '<select id="gscope" class="set-select g-scope" aria-label="Suchbereich"><option value="all"' + (scope === 'all' ? ' selected' : '') + '>Alle Kurse (' + COURSES.length + ')</option>' +
         COURSES.map(function (c) { return '<option value="' + esc(c.id) + '"' + (scope === c.id ? ' selected' : '') + '>' + esc(c.exam.code) + ' · ' + esc(c.title) + (c.id === CUR.id ? ' (aktiv)' : '') + '</option>'; }).join('') + '</select>' : '') + '</div>' +
@@ -13864,6 +13945,270 @@ window.LW_START = function () {
     var b = e.target.closest('[data-austart]'); if (!b) return;
     var m = MODS[b.dataset.mid]; if (m) auStart(b.dataset.austart, m);
   });
+  /* ---------------------------------------------------------------------
+     2.4: Gemeinsame Module, 5-Minuten-Session, Wochenrückblick, Erfolge,
+     Prüfungstag, Urkunde, Begriffs-Landkarte
+     --------------------------------------------------------------------- */
+  // (1) Dasselbe Learn-Modul in anderen Kursen: dort erledigt → hier übernehmen
+  function sharedInfo(mid) {
+    var uid = CMOD[mid] && CMOD[mid].learn && CMOD[mid].learn[0], out = null;
+    if (!uid) return null;
+    COURSES.forEach(function (c) {
+      if (c.id === CUR.id || out) return;
+      var st = courseState(c); if (!st) return;
+      (c.paths || []).forEach(function (p) { p.modules.forEach(function (x) {
+        if (out || x[2][0] !== uid) return;
+        var id2 = c.prefix + 'm' + x[0];
+        if ((st.status || {})[id2] === 'done') out = { c: c, nr: x[0], id: id2 };
+      }); });
+    });
+    return out;
+  }
+  function sharedOpen() { return ALL_MIDS.filter(function (m) { return statusOf(m) === 'open' && sharedInfo(m); }); }
+  function adoptShared(mids) {
+    mids.forEach(function (m) { S.status[m] = 'done'; });
+    save(); toast(mids.length === 1 ? 'Als erledigt übernommen' : mids.length + ' Module als erledigt übernommen');
+  }
+  function sharedBanner(mid) {
+    if (statusOf(mid) !== 'open') return '';
+    var s = sharedInfo(mid); if (!s) return '';
+    return '<div class="shared-banner">' + ico('check') + '<span>Kennen Sie schon: in <b>' + esc(s.c.exam.code) + '</b> als Modul ' + s.nr + ' erledigt.</span><button type="button" class="btn sm" data-adopt="' + mid + '">Übernehmen</button></div>';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-adopt]'); if (!b) return;
+    adoptShared(b.dataset.adopt === 'all' ? sharedOpen() : [b.dataset.adopt]); route(true);
+  });
+
+  // (4) Erfolge: beim Erreichen kurz melden (abschaltbar)
+  function badgeList() {
+    var st = streakInfo(), answered = Object.keys(S.answered).length, rd = readiness().p;
+    var fullRead = Object.keys(S.read).filter(function (k) { return MODS[k] && (S.read[k] || []).length >= (MODS[k].deep || []).length && (MODS[k].deep || []).length; }).length;
+    var list = [['first', 'Erster Schritt', 'Erste Frage beantwortet', answered > 0], ['mod1', 'Erstes Modul', 'Ein Modul erledigt', ALL_MIDS.some(function (m) { return statusOf(m) === 'done'; })]];
+    COURSE.forEach(function (lp) { var ps = pathStats(lp); list.push(['lp' + lp.nr, 'Lernpfad ' + lp.nr, 'Alle relevanten Module erledigt', ps.relevant > 0 && ps.done === ps.relevant]); });
+    list.push(['s7', 'Eine Woche dran', '7 Tage Serie', st.best >= 7], ['s30', 'Monatsmarathon', '30 Tage Serie', st.best >= 30],
+      ['read5', 'Leseratte', 'Vertiefung in 5 Modulen komplett gelesen', fullRead >= 5], ['clean', 'Aufgeräumt', '50+ Fragen und keine offenen Fehler', answered >= 50 && !wrongIds().length],
+      ['q100', 'Hundert', '100 Fragen beantwortet', answered >= 100], ['ready', 'Prüfungsreif', 'Prüfungsreife ab 70 %', rd >= 70], ['pass', 'Bestanden', 'Eine Simulation mit ≥ 700 Punkten', S.exams.some(function (e) { return e.passed; })]);
+    return list;
+  }
+  function checkBadges() {
+    S.badges = S.badges || {};
+    var fresh = badgeList().filter(function (b) { return b[3] && !S.badges[b[0]]; });
+    if (!fresh.length) return;
+    var first = !Object.keys(S.badges).length && fresh.length > 2;   // beim ersten Mal still nachtragen statt Meldungsflut
+    fresh.forEach(function (b) { S.badges[b[0]] = dayKey(); });
+    save();
+    if (first || lookVal('badges') === false) return;
+    toast('Erfolg erreicht: ' + fresh[0][1] + (fresh.length > 1 ? ' und ' + (fresh.length - 1) + ' weitere' : ''));
+    celebrate('badge-' + fresh[0][0] + dayKey());
+  }
+
+  // (3) Wochenrückblick: Montag bis Mittwoch die vergangene Woche, bis zum Wegklicken
+  function weekKey(d) { d = new Date(d); d.setHours(12); var day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return dayKey(d); }
+  function weekCard() {
+    var now = new Date(), wd = (now.getDay() + 6) % 7; if (wd > 2) return '';
+    var thisMon = weekKey(now); if (lsGet('lw.weekSeen') === thisMon) return '';
+    var start = parseDay(thisMon); start.setDate(start.getDate() - 7);
+    var A = ACTMAP(), q = 0, min = 0, fix = 0, days = 0, prevQ = 0, prevMin = 0;
+    for (var i = 0; i < 7; i++) { var d = new Date(start); d.setDate(d.getDate() + i); var a = A[dayKey(d)]; if (a) { q += a.q || 0; min += a.min || 0; fix += a.fix || 0; if ((a.q || 0) > 0 || (a.min || 0) >= 1) days++; } }
+    for (var j = 1; j <= 7; j++) { var d2 = new Date(start); d2.setDate(d2.getDate() - j); var a2 = A[dayKey(d2)]; if (a2) { prevQ += a2.q || 0; prevMin += a2.min || 0; } }
+    if (!q && !min) return '';
+    var rd = readiness(), ks = DOMAIN_KEYS.slice().sort(function (x, y) { return rd.dom[y].p - rd.dom[x].p; });
+    var cheer = days >= 5 ? 'Starke Woche – fast jeden Tag dabei.' : days >= 3 ? 'Gute Woche. Bleiben Sie dran.' : 'Jeder Tag zählt – diese Woche geht mehr.';
+    var trend = prevQ + prevMin ? (q + min >= prevQ + prevMin ? '↑ mehr als die Woche davor' : '↓ weniger als die Woche davor') : '';
+    return '<section class="card week-card"><div class="wk-head"><div><div class="t-eyebrow">Ihre Woche</div><h2>' + esc(cheer) + '</h2></div><button type="button" class="icon-btn wk-x" data-weekseen="' + thisMon + '" aria-label="Rückblick ausblenden">×</button></div>' +
+      '<div class="wk-stats"><span><b>' + days + '</b><small>von 7 Tagen</small></span><span><b>' + Math.round(min) + '</b><small>Minuten gelesen</small></span><span><b>' + q + '</b><small>Fragen</small></span><span><b>' + fix + '</b><small>Fehler abgebaut</small></span></div>' +
+      (DOMAIN_KEYS.length > 1 && Object.keys(S.answered).length ? '<p class="wk-dom">Stärkste Domäne: <b>' + esc(DOMAINS[ks[0]].label) + '</b> (' + rd.dom[ks[0]].p + ' %) · Aufholen: <b>' + esc(DOMAINS[ks[ks.length - 1]].label) + '</b> (' + rd.dom[ks[ks.length - 1]].p + ' %)</p>' : '') +
+      (trend ? '<p class="wk-trend">' + trend + '</p>' : '') + '</section>';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-weekseen]'); if (!b) return;
+    lsSet('lw.weekSeen', b.dataset.weekseen); var c = b.closest('.week-card'); if (c) c.remove();
+  });
+
+  // (5) Prüfungstag: letzte 7 Tage mit Checkliste, am Vortag nur Prüfungsfallen
+  var EXAM_CHECK = [
+    ['weak', 'Schwächste Domäne gezielt wiederholen', function () { return '#/quick/' + quickCount(); }],
+    ['sim', 'Eine Prüfungssimulation unter Zeitdruck', function () { return '#/exam'; }],
+    ['err', 'Offene Fehler abbauen', function () { return '#/errors'; }],
+    ['traps', 'Prüfungsfallen durchgehen', function () { return '#/glossary?k=trap'; }],
+    ['sys', 'Systemtest bei Pearson VUE (Online-Prüfung)', function () { return 'https://learn.microsoft.com/de-de/credentials/support/pearson-vue-online-proctored-exams'; }],
+    ['id', 'Ausweis bereitlegen, Raum und Schreibtisch frei', null],
+    ['rest', 'Am Vorabend früh schlafen – nicht mehr pauken', null]];
+  function examDayCard() {
+    var pd = planData(); if (!pd || pd.daysLeft < 0 || pd.daysLeft > 7) return '';
+    var ck = S.examCheck = S.examCheck || {}, auto = { sim: S.exams.some(function (e) { return (e.date || 0) >= Date.now() - 8 * 864e5; }), err: Object.keys(S.answered).length > 0 && !wrongIds().length };
+    var done = EXAM_CHECK.filter(function (x) { return ck[x[0]] || auto[x[0]]; }).length;
+    var title = pd.daysLeft === 0 ? 'Heute ist Prüfungstag. Viel Erfolg!' : pd.daysLeft === 1 ? 'Morgen ist Prüfung' : 'Noch ' + pd.daysLeft + ' Tage bis zur Prüfung';
+    return '<section class="card exam-day"><div class="t-eyebrow">Prüfungstag · ' + done + ' von ' + EXAM_CHECK.length + ' erledigt</div><h2>' + title + '</h2>' +
+      (pd.daysLeft <= 1 ? '<a class="btn" href="#/glossary?k=trap">Nur noch die Prüfungsfallen</a>' : '') +
+      '<ul class="ed-list">' + EXAM_CHECK.map(function (x) {
+        var on = !!(ck[x[0]] || auto[x[0]]), href = x[2] && x[2]();
+        return '<li class="' + (on ? 'on' : '') + '"><button type="button" class="ed-tick" data-edc="' + x[0] + '" aria-pressed="' + on + '" aria-label="' + esc(x[1]) + ' abhaken"></button>' +
+          (href ? '<a href="' + href + '"' + (/^https/.test(href) ? ' target="_blank" rel="noopener"' : '') + '>' + esc(x[1]) + '</a>' : '<span>' + esc(x[1]) + '</span>') + '</li>';
+      }).join('') + '</ul></section>';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-edc]'); if (!b) return;
+    S.examCheck = S.examCheck || {}; S.examCheck[b.dataset.edc] = !S.examCheck[b.dataset.edc]; save(); route(true);
+  });
+
+  // (2) 5-Minuten-Session: 3 Karteikarten, 2 Fragen, ein Absatz – dann Abschluss
+  var FIVE = null;
+  function pickRandom(a, n) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a.slice(0, n); }
+  function fiveBuild() {
+    var mods = MOD_LIST.filter(function (m) { return !(S.settings.ignoreSkipped && isSkipped(m.id)); });
+    var started = mods.filter(function (m) { return statusOf(m.id) === 'done' || (S.read[m.id] || []).length || (S.modules[m.id] || {}).visited; });
+    var pool = started.length ? started : mods.slice(0, 3);
+    var cards = []; pool.forEach(function (m) { (m.flashcards || []).forEach(function (c) { cards.push({ c: c, m: m }); }); });
+    var due = dueIds(), wrong = wrongIds(), qs = due.concat(wrong.filter(function (x) { return due.indexOf(x) < 0; }));
+    if (qs.length < 2) qs = qs.concat(pickRandom(Object.keys(QIDX).filter(function (id) { return qs.indexOf(id) < 0 && QIDX[id].correct; }), 2 - qs.length));
+    var open = mods.filter(function (m) { return statusOf(m.id) === 'open' && (m.deep || []).length; }), rm = open[0] || mods[0], ri = rm ? Math.min((S.read[rm.id] || []).length, (rm.deep || []).length - 1) : 0;
+    return { step: 0, cards: pickRandom(cards, 3), qs: qs.slice(0, 2), qi: 0, pick: [], shown: false, ok: 0, read: rm ? { m: rm, i: Math.max(0, ri) } : null, t0: Date.now() };
+  }
+  function viewFive() {
+    if (!FIVE) FIVE = fiveBuild();
+    var F = FIVE, total = 3, h = '<div class="container five"><div class="page-head"><div class="eyebrow">5-Minuten-Session · ' + (F.step > 2 ? 'Abgeschlossen' : 'Schritt ' + (F.step + 1) + ' von ' + total) + '</div>';
+    var bar = '<div class="five-bar">' + [0, 1, 2].map(function (i) { return '<i class="' + (i < F.step ? 'done' : i === F.step ? 'cur' : '') + '"></i>'; }).join('') + '</div>';
+    if (F.step === 0) {
+      h += '<h1>Drei Karteikarten</h1><div class="sub">Erst selbst beantworten, dann umdrehen.</div></div>' + bar +
+        (F.cards.length ? '<div class="flashcards five-cards">' + F.cards.map(function (x) { return '<button class="fc" aria-label="Karteikarte umdrehen"><div class="fc-inner"><div class="fc-face fc-front"><b>' + esc(x.c.front) + '</b><small>M' + x.m.nr + ' · Antippen ↻</small></div><div class="fc-face fc-back">' + md(x.c.back) + '</div></div></button>'; }).join('') + '</div>'
+          : '<p class="muted">Für diesen Kurs gibt es noch keine Karteikarten.</p>') +
+        '<div class="imp-actions"><span></span><button class="btn" data-five="next">Weiter zu den Fragen</button></div>';
+    } else if (F.step === 1) {
+      var qid = F.qs[F.qi], q = QIDX[qid];
+      if (!q) { F.step = 2; return viewFive(); }
+      var multi = q.correct.length > 1;
+      h += '<h1>Frage ' + (F.qi + 1) + ' von ' + F.qs.length + '</h1><div class="sub">' + (multi ? 'Wählen Sie ' + (COUNT_WORDS[q.correct.length] || q.correct.length) + ' Antworten.' : 'Wählen Sie eine Antwort.') + '</div></div>' + bar +
+        '<section class="card five-q"><p class="kc-t">' + md(q.q) + '</p><div class="kc-opts">' + q.opts.map(function (o, j) {
+          var cls = F.shown ? (q.correct.indexOf(j) >= 0 ? ' ok' : F.pick.indexOf(j) >= 0 ? ' bad' : '') : (F.pick.indexOf(j) >= 0 ? ' sel' : '');
+          return '<button type="button" class="ans kc-opt' + cls + '" data-fpick="' + j + '"' + (F.shown ? ' disabled' : '') + '><span class="mk">' + (j + 1) + '</span><span>' + md(o) + '</span></button>';
+        }).join('') + '</div>' + (F.shown && q.explain ? '<div class="note">' + ico('bulb') + '<span>' + md(q.explain) + '</span></div>' : '') + '</section>' +
+        '<div class="imp-actions"><span></span>' + (F.shown ? '<button class="btn" data-five="qnext">' + (F.qi + 1 < F.qs.length ? 'Nächste Frage' : 'Weiter zum Lesen') + '</button>' : '<button class="btn" data-five="check"' + (F.pick.length ? '' : ' disabled') + '>Antwort prüfen</button>') + '</div>';
+    } else if (F.step === 2) {
+      var r = F.read, d = r && r.m.deep[r.i];
+      h += '<h1>Ein Abschnitt zum Lesen</h1><div class="sub">' + (r ? 'M' + r.m.nr + ' · ' + esc(r.m.short || r.m.title) : '') + '</div></div>' + bar +
+        (d ? '<section class="card five-read"><h2>' + esc(d.t) + '</h2>' + (d.b ? deepBlocks(d.b.slice(0, 6)) : (d.p || []).slice(0, 3).map(function (p) { return '<p>' + md(p) + '</p>'; }).join('')) +
+          '<a class="five-more" href="#/module/' + r.m.id + '/learn">Ganzen Abschnitt im Modul lesen ›</a></section>' : '<p class="muted">Alles gelesen – stark!</p>') +
+        '<div class="imp-actions"><span></span><button class="btn" data-five="finish">Session abschließen</button></div>';
+    } else {
+      var mins = Math.max(1, Math.round((Date.now() - F.t0) / 60000));
+      h += '<h1>Geschafft.</h1><div class="sub">' + mins + ' Minuten · ' + F.cards.length + ' Karten · ' + F.ok + ' von ' + F.qs.length + ' Fragen richtig · ein Abschnitt gelesen</div></div>' +
+        '<div class="card five-done"><p>Kleine Schritte, jeden Tag – genau so bleibt es hängen.</p><div class="lpc-btns"><a class="btn" href="#/home">Zur Übersicht</a><button class="btn sec" data-five="again">Noch eine Session</button></div></div>';
+    }
+    app.innerHTML = h + '</div>';
+  }
+  app.addEventListener('click', function (e) {
+    if (curView !== 'five' || !FIVE) return;
+    var t = e.target.closest('.five .fc'); if (t) { t.classList.toggle('flip'); return; }
+    var p = e.target.closest('[data-fpick]');
+    if (p && !FIVE.shown) {
+      var j = +p.dataset.fpick, q = QIDX[FIVE.qs[FIVE.qi]], multi = q.correct.length > 1, k = FIVE.pick.indexOf(j);
+      if (multi) { if (k >= 0) FIVE.pick.splice(k, 1); else FIVE.pick.push(j); } else FIVE.pick = [j];
+      viewFive(); return;
+    }
+    var b = e.target.closest('[data-five]'); if (!b) return;
+    var a = b.dataset.five;
+    if (a === 'next') { FIVE.step = 1; }
+    else if (a === 'check') {
+      var qq = QIDX[FIVE.qs[FIVE.qi]], ok = FIVE.pick.length === qq.correct.length && FIVE.pick.every(function (x) { return qq.correct.indexOf(x) >= 0; });
+      recordAnswer(FIVE.qs[FIVE.qi], ok); if (ok) FIVE.ok++; FIVE.shown = true; save();
+    }
+    else if (a === 'qnext') { FIVE.shown = false; FIVE.pick = []; FIVE.qi++; if (FIVE.qi >= FIVE.qs.length) FIVE.step = 2; }
+    else if (a === 'finish') {
+      if (FIVE.read) { var rr = S.read[FIVE.read.m.id] || (S.read[FIVE.read.m.id] = []); if (rr.indexOf(FIVE.read.i) < 0) rr.push(FIVE.read.i); }
+      act().min += Math.max(1, Math.round((Date.now() - FIVE.t0) / 60000)); save(); FIVE.step = 3; celebrate('five' + Date.now());
+    }
+    else if (a === 'again') { FIVE = null; }
+    viewFive(); scrollTo(0, 0);
+  });
+
+  // (6) Urkunde: Kurs komplett oder Simulation bestanden → druckbare Urkunde (als PDF sichern)
+  function certReason() {
+    var ps = statsFor(ALL_MIDS), best = S.exams.filter(function (e) { return e.passed; }).sort(function (a, b) { return b.score - a.score; })[0];
+    if (ps.relevant && ps.done === ps.relevant) return { what: 'hat alle ' + ps.relevant + ' Module des Kurses erfolgreich abgeschlossen', extra: best ? 'Prüfungssimulation: ' + best.score + ' von 1000 Punkten' : '' };
+    if (best) return { what: 'hat die Prüfungssimulation mit ' + best.score + ' von 1000 Punkten bestanden', extra: ps.done + ' von ' + ps.relevant + ' Modulen erledigt' };
+    return null;
+  }
+  function certCard() {
+    var r = certReason();
+    return '<div class="card cert-card"><h2>Urkunde</h2>' + (r ? '<p class="card-sub">Glückwunsch – Sie ' + esc(r.what.replace(/^hat /, 'haben ')) + '.</p><button class="btn" data-cert="1">Urkunde erstellen</button>'
+      : '<p class="card-sub">Sobald Sie alle Module erledigt oder eine Prüfungssimulation bestanden haben, können Sie hier eine Urkunde erstellen.</p>') + '</div>';
+  }
+  function showCert() {
+    var r = certReason(); if (!r) return;
+    var name = lsGet('lw.certName') || '';
+    var ov = document.createElement('div'); ov.className = 'cert-ov';
+    var draw = function () {
+      ov.innerHTML = '<div class="cert-tools"><input id="certName" type="text" placeholder="Ihr Name" value="' + esc(name) + '" aria-label="Name auf der Urkunde"><button class="btn" data-certp="1">Drucken / als PDF sichern</button><button class="btn sec" data-certx="1">Schließen</button></div>' +
+        '<div class="cert"><div class="cert-in"><div class="cert-brand"><span class="cb-it">IT</span><span class="cb-sure">sure</span> · Lernwerk</div>' +
+        '<div class="cert-mid"><div class="cert-k">Urkunde</div><div class="cert-name">' + esc(name || 'Ihr Name') + '</div><div class="cert-what">' + esc(r.what) + '</div>' +
+        '<div class="cert-course">' + esc(CUR.exam.code) + ' · ' + esc(CUR.title) + '</div>' + (r.extra ? '<div class="cert-extra">' + esc(r.extra) + '</div>' : '') + '</div>' +
+        '<div class="cert-foot"><span>' + new Date().toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) + '</span><span>Lernstand aus Lernwerk · Inhalte nach Microsoft Learn</span></div>' +
+        '<div class="cert-note">Diese Urkunde bestätigt den Lernfortschritt in Lernwerk. Sie ist keine offizielle Microsoft-Zertifizierung.</div></div></div>';
+    };
+    draw(); document.body.appendChild(ov); document.body.classList.add('cert-open');
+    ov.addEventListener('input', function (e) { if (e.target.id === 'certName') { name = e.target.value; lsSet('lw.certName', name); ov.querySelector('.cert-name').textContent = name || 'Ihr Name'; } });
+    ov.addEventListener('click', function (e) {
+      if (e.target.closest('[data-certp]')) window.print();
+      if (e.target.closest('[data-certx]')) { ov.remove(); document.body.classList.remove('cert-open'); }
+    });
+  }
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-cert]')) showCert(); });
+
+  // (7) Begriffs-Landkarte: wichtige Begriffe eines Kurses und welche gemeinsam vorkommen
+  function viewMap() {
+    var items = buildGlossary('cur'), terms = {};
+    items.forEach(function (x) { if ((x.kind === 'term' || x.kind === 'card') && x.title.length >= 2 && x.title.length <= 28 && !/[.?!]$/.test(x.title)) terms[x.title.replace(/\*\*/g, '').trim()] = 1; });
+    var names = Object.keys(terms), texts = [];
+    MOD_LIST.forEach(function (m) { (m.deep || []).forEach(function (d) { texts.push(((d.p || []).concat(d.list || []).join(' ') + ' ' + d.t).toLowerCase()); }); (m.traps || []).forEach(function (t) { texts.push((t.title + ' ' + t.text).toLowerCase()); }); });
+    var occ = {}; names.forEach(function (n) { var l = n.toLowerCase(); occ[n] = []; texts.forEach(function (t, i) { if (t.indexOf(l) >= 0) occ[n].push(i); }); });
+    var narrow = innerWidth < 700;
+    names = names.filter(function (n) { return occ[n].length >= 2; }).sort(function (a, b) { return occ[b].length - occ[a].length; }).slice(0, narrow ? 22 : 30);
+    var edges = [];
+    names.forEach(function (a, i) { names.slice(i + 1).forEach(function (b) {
+      var s = occ[a].filter(function (x) { return occ[b].indexOf(x) >= 0; }).length;
+      if (s >= 2) edges.push([a, b, s]);
+    }); });
+    edges.sort(function (x, y) { return y[2] - x[2]; }); edges = edges.slice(0, narrow ? 40 : 70);
+    names = names.filter(function (n) { return edges.some(function (e) { return e[0] === n || e[1] === n; }); });   // nur verbundene Begriffe
+    // kleine Kräftesimulation (deterministisch, ohne Bibliothek)
+    var W = narrow ? 640 : 1000, H = narrow ? 920 : 720, N = {}, seed = 7, rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    names.forEach(function (n, i) { var a = i / names.length * Math.PI * 2; N[n] = { x: W / 2 + Math.cos(a) * W * .26 + rnd() * 20, y: H / 2 + Math.sin(a) * H * .3 + rnd() * 20, vx: 0, vy: 0, w: occ[n].length }; });
+    for (var it = 0; it < 340; it++) {
+      names.forEach(function (a) { names.forEach(function (b) { if (a >= b) return; var p = N[a], q = N[b], dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy + .01, f = (narrow ? 5200 : 9000) / d2; p.vx += dx * f; p.vy += dy * f; q.vx -= dx * f; q.vy -= dy * f; }); });
+      edges.forEach(function (e) { var p = N[e[0]], q = N[e[1]], dx = q.x - p.x, dy = q.y - p.y, d = Math.sqrt(dx * dx + dy * dy) || 1, f = (d - 150) * .004 * Math.min(3, e[2]); p.vx += dx / d * f * 10; p.vy += dy / d * f * 10; q.vx -= dx / d * f * 10; q.vy -= dy / d * f * 10; });
+      names.forEach(function (n) { var p = N[n]; p.vx += (W / 2 - p.x) * .007; p.vy += (H / 2 - p.y) * .007; p.x += Math.max(-20, Math.min(20, p.vx)); p.y += Math.max(-20, Math.min(20, p.vy)); p.vx *= .55; p.vy *= .55; p.x = Math.max(90, Math.min(W - 90, p.x)); p.y = Math.max(30, Math.min(H - 40, p.y)); });
+    }
+    var maxW = names.reduce(function (m, n) { return Math.max(m, N[n].w); }, 1);
+    // Beschriftungen entzerren: überlappende Kästen (Punkt + Text) auseinanderschieben
+    var fs = narrow ? 21 : 15, box = function (n) { var r = 7 + 14 * N[n].w / maxW, w = Math.max(r * 2, n.length * fs * .56 + 8); return { l: N[n].x - w / 2, r: N[n].x + w / 2, t: N[n].y - r, b: N[n].y + r + fs + 6 }; };
+    for (var k = 0; k < 300; k++) {
+      var moved = false;
+      for (var a1 = 0; a1 < names.length; a1++) for (var b1 = a1 + 1; b1 < names.length; b1++) {
+        var A1 = box(names[a1]), B1 = box(names[b1]), ox = Math.min(A1.r, B1.r) - Math.max(A1.l, B1.l), oy = Math.min(A1.b, B1.b) - Math.max(A1.t, B1.t);
+        if (ox <= 0 || oy <= 0) continue;
+        moved = true; var pa = N[names[a1]], pb = N[names[b1]];
+        if (oy < ox) { var dy = (oy / 2 + 1) * (pa.y <= pb.y ? -1 : 1); pa.y += dy; pb.y -= dy; } else { var dx = (ox / 2 + 1) * (pa.x <= pb.x ? -1 : 1); pa.x += dx; pb.x -= dx; }
+        [pa, pb].forEach(function (p) { p.x = Math.max(90, Math.min(W - 90, p.x)); p.y = Math.max(30, Math.min(H - 40, p.y)); });
+      }
+      if (!moved) break;
+    }
+    var svg = names.length ? '<svg class="cmap' + (narrow ? ' narrow' : '') + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Begriffs-Landkarte">' +
+      edges.map(function (e) { var p = N[e[0]], q = N[e[1]]; return '<line x1="' + p.x.toFixed(1) + '" y1="' + p.y.toFixed(1) + '" x2="' + q.x.toFixed(1) + '" y2="' + q.y.toFixed(1) + '" data-a="' + esc(e[0]) + '" data-b="' + esc(e[1]) + '" style="stroke-width:' + Math.min(4, .6 + e[2] * .5) + '"/>'; }).join('') +
+      names.map(function (n) { var p = N[n], r = 7 + 14 * N[n].w / maxW; return '<g class="cm-n" data-term="' + esc(n) + '" tabindex="0" role="button" aria-label="' + esc(n) + '"><circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + r.toFixed(1) + '"/><text x="' + p.x.toFixed(1) + '" y="' + (p.y + r + 15).toFixed(1) + '">' + esc(n) + '</text></g>'; }).join('') + '</svg>'
+      : '';
+    app.innerHTML = '<div class="container cmap-wrap"><div class="page-head"><div class="eyebrow">' + esc(CUR.exam.code) + '</div><h1>Begriffs-Landkarte</h1><div class="sub">Die wichtigsten Begriffe des Kurses – verbunden, wenn sie oft gemeinsam vorkommen. Größere Punkte kommen häufiger vor. Antippen hebt die Nachbarn hervor, zweimal öffnet den Glossar-Eintrag.</div></div>' +
+      (svg ? '<div class="card cmap-card">' + svg + '</div>' : emptyBox('glossary', 'Noch zu wenige Begriffe', 'Für diesen Kurs gibt es noch nicht genug Begriffe für eine Landkarte.', '<a class="btn" href="#/glossary">Zum Glossar</a>')) + '</div>';
+    var sel = null, map = app.querySelector('.cmap');
+    if (map) map.addEventListener('click', function (e) {
+      var g = e.target.closest('.cm-n'); if (!g) { sel = null; map.classList.remove('focus'); map.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); }); return; }
+      var t = g.dataset.term;
+      if (sel === t) { go('#/glossary?q=' + encodeURIComponent(t)); return; }
+      sel = t; map.classList.add('focus'); map.querySelectorAll('.on').forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on');
+      map.querySelectorAll('line').forEach(function (l) { if (l.dataset.a === t || l.dataset.b === t) { l.classList.add('on'); var o = l.dataset.a === t ? l.dataset.b : l.dataset.a; var og = map.querySelector('.cm-n[data-term="' + CSS.escape(o) + '"]'); if (og) og.classList.add('on'); } });
+    });
+  }
+
   // Kurs per Link weitergeben: …/#/add/dp-700 legt den Kurs auf dem anderen Gerät an
   function courseLink(code) { return location.origin + location.pathname + '#/add/' + String(code).toLowerCase(); }
   function shareCourse(code) {
@@ -14522,6 +14867,7 @@ window.LW_START = function () {
     densLearn: function () { return sRow('Abstände im Lernbereich', '', sSeg('densLearn', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densLearn'))); },
     densList: function () { return sRow('Abstände in Listen', 'Gilt für Einstellungen, Menüs und Übersichten.', sSeg('densList', [['compact', 'Kompakt'], ['normal', 'Normal'], ['airy', 'Luftig']], lookVal('densList'))); },
     calm: function () { return sRow('Ruhig', 'Schaltet Glas, Unschärfe, Verläufe und Animationen auf einmal ab.', sTgl('calm', !!lookVal('calm'))); },
+    badges: function () { return sRow('Erfolge melden', 'Kurze Meldung, wenn Sie ein neues Abzeichen erreichen.', sTgl('badges', lookVal('badges') !== false)); },
     celebrate: function () { return sRow('Feier-Momente', lookVal('calm') ? CALM_NOTE : 'Kurzes Konfetti bei erreichtem Tagesziel und bestandener Prüfung.', sTgl('celebrate', !!lookVal('celebrate') && !lookVal('calm'), !!lookVal('calm'))); },
     rings: function () { return sRow('Lebendige Ringe', lookVal('calm') ? CALM_NOTE : 'Ringe füllen sich mit leichtem Nachschwingen, die Serie-Flamme flackert.', sTgl('rings', !!lookVal('rings') && !lookVal('calm'), !!lookVal('calm'))); },
     daytint: function () { return sRow('Farbton nach Tageszeit', lookVal('calm') ? CALM_NOTE : 'Die „Heute“-Karte ist morgens warm, abends kühl getönt.', sTgl('daytint', !!lookVal('daytint') && !lookVal('calm'), !!lookVal('calm'))); },
@@ -14603,7 +14949,7 @@ window.LW_START = function () {
     info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6"/>'
   };
   var SETS = {
-    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'kachel', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['motion', 'pagefx', 'tilt', 'calm', 'celebrate', 'rings']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
+    darstellung: { t: 'Darstellung', rows: ['design', 'mode', 'glass', 'round', 'nav', 'tabs'], groups: [['Vorschau', ['preview', 'profiles']], ['Farbe', ['design', 'accent', 'bg']], ['Form', ['round', 'kachel', 'icons']], ['Licht', ['mode', 'glass']], ['Bewegung & Extras', ['motion', 'pagefx', 'tilt', 'calm', 'celebrate', 'badges', 'rings']], ['Navigation', ['nav', 'tabs']]], quick: ['designMini', 'mode'], tier: 1, val: function () { return (PRESETS[LOOK.preset] || {}).name + ' · ' + MODE_L[lookVal('mode')]; },
       reset: function () { lookSet({ motion: null, tilt: false, preset: 'itsure', play: null, mode: 'system', glass: null, glassT: null, round: null, removed: null, hidden: null, surface: null, bg: null, accent: null, hfont: null, tile: null, icons: null, celebrate: null, rings: null, daytint: null, calm: null, pagefx: null, glassB: null, tap: null, nav: null, tabs: null }); renderTabbar(); }, find: 'Design Farbe Erscheinungsbild Hell Dunkel Liquid Glass Transparenz Glas Abrundung Ecken rund Akzent Hintergrund Papier Punkte Verlauf Kachelstil Umrandet Oberfläche Flach Plastisch Kacheln Symbole Ruhig Konfetti Feier Ringe Profil Überrasch eigene Farbe Animationen Bewegung Seitenwechsel Neigen Lichteffekt Navigation Seitenleiste Leiste unten Tabs Reiter' },
     vorlesen: { t: 'Vorlesen', rows: ['ttsVoice', 'ttsRate', 'ttsThink', 'ttsTest'], quick: ['ttsRate'], tier: 1, val: function () { var v = ttsVoice(); return (v ? v.name : 'Stimme des Geräts') + ' · ' + String(lookVal('ttsRate')).replace('.', ',') + '×'; },
       reset: function () { lookSet({ ttsVoice: null, ttsRate: null, ttsThink: null }); }, find: 'Vorlesen Audio Stimme Tempo Sprachausgabe Hören Auto unterwegs Audio-Quiz' },
@@ -14695,7 +15041,7 @@ window.LW_START = function () {
     else if (k === 'greet') lookSet({ greet: t.checked });
     else if (k === 'contrast') lookSet({ contrast: t.checked });
     else if (k === 'glass') { lookSet({ glass: t.checked }); route(true); }
-    else if (['calm', 'celebrate', 'rings', 'daytint', 'tap'].indexOf(k) >= 0) { var pt = {}; pt[k] = t.checked; lookSet(pt); if (k === 'calm') route(true); if (k === 'celebrate' && t.checked) celebrate(); }
+    else if (['calm', 'celebrate', 'rings', 'daytint', 'tap', 'badges'].indexOf(k) >= 0) { var pt = {}; pt[k] = t.checked; lookSet(pt); if (k === 'calm') route(true); if (k === 'celebrate' && t.checked) celebrate(); }
     else if (k === 'tilt') {
       var on = t.checked; lookSet({ tilt: on });
       setTilt(on, true).then(function (ok) { if (on && !ok && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function') toast('Bewegungssensor nicht freigegeben'); });
@@ -14777,7 +15123,7 @@ window.LW_START = function () {
     app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">Lokal im Browser gespeichert</div><h1>Fortschritt & Daten</h1>' +
       '<div class="sub">Status, Quizergebnisse, Fehlerliste und Prüfungshistorie liegen im localStorage dieses Browsers. Per JSON-Export übertragen Sie alles auf ein anderes Gerät.</div></div>' +
       '<div class="card"><h2>Überblick</h2><p class="card-sub">' + ps.done + ' von ' + ps.relevant + ' relevanten Modulen erledigt · ' + ps.skipped + ' als nicht relevant markiert. Lern- und Darstellungsoptionen finden Sie unter <a href="#/settings">Einstellungen</a>.</p></div>' +
-      activityCard() + badgesCard() +
+      activityCard() + badgesCard() + certCard() +
       '<div class="card"><h2>Module</h2><p class="card-sub">Status direkt hier ändern.</p><ul class="mod-list">' + ALL_MIDS.map(modRow).join('') + '</ul></div>' +
       '<div class="card"><h2>Prüfungshistorie</h2>' + (S.exams.length ? '<table class="hist"><thead><tr><th>Datum</th><th>Fragen</th><th>Richtig</th><th>Score</th><th>Ergebnis</th></tr></thead><tbody>' +
         S.exams.map(function (e, i) { return { e: e, i: i }; }).reverse().map(function (x) {
@@ -14822,16 +15168,9 @@ window.LW_START = function () {
   }
   // Abzeichen mit Bedeutung: berechnet aus dem Lernstand, nicht gespeichert
   function badgesCard() {
-    var st = streakInfo(), answered = Object.keys(S.answered).length, rd = readiness().p;
-    var fullRead = Object.keys(S.read).filter(function (k) { return MODS[k] && (S.read[k] || []).length >= (MODS[k].deep || []).length && (MODS[k].deep || []).length; }).length;
-    var list = [['Erster Schritt', 'Erste Frage beantwortet', answered > 0]];
-    COURSE.forEach(function (lp) { var ps = pathStats(lp); list.push(['Lernpfad ' + lp.nr, 'Alle relevanten Module erledigt', ps.relevant > 0 && ps.done === ps.relevant]); });
-    list.push(['Eine Woche dran', '7 Tage Strähne', st.best >= 7], ['Monatsmarathon', '30 Tage Strähne', st.best >= 30],
-      ['Leseratte', 'Vertiefung in 5 Modulen komplett gelesen', fullRead >= 5], ['Aufgeräumt', '50+ Fragen und keine offenen Fehler', answered >= 50 && !wrongIds().length],
-      ['Prüfungsreif', 'Prüfungsreife ab 70 %', rd >= 70], ['Bestanden', 'Eine Simulation mit ≥ 700 Punkten', S.exams.some(function (e) { return e.passed; })]);
-    var got = list.filter(function (b) { return b[2]; }).length;
+    var list = badgeList(), got = list.filter(function (b) { return b[3]; }).length;
     return '<div class="card"><h2>Abzeichen <span class="muted small">' + got + ' von ' + list.length + '</span></h2><div class="badges">' + list.map(function (b) {
-      return '<div class="badge' + (b[2] ? ' got' : '') + '"><span class="bd-ic">' + ico(b[2] ? 'check' : 'clock') + '</span><b>' + esc(b[0]) + '</b><small>' + esc(b[1]) + '</small></div>';
+      return '<div class="badge' + (b[3] ? ' got' : '') + '"><span class="bd-ic">' + ico(b[3] ? 'check' : 'clock') + '</span><b>' + esc(b[1]) + '</b><small>' + esc(b[2]) + '</small></div>';
     }).join('') + '</div></div>';
   }
   function exportData() {
