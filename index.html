@@ -3074,6 +3074,14 @@ mark.jump-hl.fade { background: transparent; box-shadow: none; }
 .cert-foot { width: 100%; gap: 12px; flex-wrap: wrap; }
 .cert-note { width: 100%; margin-top: 6px; }
 @media (max-width: 600px) { .cert { aspect-ratio: auto; } .cert-in { min-height: 420px; } }
+.pa-row { margin: 4px 0 14px; }
+.pa-form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14.5px; color: var(--text-2); }
+.pa-form input { width: 76px; min-height: 40px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: var(--surface-2); color: var(--text); font: 600 15px var(--font); text-align: center; }
+.pa-hist { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+.pa-h { display: grid; text-align: center; padding: 8px 12px; border-radius: calc(12px * var(--rf, 1)); background: var(--bad-bg); min-width: 58px; }
+.pa-h.mid { background: var(--warn-bg); } .pa-h.ok { background: var(--ok-bg); }
+.pa-h b { font-size: 16px; } .pa-h small { font-size: 11.5px; color: var(--text-3); }
+.pa-del { border: 0; background: none; color: var(--text-3); font: 500 13px var(--font); cursor: pointer; text-decoration: underline; }
 
 </style>
 <script>
@@ -3141,6 +3149,7 @@ mark.jump-hl.fade { background: transparent; box-shadow: none; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '2.5', d: '2026-10-22', items: ['Prüfung: Karte „Offizielle Praxisbewertung von Microsoft“ mit Direktlink – für jeden Kurs automatisch, auch für neu hinzugefügte', 'Ergebnis der Praxisbewertung eintragen; der Verlauf wird angezeigt und fließt in die Prüfungsreife ein', 'Prüfungstag-Checkliste: neuer Punkt „Praxisbewertung mit mindestens 80 %“'] },
   { v: '2.4', d: '2026-10-21', items: ['Gemeinsame Module: In einem anderen Kurs erledigte Module lassen sich mit einem Tipp übernehmen', 'Neu: 5-Minuten-Session – 3 Karteikarten, 2 Fragen und ein Abschnitt für zwischendurch', 'Wochenrückblick am Wochenanfang: Lerntage, Minuten, Fragen und Domänen der letzten Woche', 'Erfolge werden beim Erreichen kurz gemeldet (abschaltbar unter Darstellung → Bewegung & Extras)', 'Prüfungstag: in den letzten 7 Tagen Countdown mit Checkliste, am Vortag nur noch die Prüfungsfallen', 'Urkunde zum Drucken oder als PDF, sobald ein Kurs abgeschlossen oder eine Simulation bestanden ist', 'Neu: Begriffs-Landkarte – die wichtigsten Begriffe eines Kurses und ihre Zusammenhänge'] },
   { v: '2.3.2', d: '2026-10-21', items: ['Glossar: Tipp auf die Kachel öffnet den Eintrag direkt – die Fundstelle wird angesprungen und kurz markiert, auch in anderen Kursen'] },
   { v: '2.3.1', d: '2026-10-21', items: ['Glossar: jeder Kurs einzeln wählbar oder alle zusammen', 'PL-300: leere Begriffseinträge entfernt'] },
@@ -10867,8 +10876,20 @@ Bindung requiresEquipment: Quelltabelle task_equipment (TaskId, EquipmentId)`,
   function setHidden(id, hidden) { return store.get(id).then(function (r) { if (r) { r.hidden = hidden; return store.put(r); } }); }
   function remove(id) { return store.del(id); }
 
+  // Offizielle Praxisbewertungen: Microsofts Übersichtsseite listet alle mit Prüfungscode → Link (eine Woche zwischengespeichert)
+  var PA_PAGE = 'https://learn.microsoft.com/de-de/credentials/certifications/practice-assessments-for-microsoft-certifications';
+  function practiceLinks() {
+    var c = null; try { c = JSON.parse(localStorage.getItem('lw.paLinks') || 'null'); } catch (e) {}
+    if (c && Date.now() - c.at < 7 * 864e5) return Promise.resolve(c.map);
+    return fetchMarkdown(PA_PAGE, 2).then(function (md) {
+      var map = {}, re = /\[([A-Z]{2,3}-\d{2,4})[^\]]*\]\(([^)]*practice\/assessment[^)]*)\)/g, m;
+      while ((m = re.exec(md))) { var u = unesc(m[2]); if (u[0] === '/') u = 'https://learn.microsoft.com' + u; if (!map[m[1]]) map[m[1]] = u; }
+      try { localStorage.setItem('lw.paLinks', JSON.stringify({ at: Date.now(), map: map })); } catch (e) {}
+      return map;
+    }, function () { return (c && c.map) || {}; });
+  }
   function list() { return store.all().then(function (l) { return (l || []).map(function (r) { return { id: r.id, code: r.course && r.course.exam.code, hidden: !!r.hidden, pending: (r.pending || []).length }; }); }); }
-  window.LWImport = { checkUpdates: checkUpdates, list: list, search: search, add: add, resume: resume, setHidden: setHidden, remove: remove, isRunning: function (id) { return !!running[id]; }, toBlocks: toBlocks };
+  window.LWImport = { practiceLinks: practiceLinks, PA_PAGE: PA_PAGE, checkUpdates: checkUpdates, list: list, search: search, add: add, resume: resume, setHidden: setHidden, remove: remove, isRunning: function (id) { return !!running[id]; }, toBlocks: toBlocks };
 })();
 
 </script>
@@ -12408,7 +12429,10 @@ window.LW_START = function () {
       dom[q.domain].t++; if (S.answered[id] && S.answered[id].ok) dom[q.domain].ok++;
     });
     DOMAIN_KEYS.forEach(function (k) { var d = dom[k], w = DOMAINS[k].share || 1 / DOMAIN_KEYS.length; d.p = pct(d.ok, d.t); wsum += w; r += w * (d.t ? d.ok / d.t : 0); });
-    return { p: Math.round(wsum ? r / wsum * 100 : 0), dom: dom };
+    var base = Math.round(wsum ? r / wsum * 100 : 0), pa = paLast();
+    // Offizielle Praxisbewertung der letzten 30 Tage fließt zu 40 % ein
+    if (pa && Date.now() - pa.date < 30 * 864e5) base = Math.round(base * .6 + pa.pct * .4);
+    return { p: base, dom: dom };
   }
   function viewHome(discover) {
     var ps = statsFor(ALL_MIDS);
@@ -13038,7 +13062,7 @@ window.LW_START = function () {
       var p = poolByDomain(cfg.excludeSkipped);
       if (!Object.keys(QIDX).length) {
         app.innerHTML = '<div class="container"><div class="page-head"><div class="eyebrow">' + esc(CFG.exam.code) + '</div><h1>Prüfungssimulation</h1></div>' +
-          emptyBox('exam', 'Für diesen Kurs gibt es noch keine Fragen', 'Sobald Quizfragen vorhanden sind (eigene oder aus den Wissenschecks von Microsoft Learn), stellt die Simulation sie nach den Prüfungsdomänen ' + DOMAIN_KEYS.map(function (k) { return DOMAINS[k].label + ' (' + DOMAINS[k].range + ')'; }).join(', ') + ' zusammen.', '<a class="btn" href="#/discover">Zu den Lernpfaden</a>') + '</div>';
+          emptyBox('exam', 'Für diesen Kurs gibt es noch keine Fragen', 'Sobald Quizfragen vorhanden sind (eigene oder aus den Wissenschecks von Microsoft Learn), stellt die Simulation sie nach den Prüfungsdomänen ' + DOMAIN_KEYS.map(function (k) { return DOMAINS[k].label + ' (' + DOMAINS[k].range + ')'; }).join(', ') + ' zusammen.', '<a class="btn" href="#/discover">Zu den Lernpfaden</a>') + paCard() + '</div>'; paWire();
         return;
       }
       var caseQ = CASE_LIST.reduce(function (s, c) { return s + c.questions.filter(function (q) { return inPool(q, cfg.excludeSkipped); }).length; }, 0);
@@ -13058,8 +13082,8 @@ window.LW_START = function () {
           return '<div class="w"><b><i style="background:' + DOMAINS[k].color + '"></i>' + DOMAINS[k].label + ' · ' + DOMAINS[k].range + '</b><span class="muted">' + (DOMAINS[k].en ? DOMAINS[k].en + ' · ' : '') + 'Pool: ' + p[k].length + ' Fragen</span></div>';
         }).join('') + '</div></div>' +
         '<p class="muted small">Bestehensgrenze: <b>700 von 1000 Punkten</b>. Die Simulation skaliert linear (Anteil richtiger Antworten × 1000); Multiple-Choice-Fragen zählen nur bei vollständig richtiger Auswahl. Die echte Microsoft-Bewertung ist skaliert und nicht öffentlich – der Wert ist ein Richtwert.</p>' +
-        '<div class="actions"><button class="btn" data-x="start">Simulation starten</button></div></div></div>';
-      app.innerHTML = h;
+        '<div class="actions"><button class="btn" data-x="start">Simulation starten</button></div></div>' + paCard() + '</div>';
+      app.innerHTML = h; paWire();
     };
     var onClick = function (e) {
       var o = e.target.closest('.cfg-opt');
@@ -14029,6 +14053,7 @@ window.LW_START = function () {
   var EXAM_CHECK = [
     ['weak', 'Schwächste Domäne gezielt wiederholen', function () { return '#/quick/' + quickCount(); }],
     ['sim', 'Eine Prüfungssimulation unter Zeitdruck', function () { return '#/exam'; }],
+    ['pa', 'Offizielle Praxisbewertung mit mindestens 80 %', function () { return '#/exam'; }],
     ['err', 'Offene Fehler abbauen', function () { return '#/errors'; }],
     ['traps', 'Prüfungsfallen durchgehen', function () { return '#/glossary?k=trap'; }],
     ['sys', 'Systemtest bei Pearson VUE (Online-Prüfung)', function () { return 'https://learn.microsoft.com/de-de/credentials/support/pearson-vue-online-proctored-exams'; }],
@@ -14036,7 +14061,7 @@ window.LW_START = function () {
     ['rest', 'Am Vorabend früh schlafen – nicht mehr pauken', null]];
   function examDayCard() {
     var pd = planData(); if (!pd || pd.daysLeft < 0 || pd.daysLeft > 7) return '';
-    var ck = S.examCheck = S.examCheck || {}, auto = { sim: S.exams.some(function (e) { return (e.date || 0) >= Date.now() - 8 * 864e5; }), err: Object.keys(S.answered).length > 0 && !wrongIds().length };
+    var ck = S.examCheck = S.examCheck || {}, auto = { sim: S.exams.some(function (e) { return (e.date || 0) >= Date.now() - 8 * 864e5; }), err: Object.keys(S.answered).length > 0 && !wrongIds().length, pa: !!(paLast() && paLast().pct >= 80) };
     var done = EXAM_CHECK.filter(function (x) { return ck[x[0]] || auto[x[0]]; }).length;
     var title = pd.daysLeft === 0 ? 'Heute ist Prüfungstag. Viel Erfolg!' : pd.daysLeft === 1 ? 'Morgen ist Prüfung' : 'Noch ' + pd.daysLeft + ' Tage bis zur Prüfung';
     return '<section class="card exam-day"><div class="t-eyebrow">Prüfungstag · ' + done + ' von ' + EXAM_CHECK.length + ' erledigt</div><h2>' + title + '</h2>' +
@@ -14209,6 +14234,29 @@ window.LW_START = function () {
     });
   }
 
+  // Offizielle Praxisbewertung von Microsoft: Link je Kurs (automatisch), Ergebnisse eintragen, Verlauf
+  function paLast() { var a = (S.practice || []).slice(-1)[0]; return a ? { pct: Math.round(a.ok / a.n * 100), date: a.date } : null; }
+  function paCard() {
+    var list = S.practice || [], code = CFG.exam.code;
+    var hist = list.slice(-6).map(function (x) { var p = Math.round(x.ok / x.n * 100); return '<span class="pa-h' + (p >= 80 ? ' ok' : p >= 60 ? ' mid' : '') + '" title="' + new Date(x.date).toLocaleDateString('de-DE') + '"><b>' + p + ' %</b><small>' + new Date(x.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }) + '</small></span>'; }).join('');
+    return '<div class="card pa-card"><h2>Offizielle Praxisbewertung von Microsoft</h2>' +
+      '<p class="card-sub">50 Fragen im Stil der echten Prüfung, kostenlos auf Microsoft Learn. Danach tragen Sie hier Ihr Ergebnis ein – es fließt in die Prüfungsreife ein. Ab 80 % gelten Sie als gut vorbereitet.</p>' +
+      '<div class="pa-row"><a class="btn" id="paLink" href="' + esc((window.LWImport && window.LWImport.PA_PAGE) || '#') + '" target="_blank" rel="noopener">Praxisbewertung ' + esc(code) + ' öffnen ↗</a></div>' +
+      '<div class="pa-form"><span>Ergebnis:</span><input id="paOk" type="number" min="0" max="200" inputmode="numeric" placeholder="richtig" aria-label="Richtige Antworten"><span>von</span><input id="paN" type="number" min="1" max="200" inputmode="numeric" value="50" aria-label="Fragen insgesamt"><button class="btn sec" data-pa="save">Eintragen</button></div>' +
+      (hist ? '<div class="pa-hist">' + hist + (list.length ? '<button class="pa-del" data-pa="undo" title="Letzten Eintrag löschen">Letzten löschen</button>' : '') + '</div>' : '') + '</div>';
+  }
+  function paWire() {
+    var a = document.getElementById('paLink'); if (!a || !window.LWImport) return;
+    window.LWImport.practiceLinks().then(function (map) { var u = map[CFG.exam.code]; if (u) a.href = u; else a.textContent = 'Übersicht der Praxisbewertungen ↗'; });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-pa]'); if (!b) return;
+    if (b.dataset.pa === 'undo') { (S.practice || []).pop(); save(); route(true); return; }
+    var ok = +document.getElementById('paOk').value, n = +document.getElementById('paN').value;
+    if (!n || isNaN(ok) || ok < 0 || ok > n || document.getElementById('paOk').value === '') { toast('Bitte richtige Antworten und Fragenzahl angeben'); return; }
+    (S.practice = S.practice || []).push({ date: Date.now(), ok: ok, n: n }); save();
+    var p = Math.round(ok / n * 100); toast('Eingetragen: ' + p + ' %' + (p >= 80 ? ' – stark!' : '')); if (p >= 80) celebrate('pa' + Date.now()); route(true);
+  });
   // Kurs per Link weitergeben: …/#/add/dp-700 legt den Kurs auf dem anderen Gerät an
   function courseLink(code) { return location.origin + location.pathname + '#/add/' + String(code).toLowerCase(); }
   function shareCourse(code) {
