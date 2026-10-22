@@ -3149,6 +3149,7 @@ mark.jump-hl.fade { background: transparent; box-shadow: none; }
    Zweite Zahl = neue Funktionen/sichtbare Änderungen, dritte Zahl = reine Fehlerbehebung.
    Schreibweise: sachlich beschreiben, was sich ändert („Neue Seite …“, „Schriftart …“) – keine Vorbilder oder Schlagworte. */
 window.DP_CHANGELOG = [
+  { v: '3.0', d: '2026-10-22', items: ['Lernwerk läuft jetzt als App in Microsoft Fabric – Anmeldung mit dem Firmenkonto von IT sure', 'Lernstand in der Fabric-Datenbank: Fortschritt, Markierungen, Notizen und eigene Kurse sind auf allen Geräten gleich', 'Jede Person sieht ausschließlich ihre eigenen Daten', 'Bisherigen Lernstand übernehmen: in der alten Version unter „Fortschritt & Daten“ exportieren und hier importieren'] },
   { v: '2.5', d: '2026-10-22', items: ['Prüfung: Karte „Offizielle Praxisbewertung von Microsoft“ mit Direktlink – für jeden Kurs automatisch, auch für neu hinzugefügte', 'Ergebnis der Praxisbewertung eintragen; der Verlauf wird angezeigt und fließt in die Prüfungsreife ein', 'Prüfungstag-Checkliste: neuer Punkt „Praxisbewertung mit mindestens 80 %“'] },
   { v: '2.4', d: '2026-10-21', items: ['Gemeinsame Module: In einem anderen Kurs erledigte Module lassen sich mit einem Tipp übernehmen', 'Neu: 5-Minuten-Session – 3 Karteikarten, 2 Fragen und ein Abschnitt für zwischendurch', 'Wochenrückblick am Wochenanfang: Lerntage, Minuten, Fragen und Domänen der letzten Woche', 'Erfolge werden beim Erreichen kurz gemeldet (abschaltbar unter Darstellung → Bewegung & Extras)', 'Prüfungstag: in den letzten 7 Tagen Countdown mit Checkliste, am Vortag nur noch die Prüfungsfallen', 'Urkunde zum Drucken oder als PDF, sobald ein Kurs abgeschlossen oder eine Simulation bestanden ist', 'Neu: Begriffs-Landkarte – die wichtigsten Begriffe eines Kurses und ihre Zusammenhänge'] },
   { v: '2.3.2', d: '2026-10-21', items: ['Glossar: Tipp auf die Kachel öffnet den Eintrag direkt – die Fundstelle wird angesprungen und kurz markiert, auch in anderen Kursen'] },
@@ -12332,7 +12333,7 @@ window.LW_START = function () {
       if (morph && morph.dir === 'collapse') { stopMorph(); return; }
       if (!b.classList.contains('tb-idle') || morph) return;
       var res = document.querySelector('.tb-resume'), bar = document.querySelector('.tb-bar');
-      if (!res || !res.animate || noMotion()) { b.classList.remove('tb-idle'); return; }
+      if (!res || !bar || !res.querySelector('.tbr-play') || !res.animate || noMotion()) { b.classList.remove('tb-idle'); return; }
       var C = res.getBoundingClientRect(), B0 = bar.getBoundingClientRect();
       b.classList.remove('tb-idle'); b.classList.add('tb-anim');
       var R = res.getBoundingClientRect(), P = res.querySelector('.tbr-play').getBoundingClientRect(), B1 = bar.getBoundingClientRect();
@@ -15180,7 +15181,7 @@ window.LW_START = function () {
         }).join('') + '</tbody></table>' : emptyBox('exam', 'Noch keine Simulation', 'Die Ergebnisse jeder Prüfungssimulation erscheinen hier mit Score und Datum.', '<a class="btn" href="#/exam">Erste Simulation starten</a>')) + '</div>' +
       '<div class="card" id="trBox"><h2>Fortschritt auf ein anderes Gerät übertragen</h2>' +
         '<p class="muted small">Speicher ' + (PERSIST === 'yes' ? 'vom Browser geschützt – wird nicht automatisch gelöscht.' : PERSIST === 'no' ? 'nicht dauerhaft geschützt: Der Browser darf ihn bei Platzmangel oder längerer Pause löschen. Bitte regelmäßig sichern.' : 'wird geprüft …') + (+lsGet('dp600.backup') ? ' Letzte Sicherung: ' + new Date(+lsGet('dp600.backup')).toLocaleDateString('de-DE') + '.' : '') + ' Der Code enthält auch Design und Stil.</p>' +
-        (CLOUD.state === 'on' ? '<p class="sync-on">✓ Geräte-Sync aktiv: In der claude.ai-Version wird Ihr Fortschritt automatisch auf allen Geräten abgeglichen, auf denen Sie angemeldet sind.</p>' : '') +
+        (CLOUD.state === 'on' ? '<p class="sync-on">✓ Geräte-Sync aktiv: ' + (CLOUD.kind === 'fabric' ? 'Ihr Fortschritt liegt in der Fabric-Datenbank von IT sure und ist auf allen Geräten gleich, auf denen Sie mit Ihrem Firmenkonto angemeldet sind.' : 'In der claude.ai-Version wird Ihr Fortschritt automatisch auf allen Geräten abgeglichen, auf denen Sie angemeldet sind.') + '</p>' : '') +
         '<p class="card-sub">Ohne Datei: Code auf diesem Gerät erzeugen, kopieren (z. B. per AirDrop, Notiz oder Nachricht an sich selbst) und auf dem anderen Gerät einfügen. Beide Stände werden zusammengeführt – nichts geht verloren.</p>' +
         '<div class="tr-grid"><div><b>1. Hier erzeugen</b><div class="actions"><button class="btn" data-tr="make">Code erzeugen</button><button class="btn sec" data-tr="copy" hidden>Kopieren</button></div>' +
         '<textarea id="trOut" class="tr-code" rows="3" readonly hidden aria-label="Übertragungscode"></textarea></div>' +
@@ -15505,11 +15506,46 @@ window.LW_START = function () {
     var bar = e.target.closest('.bk-bar'); if (bar) bar.remove();
   });
   var CLOUD = { ref: null, state: 'off', lastJson: '', timer: null, busy: Promise.resolve() };
+  // Fabric-App: Lernwerk läuft eingebettet; die Hülle speichert in der Fabric-Datenbank (siehe Lernwerk/…/lernwerk-bridge.ts)
+  function fabricBridge() {
+    if (window.parent === window) return Promise.resolve(null);
+    return new Promise(function (ok) {
+      var seq = 0, waits = {}, subs = {}, done = false;
+      var post = function (m) { window.parent.postMessage(m, location.origin); };
+      var ask = function (m) { return new Promise(function (res, rej) { m.req = ++seq; waits[m.req] = { res: res, rej: rej }; post(m); }); };
+      var snap = function (json) { var o = null; try { o = json ? JSON.parse(json) : null; } catch (e) {} return { exists: !!o, data: function () { return o; }, metadata: {} }; };
+      window.addEventListener('message', function (e) {
+        if (e.origin !== location.origin || e.source !== window.parent) return;
+        var m = e.data || {};
+        if (m.lw === 'bridge' && !done) {
+          done = true;
+          ok({ uid: m.user || 'me', db: { doc: function (path) {
+            var key = String(path).split('/').pop();
+            return {
+              get: function () { return ask({ lw: 'get', key: key }).then(snap); },
+              set: function (obj) { return ask({ lw: 'set', key: key, json: JSON.stringify(obj) }).then(function (r) { if (!r.ok) throw new Error('Speichern fehlgeschlagen'); }); },
+              onSnapshot: function (cb, err) {
+                (subs[key] = subs[key] || []).push(cb);
+                ask({ lw: 'get', key: key }).then(function (r) { cb(snap(r.json)); post({ lw: 'watch', key: key }); }, function (x) { if (err) err(x); });
+              }
+            };
+          } } });
+        } else if (m.lw === 'changed') (subs[m.key] || []).forEach(function (cb) { cb(snap(m.json)); });
+        else if (m.req && waits[m.req]) { var w = waits[m.req]; delete waits[m.req]; if (m.lw === 'error') w.rej(new Error(m.message)); else w.res(m); }
+      });
+      post({ lw: 'hello' });
+      setTimeout(function () { if (!done) { done = true; ok(null); } }, 4000);
+    });
+  }
   async function cloudInit() {
-    if (!window.claude || typeof window.claude.use !== 'function') return;
+    var fb = await fabricBridge();
+    if (!fb && (!window.claude || typeof window.claude.use !== 'function')) return;
     try {
-      var db = await window.claude.use('db'); if (!db) return;
-      var user = await window.claude.use('user'); var uid = user && await user.id(); if (!uid) return;
+      var db = fb ? fb.db : await window.claude.use('db'); if (!db) return;
+      var uid = fb ? fb.uid : null;
+      if (!uid) { var user = await window.claude.use('user'); uid = user && await user.id(); }
+      if (!uid) return;
+      CLOUD.kind = fb ? 'fabric' : 'claude';
       CLOUD.ref = db.doc('data/users/' + uid + '/' + (CUR.id === 'dp600' ? 'progress' : 'progress-' + CUR.id));
       cloudCoursesInit(db.doc('data/users/' + uid + '/courses'));
       CLOUD.state = 'on';
@@ -15568,7 +15604,7 @@ window.LW_START = function () {
       if (json === CLOUD.lastJson) return;
       CLOUD.lastJson = json; CLOUD.dirty = false;
       CLOUD.busy = CLOUD.busy.then(function () { return CLOUD.ref.set({ json: json, updated: S.updated }); }).catch(function () { CLOUD.state = 'error'; });
-    }, 1500);
+    }, CLOUD.kind === 'fabric' ? 4000 : 1500);
   }
 
   /* ---------------------------------------------------------------------
